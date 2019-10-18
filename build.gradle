@@ -1,11 +1,18 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'edu.wpi.first.GradleRIO' version '2019.4.1'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
+	compile wpi.deps.wpilib()
+	compile wpi.deps.vendor.java()
+	nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+	nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+	testCompile 'junit:junit:4.12'
 }
 
 sourceSets {
