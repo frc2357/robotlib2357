@@ -2,3 +2,10 @@
 .gradle
 /build/
 /bin/
+
+### VS Code ###
+.vscode
+.project
+.settings
+.classpath
+

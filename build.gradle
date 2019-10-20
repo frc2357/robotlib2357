@@ -1,24 +1,23 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'edu.wpi.first.GradleRIO' version '2019.4.1'
+}
+
+// Set this to true to enable desktop support.
+def includeDesktopSupport = false
 
 repositories {
+	jcenter()
     mavenCentral()
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-}
-
-sourceSets {
-	main {
-		java {
-			srcDirs = [ 'src/main/java' ]
-		}
-	}
-	test {
-		java {
-			srcDirs = [ 'src/test/java' ]
-		}
-	}
+	compile wpi.deps.wpilib()
+	compile wpi.deps.vendor.java()
+	nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+	nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:2.+'
 }
 
 jar {
