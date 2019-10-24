@@ -1,4 +1,4 @@
-package common;
+package com.systemmeltdown.robotlib.triggers;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.buttons.Trigger;
