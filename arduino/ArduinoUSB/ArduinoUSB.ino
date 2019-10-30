@@ -1,9 +1,9 @@
 /*
  * ArduinoUSB
- * 
+ *
  * This is a firmware for Arduino microcontrollers communicating
  * with the RoboRIO over USB
- * 
+ *
  * The primary purpose of these Arduinos is to:
  *  - Connect to sensors using established Arduino code
  *  - Filter and debounce data from those sensors
@@ -30,3 +30,4 @@ void setup() {
 void loop() {
   serialState.handleSerial();
 }
+
