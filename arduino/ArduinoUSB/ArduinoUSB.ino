@@ -18,29 +18,61 @@
 
 #define USB_BAUDRATE 115200
 
+
+class SerialState {
+  public:
+    SerialState(DynamicJsonDocument* state, String initialState);
+
+    void init();
+    void handleSerial();
+    void sendState();
+    void updateObject(JsonObject stateObject, JsonObject fields);
+    void setError(String type, String message);
+    void clearError();
+
+  private:
+    DynamicJsonDocument* state;
+
+    void readMessage();
+};
+
+
 String name = "Test Devices";
 String initialState = "{name: '" + name + "', devices: {}}";
+
 DynamicJsonDocument state(1024);
+SerialState serialState(&state, initialState);
 
 void setup() {
-  deserializeJson(state, initialState);
-  Serial.begin(USB_BAUDRATE);
-
-  sendState();
+  serialState.init();
 }
 
 void loop() {
+  serialState.handleSerial();
+}
+
+SerialState::SerialState(DynamicJsonDocument* state, String initialState) {
+  deserializeJson(*state, initialState);
+  this->state = state;
+}
+
+void SerialState::init() {
+  Serial.begin(USB_BAUDRATE);
+  sendState();
+}
+
+void SerialState::handleSerial() {
   if (Serial.available() > 0) {
     readMessage();
   }
 }
 
-void sendState() {
-  serializeJson(state, Serial);
+void SerialState::sendState() {
+  serializeJson(*this->state, Serial);
   Serial.print("\n\r");
 }
 
-void readMessage() {
+void SerialState::readMessage() {
   StaticJsonDocument<1024> message;
   DeserializationError readErr = deserializeJson(message, Serial);
 
@@ -52,12 +84,12 @@ void readMessage() {
 
   JsonObject fields = message.as<JsonObject>();
 
-  updateObject(state.as<JsonObject>(), fields);
+  updateObject(this->state->as<JsonObject>(), fields);
   clearError();
   sendState();
 }
 
-void updateObject(JsonObject stateObject, JsonObject fields) {
+void SerialState::updateObject(JsonObject stateObject, JsonObject fields) {
   for (JsonPair kv : fields) {
     const String key = kv.key().c_str();
     const JsonVariant value = kv.value();
@@ -76,13 +108,13 @@ void updateObject(JsonObject stateObject, JsonObject fields) {
   }
 }
 
-void setError(String type, String message) {
+void SerialState::setError(String type, String message) {
   StaticJsonDocument<512> error;
   deserializeJson(error, "{type: '" + type + "', message: '" + message + "'}");
-  state["error"] = error.as<JsonObject>();
+  (*this->state)["error"] = error.as<JsonObject>();
 }
 
-void clearError() {
-  state.as<JsonObject>().remove("error");
+void SerialState::clearError() {
+  this->state->as<JsonObject>().remove("error");
 }
 
