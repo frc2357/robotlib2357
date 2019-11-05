@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class SubsystemBaseTest {
-
 	@Test
 	public void testSetFailsafeActive() {
 		SubsystemBase subBase = new TestSubsystem();
@@ -20,14 +19,19 @@ public class SubsystemBaseTest {
 
 	@Test
 	public void testSetFailsafeNotActive() {
-		
+		SubsystemBase subBase = new TestSubsystem();
+
+		subBase.setFailsafeActive(false);
+    
+		assertEquals(subBase.isFailsafeActive(), false );
+
+		subBase.close();
 	}
 
 	@Test
 	public void testIsFailsafeActive() {
         SubsystemBase subBase = mock(SubsystemBase.class);
         
-
 		assertEquals( subBase.isFailsafeActive(), false );
 
 		subBase.close();
