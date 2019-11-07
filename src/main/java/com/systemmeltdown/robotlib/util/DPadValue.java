@@ -1,6 +1,5 @@
 package com.systemmeltdown.robotlib.util;
 
-
 public enum DPadValue {
     Up(0), Right(1), Down(2), Left(3), Unpressed(4);
   
