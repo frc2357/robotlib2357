@@ -18,10 +18,13 @@
 #include "serialstate.h"
 
 String name = "Test Devices";
-String initialState = "{name: '" + name + "', devices: {}}";
+String initialState = "{name: '" + name + "', devices: {example: {}}}";
 
 DynamicJsonDocument state(1024);
 SerialState serialState(&state, initialState);
+
+JsonObject laserToF = state["devices"]["example"];
+double count = 0;
 
 void setup() {
   serialState.init();
@@ -29,5 +32,11 @@ void setup() {
 
 void loop() {
   serialState.handleSerial();
+  delay(500);
+
+  count += 0.5;
+
+  serialState.updateField(laserToF, "count", count);
+  serialState.sendState();
 }
 

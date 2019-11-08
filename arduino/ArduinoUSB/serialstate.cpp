@@ -39,6 +39,33 @@ void SerialState::readMessage() {
   sendState();
 }
 
+void SerialState::updateField(JsonObject stateObject, String fieldName, String value) {
+  StaticJsonDocument<JSON_STRING_LEN> fields;
+  deserializeJson(fields, "{" + fieldName + ": '" + value + "'}");
+  updateObject(stateObject, fields.as<JsonObject>());
+}
+
+void SerialState::updateField(JsonObject stateObject, String fieldName, double value) {
+  StaticJsonDocument<JSON_DOUBLE_LEN> fields;
+  String valueStr(value);
+  deserializeJson(fields, "{" + fieldName + ": " + value + "}");
+  updateObject(stateObject, fields.as<JsonObject>());
+}
+
+void SerialState::updateField(JsonObject stateObject, String fieldName, int value) {
+  StaticJsonDocument<JSON_INT_LEN> fields;
+  String valueStr(value);
+  deserializeJson(fields, "{" + fieldName + ": " + valueStr + "}");
+  updateObject(stateObject, fields.as<JsonObject>());
+}
+
+void SerialState::updateField(JsonObject stateObject, String fieldName, bool value) {
+  StaticJsonDocument<JSON_BOOL_LEN> fields;
+  String valueStr = value ? "true" : "false";
+  deserializeJson(fields, "{" + fieldName + ": " + valueStr + "}");
+  updateObject(stateObject, fields.as<JsonObject>());
+}
+
 void SerialState::updateObject(JsonObject stateObject, JsonObject fields) {
   for (JsonPair kv : fields) {
     const String key = kv.key().c_str();
