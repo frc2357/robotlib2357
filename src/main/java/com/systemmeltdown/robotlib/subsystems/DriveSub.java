@@ -5,13 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package common;
+package com.systemmeltdown.robotlib.subsystems;
 
-import common.DriveProportional;
-import common.DriveWithEncoders;
-import common.PIDValues;
-import common.Utility;
-import common.RobotMap;
+import com.systemmeltdown.robotlib.commands.DriveProportional;
+import com.systemmeltdown.robotlib.commands.DriveWithEncoders;
+import com.systemmeltdown.robotlib.util.PIDValues;
+import com.systemmeltdown.robotlib.util.Utility;
+import com.systemmeltdown.robotlib.util.RobotMap;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;

@@ -1,4 +1,4 @@
-package common;
+package com.systemmeltdown.robotlib.util;
 
 public class RobotMap{
     public static double DRIVE_STICK_DEADBAND;

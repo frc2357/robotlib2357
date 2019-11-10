@@ -1,4 +1,4 @@
-package common;
+package com.systemmeltdown.robotlib.commands;
 
 /**
  * A proportional drive control.
