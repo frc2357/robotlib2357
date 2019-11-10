@@ -1,4 +1,4 @@
-package common;
+package com.systemmeltdown.robotlib.util;
 
 // Constants for the raw button and axis values of the XBox controller
 public enum XboxRaw
