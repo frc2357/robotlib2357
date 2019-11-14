@@ -1,6 +1,5 @@
 package com.systemmeltdown.robotlib.subsystems;
 
-import com.systemmeltdown.robotlib.subsystems.SubsystemBase;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
