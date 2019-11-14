@@ -1,6 +1,5 @@
 package com.systemmeltdown.robotlib.util;
 
-import com.systemmeltdown.robotlib.util.DPadValue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
