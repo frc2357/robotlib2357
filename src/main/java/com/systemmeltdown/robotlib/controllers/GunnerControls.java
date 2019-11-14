@@ -19,7 +19,7 @@ public class GunnerControls extends Controls
 
   public GunnerControls(XboxController controller, double TURN_FACTOR, double SPEED_FACTOR, double deadband,
   int gunnerEncoderSpeed, int gunnerEncoderTurnRate) {
-    super(controller);
+    super(controller,0.0);
     this.TURN_FACTOR = TURN_FACTOR;
     this.SPEED_FACTOR = SPEED_FACTOR;
     this.deadband = deadband;
