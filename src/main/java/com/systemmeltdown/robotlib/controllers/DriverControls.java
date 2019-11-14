@@ -1,11 +1,13 @@
-package common;
+package com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import common.OI;
-import common.RobotTemplate;
-import common.RobotMap;
-import common.Utility;
+import com.systemmeltdown.robotlib.util.RobotTemplate;
+import com.systemmeltdown.robotlib.util.RobotMap;
+import com.systemmeltdown.robotlib.util.Utility;
+import com.systemmeltdown.robotlib.commands.ProportionalDrive;
+import com.systemmeltdown.robotlib.commands.VelocityDrive;
+import com.systemmeltdown.robotlib.triggers.DriverSlowTrigger;
 
 public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
   public final DriverSlowTrigger slowTrigger;

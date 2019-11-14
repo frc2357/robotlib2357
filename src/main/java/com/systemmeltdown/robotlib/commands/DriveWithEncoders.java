@@ -4,11 +4,10 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-package common;
+package com.systemmeltdown.robotlib.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import common.OI;
-import common.RobotTemplate;
+import com.systemmeltdown.robotlib.util.RobotTemplate;
 
 public class DriveWithEncoders extends Command {
 
