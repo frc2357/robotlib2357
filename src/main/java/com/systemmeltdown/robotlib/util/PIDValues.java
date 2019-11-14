@@ -1,4 +1,4 @@
-package common;
+package com.systemmeltdown.robotlib.util;
 
 /**
  * This class stores a set of PID configuration values.

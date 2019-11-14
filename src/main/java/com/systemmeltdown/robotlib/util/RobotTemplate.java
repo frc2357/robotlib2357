@@ -1,8 +1,6 @@
 package com.systemmeltdown.robotlib.util;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 
 import com.systemmeltdown.robotlib.subsystems.DriveSub;
 

@@ -7,7 +7,6 @@
 package com.systemmeltdown.robotlib.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import com.systemmeltdown.robotlib.util.OI;
 import com.systemmeltdown.robotlib.util.RobotTemplate;
 
 public class DriveWithEncoders extends Command {

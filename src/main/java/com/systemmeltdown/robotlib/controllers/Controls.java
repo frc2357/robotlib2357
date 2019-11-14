@@ -1,8 +1,9 @@
-package common;
+package  com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import common.Utility;
+import com.systemmeltdown.robotlib.util.Utility;
+import  com.systemmeltdown.robotlib.util.RobotMap;
 
 public class Controls {
   protected XboxController controller;

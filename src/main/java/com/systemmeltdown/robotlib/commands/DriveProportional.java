@@ -11,8 +11,6 @@ package com.systemmeltdown.robotlib.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import com.systemmeltdown.robotlib.util.Utility;
-import com.systemmeltdown.robotlib.subsystems.DriveSub;
-import com.systemmeltdown.robotlib.util.OI;
 import com.systemmeltdown.robotlib.util.RobotTemplate;
 
 public class DriveProportional extends Command {

@@ -2,7 +2,6 @@ package com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import com.systemmeltdown.robotlib.util.OI;
 import com.systemmeltdown.robotlib.util.RobotTemplate;
 import com.systemmeltdown.robotlib.util.RobotMap;
 import com.systemmeltdown.robotlib.util.Utility;
@@ -14,7 +13,7 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
   public final DriverSlowTrigger slowTrigger;
 
   public DriverControls(XboxController controller) {
-    super(controller,0.1);
+    super(controller);
 
     slowTrigger = new DriverSlowTrigger(controller);
   }
