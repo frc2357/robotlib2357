@@ -7,15 +7,15 @@ import com.systemmeltdown.robotlib.util.RobotMap;
 import com.systemmeltdown.robotlib.util.Utility;
 import com.systemmeltdown.robotlib.commands.ProportionalDrive;
 import com.systemmeltdown.robotlib.commands.VelocityDrive;
-import com.systemmeltdown.robotlib.triggers.DriverSlowTrigger;
+import com.systemmeltdown.robotlib.triggers.AxisThresholdTrigger;;
 
 public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
-  public final DriverSlowTrigger slowTrigger;
+  public final AxisThresholdTrigger slowTrigger;
 
   public DriverControls(XboxController controller) {
-    super(controller);
+    super(controller,0.0);
 
-    slowTrigger = new DriverSlowTrigger(controller);
+    slowTrigger = new AxisThresholdTrigger(controller,Hand.kRight,0.25);
   }
 
   @Override
