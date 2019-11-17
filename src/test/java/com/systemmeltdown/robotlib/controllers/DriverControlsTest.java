@@ -2,36 +2,42 @@ package com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class DriverControlsTest{
+  private XboxController controller;
+
+  @Before
+  public void setup() {
+    controller = mock(XboxController.class);
+  }
+
   @Test
-  public void testGetEncoderTurnDifferentialIsOneWhenIsDriverSlowIsFalseAndTurnRateIsOneAndRightStickIsOne(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderTurnDifferentialIsOneWhenIsDriverSlowIsFalseAndTurnRateIsOneAndRightStickIsOne() {
 
     when(controller.getX(Hand.kRight)).thenReturn(1.0);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,1,0,0);
 
-    assertEquals(driverControlTester.getEncoderTurnDifferential(), 0.9,1.0);
+    assertEquals(driverControlTester.getEncoderTurnDifferential(), 1.0,0.0);
   }
 
   @Test
-  public void testGetEncoderTurnDifferentialIsNegativeOneWhenIsDriverSlowIsFalseAndTurnRateIsOneAndRightStickIsNegativeOne(){
-    XboxController controller = mock(XboxController.class);
-
+  public void testGetEncoderTurnDifferentialIsNegativeOneWhenIsDriverSlowIsFalseAndTurnRateIsOneAndRightStickIsNegativeOne() {
+  
     when(controller.getX(Hand.kRight)).thenReturn(-1.0);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,1,0,0);
 
-    assertEquals(driverControlTester.getEncoderTurnDifferential(), -1.0,-0.9);
+    assertEquals(driverControlTester.getEncoderTurnDifferential(), -1.0,0.0);
   }
 
   @Test
-  public void testGetEncoderTurnDifferentialIsZeroWhenIsDriverSlowIsFalseAndTurnRateIsOneHalfAndRightStickIsZero(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderTurnDifferentialIsZeroWhenIsDriverSlowIsFalseAndTurnRateIsOneHalfAndRightStickIsZero() {
 
     when(controller.getX(Hand.kRight)).thenReturn(0.0);
 
@@ -41,57 +47,40 @@ public class DriverControlsTest{
   }
 
   @Test
-  public void testGetEncoderTurnDifferentialIsZeroWhenIsDriverSlowIsTrueAndDriverSlowTurnRateIs1AndRightStickIs1(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderTurnDifferentialIsOneWhenIsDriverSlowIsTrueAndDriverSlowTurnRateIsOneAndRightStickIsOne() {
 
     when(controller.getX(Hand.kRight)).thenReturn(1.0);
     when(controller.getTriggerAxis(Hand.kRight)).thenReturn(0.30);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,1,0,0,0);
 
-    assertEquals(driverControlTester.getEncoderTurnDifferential(), 0.9,1);
+    assertEquals(driverControlTester.getEncoderTurnDifferential(), 1.0,0.0);
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   @Test
-  public void testGetEncoderSpeedIsOneWhenIsDriverSlowIsFalseAndSpeedRateIsOneAndLeftStickIsOne(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderSpeedIsOneWhenIsDriverSlowIsFalseAndSpeedRateIsOneAndLeftStickIsOne() {
 
-    when(controller.getX(Hand.kLeft)).thenReturn(1.0);
+    when(controller.getY(Hand.kLeft)).thenReturn(1.0);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,0,1);
 
-    assertEquals(driverControlTester.getEncoderSpeed(), -1.0,-0.9);
+    assertEquals(driverControlTester.getEncoderSpeed(), -1.0,0.0);
   }
 
   @Test
-  public void testGetEncoderSpeedIsNegativeOneWhenIsDriverSlowIsFalseAndSpeedRateIsOneAndLeftStickIsNegativeOne(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderSpeedIsNegativeOneWhenIsDriverSlowIsFalseAndSpeedRateIsOneAndLeftStickIsNegativeOne() {
 
-    when(controller.getX(Hand.kLeft)).thenReturn(-1.0);
+    when(controller.getY(Hand.kLeft)).thenReturn(-1.0);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,0,1);
 
-    assertEquals(driverControlTester.getEncoderSpeed(), 0.9,1.0);
+    assertEquals(driverControlTester.getEncoderSpeed(), 1.0,0.0);
   }
 
   @Test
-  public void testGetEncoderSpeedIsZeroWhenIsDriverSlowIsFalseAndSpeedRateIsTwoAndLeftStickIsZero(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderSpeedIsZeroWhenIsDriverSlowIsFalseAndSpeedRateIsTwoAndLeftStickIsZero() {
 
-    when(controller.getX(Hand.kRight)).thenReturn(0.0);
+    when(controller.getY(Hand.kLeft)).thenReturn(0.0);
 
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,0,2);
 
@@ -99,14 +88,13 @@ public class DriverControlsTest{
   }
 
   @Test
-  public void testGetEncoderSpeedIsZeroWhenIsDriverSlowIsTrueAndDriverSlowSpeedRateIsOneAndLeftStickIsOne(){
-    XboxController controller = mock(XboxController.class);
+  public void testGetEncoderSpeedIsOneWhenIsDriverSlowIsTrueAndDriverSlowSpeedRateIsOneAndLeftStickIsOne() {
 
-    when(controller.getX(Hand.kRight)).thenReturn(1.0);
+    when(controller.getY(Hand.kLeft)).thenReturn(1.0);
     when(controller.getTriggerAxis(Hand.kRight)).thenReturn(0.30);
 
-    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,1,2);
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,1,0);
 
-    assertEquals(driverControlTester.getEncoderSpeed(), -1.0,-0.9);
+    assertEquals(driverControlTester.getEncoderSpeed(), -1.0,0.0);
   }
 }

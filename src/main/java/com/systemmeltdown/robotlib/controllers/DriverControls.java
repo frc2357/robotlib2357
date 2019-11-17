@@ -10,10 +10,10 @@ import com.systemmeltdown.robotlib.commands.VelocityDrive;
 import com.systemmeltdown.robotlib.triggers.AxisThresholdTrigger;;
 
 public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
-  public final AxisThresholdTrigger slowTrigger;
   double driveStickDeadband;
   double driverTurnProportion;
   double driverSpeedProportion;
+  final double axisThreshold = 0.25;
   int driverEncoderSlowTurnRate;
   int driverEncoderTurnRate;
   int driverEncoderSlowSpeed;
@@ -32,13 +32,18 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
     this.driverEncoderSlowSpeed = driverEncoderSlowSpeed;
     this.driverEncoderSpeed = driverEncoderSpeed;
 
-    slowTrigger = new AxisThresholdTrigger(controller,Hand.kRight,0.25);
   }
+  
+  public boolean isDriverSlow() {
+    double axis = controller.getTriggerAxis(Hand.kRight);
 
+    return axis > axisThreshold;
+  }
+  
   @Override
   public int getEncoderTurnDifferential() {
     double input = Utility.deadband(controller.getX(Hand.kRight),driveStickDeadband);
-    int encoderTurn = RobotTemplate.OI.isDriverSlow() ? driverEncoderSlowTurnRate : driverEncoderTurnRate;
+    int encoderTurn = isDriverSlow() ? driverEncoderSlowTurnRate : driverEncoderTurnRate;
     int turnRate = (int)(input * encoderTurn);
     return turnRate;
   }
@@ -47,7 +52,7 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
   public int getEncoderSpeed() {
 
     double input = Utility.deadband(controller.getY(Hand.kLeft),driveStickDeadband);
-    int encoderSpeed = RobotTemplate.OI.isDriverSlow() ? driverEncoderSlowSpeed : driverEncoderSpeed;
+    int encoderSpeed = isDriverSlow() ? driverEncoderSlowSpeed : driverEncoderSpeed;
     int speed = (int)(-input * encoderSpeed);
     return speed;
   }
