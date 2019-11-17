@@ -10,7 +10,7 @@ public abstract class SkidSteerDriveSubBase extends SubsystemBase {
         if (this.isFailsafeActive()) {
             setDefaultCommand(new DriveProportional());
         } else {
-            //setDefualtCommand(new DriveWithEncoders());
+            setDefaultCommand(new DriveWithEncoders());
         }
     }
 
