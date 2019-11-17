@@ -15,21 +15,22 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
     WPI_TalonSRX m_leftMaster;
     WPI_TalonSRX[] m_rightSlaves;
     WPI_TalonSRX[] m_leftSlaves;
+    int m_timeout;
+    int m_talonPidPrimary;
+    double m_driveMotorDeadband;
+    double m_driveRampSeconds;
 
-    public SingleSpeedTalonDriveSub(WPI_TalonSRX rightMaster, WPI_TalonSRX leftMaster, WPI_TalonSRX[] rightSlaves,
-            WPI_TalonSRX[] leftSlaves) {
+    int m_talonSlotVelocity;
+    int m_talonSlotDistance;
+    int m_talonSlotTurning;
+    PIDValues m_pidDrivePos;
 
-        m_rightMaster = rightMaster;
-        m_leftMaster = leftMaster;
-        m_rightSlaves = rightSlaves;
-        m_leftSlaves = leftSlaves;
+    PIDValues m_pidDriveSpeed;
 
-    }
+    public SingleSpeedTalonDriveSub(int rightMasterID, int leftMasterID, int[] rightSlaveIDS, int[] leftSlaveIDS,
+            int timeout, int talonPidPrimary, double driveMotorDeadband, double driveRampSeconds, int talonSlotVelocity,
+            int talonSlotDistance, int talonSlotTurning, PIDValues pidDrivePos, PIDValues pidDriveSpeed) {
 
-    public SingleSpeedTalonDriveSub(int rightMasterID, int leftMasterID, int[] rightSlaveIDS, int[] leftSlaveIDS) {
-
-        m_rightMaster = new WPI_TalonSRX(rightMasterID);
-        m_leftMaster = new WPI_TalonSRX(leftMasterID);
         ArrayList<WPI_TalonSRX> rightSlaves = new ArrayList<>();
         ArrayList<WPI_TalonSRX> leftSlaves = new ArrayList<>();
 
@@ -37,19 +38,30 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
             rightSlaves.add(new WPI_TalonSRX(id));
         }
 
-        m_rightSlaves = rightSlaves.toArray(m_rightSlaves);
-
         for (int id : leftSlaveIDS) {
             leftSlaves.add(new WPI_TalonSRX(id));
         }
 
+        m_rightMaster = new WPI_TalonSRX(rightMasterID);
+        m_leftMaster = new WPI_TalonSRX(leftMasterID);
+        m_rightSlaves = rightSlaves.toArray(m_rightSlaves);
         m_leftSlaves = leftSlaves.toArray(m_leftSlaves);
+
+        m_timeout = timeout;
+        m_talonPidPrimary = talonPidPrimary;
+        m_driveMotorDeadband = driveMotorDeadband;
+        m_driveRampSeconds = driveRampSeconds;
+
+        m_talonSlotVelocity = talonSlotVelocity;
+        m_talonSlotDistance = talonSlotDistance;
+        m_talonSlotTurning = talonSlotTurning;
+        m_pidDrivePos = pidDrivePos;
+
+        m_pidDriveSpeed = pidDriveSpeed;
 
     }
 
-    public void configure(int timeout, int talonPidPrimary, double driveMotorDeadband, double driveRampSeconds,
-            int talonSlotVelocity, int talonSlotDistance, int talonSlotTurning, PIDValues pidDrivePos,
-            PIDValues pidDriveSpeed) {
+    public void configure() {
 
         m_leftMaster.set(ControlMode.PercentOutput, 0.0);
         m_rightMaster.set(ControlMode.PercentOutput, 0.0);
@@ -65,8 +77,8 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
         m_leftMaster.setNeutralMode(NeutralMode.Brake);
         m_rightMaster.setNeutralMode(NeutralMode.Brake);
 
-        m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, talonPidPrimary, timeout);
-        m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, talonPidPrimary, timeout);
+        m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, m_talonPidPrimary, m_timeout);
+        m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, m_talonPidPrimary, m_timeout);
 
         m_leftMaster.setInverted(false);
         m_leftMaster.setSensorPhase(false);
@@ -87,26 +99,26 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
         m_leftMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
         m_rightMaster.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
 
-        m_leftMaster.configNeutralDeadband(driveMotorDeadband);
-        m_rightMaster.configNeutralDeadband(driveMotorDeadband);
+        m_leftMaster.configNeutralDeadband(m_driveMotorDeadband);
+        m_rightMaster.configNeutralDeadband(m_driveMotorDeadband);
 
-        m_leftMaster.configOpenloopRamp(driveRampSeconds);
-        m_rightMaster.configOpenloopRamp(driveRampSeconds);
+        m_leftMaster.configOpenloopRamp(m_driveRampSeconds);
+        m_rightMaster.configOpenloopRamp(m_driveRampSeconds);
 
-        m_leftMaster.configNominalOutputForward(0, timeout);
-        m_leftMaster.configNominalOutputReverse(0, timeout);
-        m_leftMaster.configPeakOutputReverse(-1.0, timeout);
-        m_leftMaster.configPeakOutputForward(+1.0, timeout);
-        m_rightMaster.configNominalOutputForward(0, timeout);
-        m_rightMaster.configNominalOutputReverse(0, timeout);
-        m_rightMaster.configPeakOutputForward(+1.0, timeout);
-        m_rightMaster.configPeakOutputReverse(-1.0, timeout);
+        m_leftMaster.configNominalOutputForward(0, m_timeout);
+        m_leftMaster.configNominalOutputReverse(0, m_timeout);
+        m_leftMaster.configPeakOutputReverse(-1.0, m_timeout);
+        m_leftMaster.configPeakOutputForward(+1.0, m_timeout);
+        m_rightMaster.configNominalOutputForward(0, m_timeout);
+        m_rightMaster.configNominalOutputReverse(0, m_timeout);
+        m_rightMaster.configPeakOutputForward(+1.0, m_timeout);
+        m_rightMaster.configPeakOutputReverse(-1.0, m_timeout);
 
-        Utility.configTalonPID(m_leftMaster, talonSlotVelocity, pidDriveSpeed);
-        Utility.configTalonPID(m_rightMaster, talonSlotVelocity, pidDriveSpeed);
+        Utility.configTalonPID(m_leftMaster, m_talonSlotVelocity, m_pidDriveSpeed);
+        Utility.configTalonPID(m_rightMaster, m_talonSlotVelocity, m_pidDriveSpeed);
 
-        Utility.configTalonPID(m_rightMaster, talonSlotDistance, pidDrivePos);
-        Utility.configTalonPID(m_leftMaster, talonSlotDistance, pidDrivePos);
+        Utility.configTalonPID(m_rightMaster, m_talonSlotDistance, m_pidDrivePos);
+        Utility.configTalonPID(m_leftMaster, m_talonSlotDistance, m_pidDrivePos);
 
         /**
          * 1ms per loop. PID loop can be slowed down if need be. For example, - if
@@ -116,16 +128,16 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
          */
         int closedLoopTimeMs = 1;
 
-        m_rightMaster.configClosedLoopPeriod(talonSlotDistance, closedLoopTimeMs, timeout);
-        m_rightMaster.configClosedLoopPeriod(talonSlotTurning, closedLoopTimeMs, timeout);
-        m_rightMaster.configClosedLoopPeriod(talonSlotVelocity, closedLoopTimeMs, timeout);
+        m_rightMaster.configClosedLoopPeriod(m_talonSlotDistance, closedLoopTimeMs, m_timeout);
+        m_rightMaster.configClosedLoopPeriod(m_talonSlotTurning, closedLoopTimeMs, m_timeout);
+        m_rightMaster.configClosedLoopPeriod(m_talonSlotVelocity, closedLoopTimeMs, m_timeout);
 
-        resetEncoders(timeout);
+        resetEncoders(m_timeout);
     }
 
-    public void resetEncoders(int timeout) {
-        m_rightMaster.getSensorCollection().setQuadraturePosition(0, timeout);
-        m_leftMaster.getSensorCollection().setQuadraturePosition(0, timeout);
+    public void resetEncoders(int m_timeout) {
+        m_rightMaster.getSensorCollection().setQuadraturePosition(0, m_timeout);
+        m_leftMaster.getSensorCollection().setQuadraturePosition(0, m_timeout);
     }
 
     @Override
@@ -138,5 +150,45 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
         m_rightMaster.set(ControlMode.PercentOutput, speed);
     }
 
-    
+    //Until next PR
+
+    @Override
+    public void PIDDrive(int speed, int turn) {
+    //     if (this.isFailsafeActive()) {
+    //         return;
+    //     }
+
+    //     if (yawPID.isEnabled()) {
+    //         yawPID.disable();
+    //     }
+
+    //     m_leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+    //     m_rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+
+    //     int leftVelocity = speed + turn;
+    //     int rightVelocity = speed - turn;
+
+    //     Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+    //     Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+
+    //     rightMaster.set(ControlMode.Velocity, rightVelocity);
+    //     leftMaster.set(ControlMode.Velocity, leftVelocity);
+    // }
+
+    // public void rotateDegrees(double degrees) {
+    //     if (Robot.getInstance().isFailsafeActive()) {
+    //         return;
+    //     }
+
+    //     double currentYaw = getYaw(false);
+    //     double targetYaw = currentYaw + degrees;
+
+    //     leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+    //     rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+
+    //     yawPID.reset();
+    //     yawPID.setSetpoint(targetYaw);
+    //     yawPID.enable();
+    }
+
 }

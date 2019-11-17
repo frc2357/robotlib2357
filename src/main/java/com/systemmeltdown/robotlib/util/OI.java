@@ -2,7 +2,7 @@ package com.systemmeltdown.robotlib.util;
 
 import com.systemmeltdown.robotlib.controllers.GunnerControls;
 import com.systemmeltdown.robotlib.controllers.DriverControls;
-import com.systemmeltdown.robotlib.commands.ProportionalDrive;
+import com.systemmeltdown.robotlib.controllers.ProportionalDrive;
 
 public class OI implements ProportionalDrive{
 

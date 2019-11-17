@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.systemmeltdown.robotlib.util.RobotTemplate;
 import com.systemmeltdown.robotlib.util.RobotMap;
 import com.systemmeltdown.robotlib.util.Utility;
-import com.systemmeltdown.robotlib.commands.ProportionalDrive;
+import com.systemmeltdown.robotlib.controllers.ProportionalDrive;
 import com.systemmeltdown.robotlib.commands.VelocityDrive;
 import com.systemmeltdown.robotlib.triggers.AxisThresholdTrigger;;
 

@@ -1,23 +1,32 @@
 package com.systemmeltdown.robotlib.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import com.systemmeltdown.robotlib.commands.DriveProportional;
+import com.systemmeltdown.robotlib.commands.DriveWithEncoders;
 
 public abstract class SkidSteerDriveSubBase extends SubsystemBase {
 
-    
-
     @Override
     public void initDefaultCommand() {
-        if(this.isFailsafeActive()) {
-            setDefaultCommand(splitArcadeDrive);
+        if (this.isFailsafeActive()) {
+            setDefaultCommand(new DriveProportional());
+        } else {
+            //setDefualtCommand(new DriveWithEncoders());
         }
     }
 
-    abstract void tankDrive(double leftSpeed, double rightSpeed);
+    abstract void setLeftSpeed(double speed);
 
+    abstract void setRightSpeed(double speed);
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+
+        setLeftSpeed(leftSpeed);
+        setRightSpeed(rightSpeed);
+    }
+    //Override me!
+    public void PIDDrive(int speed, int turn) {
+
+    }
+
+    
 }

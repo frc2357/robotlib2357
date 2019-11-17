@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlib.commands;
+package com.systemmeltdown.robotlib.controllers;
 
 /**
  * A proportional drive control.

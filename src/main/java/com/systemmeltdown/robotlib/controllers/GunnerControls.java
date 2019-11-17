@@ -3,7 +3,7 @@ package com.systemmeltdown.robotlib.controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.systemmeltdown.robotlib.util.Utility;
-import com.systemmeltdown.robotlib.commands.ProportionalDrive;
+import com.systemmeltdown.robotlib.controllers.ProportionalDrive;
 import com.systemmeltdown.robotlib.commands.VelocityDrive;
 
 public class GunnerControls extends Controls
