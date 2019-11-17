@@ -7,13 +7,11 @@
 
 
 
-package common;
+package com.systemmeltdown.robotlib.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import common.Utility;
-import common.DriveSub;
-import common.OI;
-import common.RobotTemplate;
+import com.systemmeltdown.robotlib.util.Utility;
+import com.systemmeltdown.robotlib.util.RobotTemplate;
 
 public class DriveProportional extends Command {
   public DriveProportional() {
@@ -52,7 +50,7 @@ public class DriveProportional extends Command {
       leftSpeed *= (1 + trim);
     }
 
-    common.RobotTemplate.DRIVE_SUB.tankDrive(leftSpeed, rightSpeed);
+    com.systemmeltdown.robotlib.util.RobotTemplate.DRIVE_SUB.tankDrive(leftSpeed, rightSpeed);
   }
 
   @Override

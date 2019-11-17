@@ -21,7 +21,6 @@ public class DPadTriggerTest {
 		assertEquals(Dpad.get(), true);
 
 		Dpad.close();
-		
 	}
 
 	@Test
