@@ -18,7 +18,7 @@ public class AxisThresholdTrigger extends Trigger {
   @Override
   public boolean get() {
     double axis = controller.getTriggerAxis(hand);
-
+    
     return (axis > triggerThreshold);
   }
 }
