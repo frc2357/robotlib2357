@@ -16,6 +16,8 @@ public class DriverControlsTest{
     controller = mock(XboxController.class);
   }
 
+  //getEncoderTurnDifferential tests
+
   @Test
   public void testGetEncoderTurnDifferentialIsOneWhenIsDriverSlowIsFalseAndTurnRateIsOneAndRightStickIsOne() {
 
@@ -37,11 +39,11 @@ public class DriverControlsTest{
   }
 
   @Test
-  public void testGetEncoderTurnDifferentialIsZeroWhenIsDriverSlowIsFalseAndTurnRateIsOneHalfAndRightStickIsZero() {
+  public void testGetEncoderTurnDifferentialIsZeroWhenIsDriverSlowIsFalseAndTurnRateIsTwoAndRightStickIsZero() {
 
     when(controller.getX(Hand.kRight)).thenReturn(0.0);
 
-    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,1,0,0);
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,2,0,0);
 
     assertEquals(driverControlTester.getEncoderTurnDifferential(), 0.0,0.0);
   }
@@ -56,6 +58,8 @@ public class DriverControlsTest{
 
     assertEquals(driverControlTester.getEncoderTurnDifferential(), 1.0,0.0);
   }
+
+  //getEncoderSpeed tests
 
   @Test
   public void testGetEncoderSpeedIsOneWhenIsDriverSlowIsFalseAndSpeedRateIsOneAndLeftStickIsOne() {
@@ -96,5 +100,69 @@ public class DriverControlsTest{
     DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.0,0,0,1,0);
 
     assertEquals(driverControlTester.getEncoderSpeed(), -1.0,0.0);
+  }
+
+  //getProportionalTurn tests
+
+  @Test
+  public void testGetProportionalTurnIsOneWhenTurnProportionIsOneAndRightStickIsOne() {
+
+    when(controller.getX(Hand.kRight)).thenReturn(1.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,1.0,0,0,0,0,0);
+
+    assertEquals(driverControlTester.getProportionalTurn(), 1.0,0.0);
+  }
+
+  @Test
+  public void testGetProportionalTurnIsNegativeOneWhenTurnProportionIsOneAndRightStickIsNegativeOne() {
+  
+    when(controller.getX(Hand.kRight)).thenReturn(-1.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,1.0,0.0,0,0,0,0);
+
+    assertEquals(driverControlTester.getProportionalTurn(), -1.0,0.0);
+  }
+
+  @Test
+  public void testGetProportionalTurnIsZeroWhenTurnProportionIsOneHalfAndRightStickIsZero() {
+
+    when(controller.getX(Hand.kRight)).thenReturn(0.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.5,0.0,0,1,0,0);
+
+    assertEquals(driverControlTester.getProportionalTurn(), 0.0,0.0);
+  }
+
+  //getProportionalSpeed tests
+
+  @Test
+  public void testGetProportionalSpeedIsNegativeOneWhenSpeedProportionIsOneAndLeftStickIsOne() {
+
+    when(controller.getY(Hand.kLeft)).thenReturn(1.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,1.0,0,0,0,0);
+
+    assertEquals(driverControlTester.getProportionalSpeed(), -1.0,0.0);
+  }
+
+  @Test
+  public void testGetProportionalSpeedIsOneWhenSpeedRateIsOneAndLeftStickIsNegativeOne() {
+
+    when(controller.getY(Hand.kLeft)).thenReturn(-1.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,1.0,0,0,0,0);
+
+    assertEquals(driverControlTester.getProportionalSpeed(), 1.0,0.0);
+  }
+
+  @Test
+  public void testGetEncoderSpeedIsZeroWhenIsDriverSlowIsFalseAndSpeedRateIsOneHalfAndLeftStickIsZero() {
+
+    when(controller.getY(Hand.kLeft)).thenReturn(0.0);
+
+    DriverControls driverControlTester = new DriverControls(controller,0.0,0.0,0.5,0,0,0,0);
+
+    assertEquals(driverControlTester.getProportionalSpeed(), 0.0,0.0);
   }
 }

@@ -2,12 +2,9 @@ package com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import com.systemmeltdown.robotlib.util.RobotTemplate;
-import com.systemmeltdown.robotlib.util.RobotMap;
 import com.systemmeltdown.robotlib.util.Utility;
 import com.systemmeltdown.robotlib.commands.ProportionalDrive;
 import com.systemmeltdown.robotlib.commands.VelocityDrive;
-import com.systemmeltdown.robotlib.triggers.AxisThresholdTrigger;;
 
 public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
   double driveStickDeadband;
