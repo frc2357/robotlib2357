@@ -6,14 +6,15 @@ import com.systemmeltdown.robotlib.commands.ProportionalDrive;
 
 public class OI implements ProportionalDrive{
 
+    private boolean driverSlow;
 
     private DriverControls driverControls;
     private GunnerControls gunnerControls;
     private int lastEncoderSpeed;
       
-    public OI(DriverControls driverControls){
+    public OI(){
         this.lastEncoderSpeed = 0;
-        this.driverControls = driverControls;
+        this.driverSlow = false;
     }
 
     public double getProportionalSpeed() {
@@ -39,7 +40,7 @@ public class OI implements ProportionalDrive{
         return turn;
       }
       public boolean isDriverSlow() {
-        return driverControls.isDriverSlow();
+        return driverSlow;
       }
 
       public boolean isGunnerDriving() {
