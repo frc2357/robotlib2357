@@ -32,7 +32,6 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
     this.driverEncoderSpeed = driverEncoderSpeed;
 
     slowTrigger = new AxisThresholdTrigger(controller,Hand.kRight,0.25);
-
   }
   
   @Override
@@ -45,7 +44,6 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
 
   @Override
   public int getEncoderSpeed() {
-
     double input = Utility.deadband(controller.getY(Hand.kLeft),driveStickDeadband);
     int encoderSpeed = slowTrigger.get() ? driverEncoderSlowSpeed : driverEncoderSpeed;
     int speed = (int)(-input * encoderSpeed);
