@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.buttons.Trigger;
 /**
  * A Shuffleboard toggle button trigger.
  *
- * This keeps track of when the button state changes for
- * events that should trigger on an edge.
+ * This keeps track of when the button state changes for events that should
+ * trigger on an edge.
  */
 public class ToggleTrigger extends Trigger {
   private NetworkTableEntry entry;

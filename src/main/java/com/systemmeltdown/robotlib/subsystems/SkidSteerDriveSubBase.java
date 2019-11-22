@@ -10,23 +10,21 @@ public abstract class SkidSteerDriveSubBase extends SubsystemBase {
         if (this.isFailsafeActive()) {
             setDefaultCommand(new DriveProportional());
         } else {
-            //setDefualtCommand(new DriveWithEncoders());
+            // TODO replace with driveWithEncoders
+            setDefaultCommand(new DriveProportional());
         }
     }
 
-    abstract void setLeftSpeed(double speed);
+    protected abstract void setLeftSpeed(double speed);
 
-    abstract void setRightSpeed(double speed);
+    protected abstract void setRightSpeed(double speed);
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
-
         setLeftSpeed(leftSpeed);
         setRightSpeed(rightSpeed);
     }
-    //Override me!
-    public void PIDDrive(int speed, int turn) {
 
-    }
+    // Override me!
+    public abstract void PIDDrive(int speed, int turn);
 
-    
 }

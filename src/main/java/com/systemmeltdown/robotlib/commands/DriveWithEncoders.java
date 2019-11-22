@@ -22,15 +22,17 @@ public class DriveWithEncoders extends Command {
     RobotTemplate.DRIVE_SUB.PIDDrive(speed, turn);
 
     /*
-    System.out.println(
-      "left: " + Robot.DRIVE_SUB.leftMaster.getClosedLoopError() + "|" + ((int)(Robot.DRIVE_SUB.leftMaster.getMotorOutputPercent()*100.0)) +
-      " right: " + Robot.DRIVE_SUB.rightMaster.getClosedLoopError() + "|" + ((int)(Robot.DRIVE_SUB.rightMaster.getMotorOutputPercent()*100.0))
-    );*/
-    
+     * System.out.println( "left: " +
+     * Robot.DRIVE_SUB.leftMaster.getClosedLoopError() + "|" +
+     * ((int)(Robot.DRIVE_SUB.leftMaster.getMotorOutputPercent()*100.0)) +
+     * " right: " + Robot.DRIVE_SUB.rightMaster.getClosedLoopError() + "|" +
+     * ((int)(Robot.DRIVE_SUB.rightMaster.getMotorOutputPercent()*100.0)) );
+     */
+
   }
 
   @Override
   protected boolean isFinished() {
     return false;
   }
-} 
+}

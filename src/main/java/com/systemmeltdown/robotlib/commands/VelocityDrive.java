@@ -8,12 +8,14 @@ package com.systemmeltdown.robotlib.commands;
 public interface VelocityDrive {
   /**
    * Gets a turn value in encocer click differential.
+   * 
    * @return Positive for clockwise, negative for counter-clockwise.
    */
   public int getEncoderTurnDifferential();
 
   /**
    * Gets a desired speed in encoder clicks.
+   * 
    * @return Positive for forward, negative for backward.
    */
   public int getEncoderSpeed();

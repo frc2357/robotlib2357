@@ -6,20 +6,16 @@ import com.systemmeltdown.robotlib.util.Utility;
 import com.systemmeltdown.robotlib.controllers.ProportionalDrive;
 import com.systemmeltdown.robotlib.commands.VelocityDrive;
 
-public class GunnerControls extends Controls
-    implements ProportionalDrive, VelocityDrive {
+public class GunnerControls extends Controls implements ProportionalDrive, VelocityDrive {
   private double TURN_FACTOR;
   private double SPEED_FACTOR;
   private double deadband;
   private int gunnerEncoderSpeed;
   private int gunnerEncoderTurnRate;
-  
-  
-  
 
   public GunnerControls(XboxController controller, double TURN_FACTOR, double SPEED_FACTOR, double deadband,
-  int gunnerEncoderSpeed, int gunnerEncoderTurnRate) {
-    super(controller,0.0);
+      int gunnerEncoderSpeed, int gunnerEncoderTurnRate) {
+    super(controller, 0.0);
     this.TURN_FACTOR = TURN_FACTOR;
     this.SPEED_FACTOR = SPEED_FACTOR;
     this.deadband = deadband;
@@ -40,16 +36,15 @@ public class GunnerControls extends Controls
   @Override
   public int getEncoderTurnDifferential() {
     double input = Utility.deadband(controller.getX(Hand.kRight), deadband);
-    int turnRate = (int)(input * gunnerEncoderTurnRate);
+    int turnRate = (int) (input * gunnerEncoderTurnRate);
     return turnRate;
   }
 
   @Override
   public int getEncoderSpeed() {
     double input = Utility.deadband(controller.getY(Hand.kLeft), deadband);
-    int speed = (int)(-input * gunnerEncoderSpeed);
+    int speed = (int) (-input * gunnerEncoderSpeed);
     return speed;
   }
 
- 
 }

@@ -5,8 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-
-
 package com.systemmeltdown.robotlib.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -37,12 +35,11 @@ public class DriveProportional extends Command {
 
     double trim = 0.0;
 
-    //Does a thing, stick told me to comment it out.
-    /*if (speed > 0) {
-      trim = SettingsTab.getFailsafeTrimForward();
-    } else if (speed < 0) {
-      trim = SettingsTab.getFailsafeTrimReverse();
-    }*/
+    // Does a thing, stick told me to comment it out.
+    /*
+     * if (speed > 0) { trim = SettingsTab.getFailsafeTrimForward(); } else if
+     * (speed < 0) { trim = SettingsTab.getFailsafeTrimReverse(); }
+     */
 
     if (trim > 0) {
       rightSpeed *= (1 - trim);

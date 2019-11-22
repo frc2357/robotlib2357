@@ -13,16 +13,17 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
   public final AxisThresholdTrigger slowTrigger;
 
   public DriverControls(XboxController controller) {
-    super(controller,0.0);
+    super(controller, 0.0);
 
-    slowTrigger = new AxisThresholdTrigger(controller,Hand.kRight,0.25);
+    slowTrigger = new AxisThresholdTrigger(controller, Hand.kRight, 0.25);
   }
 
   @Override
   public int getEncoderTurnDifferential() {
     double input = Utility.deadband(controller.getX(Hand.kRight), RobotMap.DRIVE_STICK_DEADBAND);
-    int encoderTurn = RobotTemplate.OI.isDriverSlow() ? RobotMap.DRIVER_ENCODER_SLOW_TURN_RATE : RobotMap.DRIVER_ENCODER_TURN_RATE;
-    int turnRate = (int)(input * encoderTurn);
+    int encoderTurn = RobotTemplate.OI.isDriverSlow() ? RobotMap.DRIVER_ENCODER_SLOW_TURN_RATE
+        : RobotMap.DRIVER_ENCODER_TURN_RATE;
+    int turnRate = (int) (input * encoderTurn);
     return turnRate;
   }
 
@@ -30,8 +31,9 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
   public int getEncoderSpeed() {
 
     double input = Utility.deadband(controller.getY(Hand.kLeft), RobotMap.DRIVE_STICK_DEADBAND);
-    int encoderSpeed = RobotTemplate.OI.isDriverSlow() ? RobotMap.DRIVER_ENCODER_SLOW_SPEED : RobotMap.DRIVER_ENCODER_SPEED;
-    int speed = (int)(-input * encoderSpeed);
+    int encoderSpeed = RobotTemplate.OI.isDriverSlow() ? RobotMap.DRIVER_ENCODER_SLOW_SPEED
+        : RobotMap.DRIVER_ENCODER_SPEED;
+    int speed = (int) (-input * encoderSpeed);
     return speed;
   }
 
@@ -42,6 +44,6 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
 
   @Override
   public double getProportionalSpeed() {
-    return - (controller.getY(Hand.kLeft) * RobotMap.DRIVER_SPEED_PROPORTION);
+    return -(controller.getY(Hand.kLeft) * RobotMap.DRIVER_SPEED_PROPORTION);
   }
 }

@@ -31,21 +31,18 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
             int timeout, int talonPidPrimary, double driveMotorDeadband, double driveRampSeconds, int talonSlotVelocity,
             int talonSlotDistance, int talonSlotTurning, PIDValues pidDrivePos, PIDValues pidDriveSpeed) {
 
-        ArrayList<WPI_TalonSRX> rightSlaves = new ArrayList<>();
-        ArrayList<WPI_TalonSRX> leftSlaves = new ArrayList<>();
-
-        for (int id : rightSlaveIDS) {
-            rightSlaves.add(new WPI_TalonSRX(id));
+        m_rightSlaves = new WPI_TalonSRX[rightSlaveIDS.length];
+        for (int i = 0; i < rightSlaveIDS.length; i++) {
+            m_rightSlaves[i] = new WPI_TalonSRX(rightSlaveIDS[i]);
         }
 
-        for (int id : leftSlaveIDS) {
-            leftSlaves.add(new WPI_TalonSRX(id));
+        m_leftSlaves = new WPI_TalonSRX[leftSlaveIDS.length];
+        for (int i = 0; i < leftSlaveIDS.length; i++) {
+            m_leftSlaves[i] = new WPI_TalonSRX(leftSlaveIDS[i]);
         }
 
         m_rightMaster = new WPI_TalonSRX(rightMasterID);
         m_leftMaster = new WPI_TalonSRX(leftMasterID);
-        m_rightSlaves = rightSlaves.toArray(m_rightSlaves);
-        m_leftSlaves = leftSlaves.toArray(m_leftSlaves);
 
         m_timeout = timeout;
         m_talonPidPrimary = talonPidPrimary;
@@ -150,45 +147,51 @@ public class SingleSpeedTalonDriveSub extends SkidSteerDriveSubBase {
         m_rightMaster.set(ControlMode.PercentOutput, speed);
     }
 
-    //Until next PR
+    // Until next PR
 
     @Override
     public void PIDDrive(int speed, int turn) {
-    //     if (this.isFailsafeActive()) {
-    //         return;
-    //     }
+        // if (this.isFailsafeActive()) {
+        // return;
+        // }
 
-    //     if (yawPID.isEnabled()) {
-    //         yawPID.disable();
-    //     }
+        // if (yawPID.isEnabled()) {
+        // yawPID.disable();
+        // }
 
-    //     m_leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
-    //     m_rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+        // m_leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY,
+        // RobotMap.TALON_PID_PRIMARY);
+        // m_rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY,
+        // RobotMap.TALON_PID_PRIMARY);
 
-    //     int leftVelocity = speed + turn;
-    //     int rightVelocity = speed - turn;
+        // int leftVelocity = speed + turn;
+        // int rightVelocity = speed - turn;
 
-    //     Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
-    //     Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY, RobotMap.MAX_ENCODER_VELOCITY);
+        // Utility.clamp(leftVelocity, -RobotMap.MAX_ENCODER_VELOCITY,
+        // RobotMap.MAX_ENCODER_VELOCITY);
+        // Utility.clamp(rightVelocity, -RobotMap.MAX_ENCODER_VELOCITY,
+        // RobotMap.MAX_ENCODER_VELOCITY);
 
-    //     rightMaster.set(ControlMode.Velocity, rightVelocity);
-    //     leftMaster.set(ControlMode.Velocity, leftVelocity);
-    // }
+        // rightMaster.set(ControlMode.Velocity, rightVelocity);
+        // leftMaster.set(ControlMode.Velocity, leftVelocity);
+        // }
 
-    // public void rotateDegrees(double degrees) {
-    //     if (Robot.getInstance().isFailsafeActive()) {
-    //         return;
-    //     }
+        // public void rotateDegrees(double degrees) {
+        // if (Robot.getInstance().isFailsafeActive()) {
+        // return;
+        // }
 
-    //     double currentYaw = getYaw(false);
-    //     double targetYaw = currentYaw + degrees;
+        // double currentYaw = getYaw(false);
+        // double targetYaw = currentYaw + degrees;
 
-    //     leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
-    //     rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY, RobotMap.TALON_PID_PRIMARY);
+        // leftMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY,
+        // RobotMap.TALON_PID_PRIMARY);
+        // rightMaster.selectProfileSlot(RobotMap.TALON_SLOT_VELOCITY,
+        // RobotMap.TALON_PID_PRIMARY);
 
-    //     yawPID.reset();
-    //     yawPID.setSetpoint(targetYaw);
-    //     yawPID.enable();
+        // yawPID.reset();
+        // yawPID.setSetpoint(targetYaw);
+        // yawPID.enable();
     }
 
 }
