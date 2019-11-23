@@ -3,11 +3,9 @@ package com.systemmeltdown.robotlib.controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.systemmeltdown.robotlib.util.Utility;
-import com.systemmeltdown.robotlib.commands.ProportionalDrive;
-import com.systemmeltdown.robotlib.commands.VelocityDrive;
 import com.systemmeltdown.robotlib.triggers.AxisThresholdTrigger;
 
-public class DriverControls extends Controls implements ProportionalDrive, VelocityDrive {
+public class DriverControls extends Controls {
   public final AxisThresholdTrigger slowTrigger;
   double driveStickDeadband;
   double driverTurnProportion;
@@ -34,7 +32,6 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
     slowTrigger = new AxisThresholdTrigger(controller, Hand.kRight, 0.25);
   }
 
-  @Override
   public int getEncoderTurnDifferential() {
     double input = Utility.deadband(controller.getX(Hand.kRight), driveStickDeadband);
     int encoderTurn = slowTrigger.get() ? driverEncoderSlowTurnRate : driverEncoderTurnRate;
@@ -42,7 +39,6 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
     return turnRate;
   }
 
-  @Override
   public int getEncoderSpeed() {
     double input = Utility.deadband(controller.getY(Hand.kLeft), driveStickDeadband);
     int encoderSpeed = slowTrigger.get() ? driverEncoderSlowSpeed : driverEncoderSpeed;
@@ -50,12 +46,10 @@ public class DriverControls extends Controls implements ProportionalDrive, Veloc
     return speed;
   }
 
-  @Override
   public double getProportionalTurn() {
     return controller.getX(Hand.kRight) * driverTurnProportion;
   }
 
-  @Override
   public double getProportionalSpeed() {
     return -(controller.getY(Hand.kLeft) * driverSpeedProportion);
   }

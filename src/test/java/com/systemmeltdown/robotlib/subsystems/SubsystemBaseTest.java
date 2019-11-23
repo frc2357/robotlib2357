@@ -1,6 +1,7 @@
 package com.systemmeltdown.robotlib.subsystems;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -36,7 +37,8 @@ public class SubsystemBaseTest {
 		subBase.close();
 	}
 
-	private class TestSubsystem extends SubsystemBase{
+	@Ignore
+	public static class TestSubsystem extends SubsystemBase {
 		@Override
 		public void initDefaultCommand(){
 		}

@@ -3,10 +3,8 @@ package com.systemmeltdown.robotlib.controllers;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.systemmeltdown.robotlib.util.Utility;
-import com.systemmeltdown.robotlib.commands.ProportionalDrive;
-import com.systemmeltdown.robotlib.commands.VelocityDrive;
 
-public class GunnerControls extends Controls implements ProportionalDrive, VelocityDrive {
+public class GunnerControls extends Controls {
   private double TURN_FACTOR;
   private double SPEED_FACTOR;
   private double deadband;
@@ -23,24 +21,20 @@ public class GunnerControls extends Controls implements ProportionalDrive, Veloc
     this.gunnerEncoderTurnRate = gunnerEncoderTurnRate;
   }
 
-  @Override
   public double getProportionalTurn() {
     return controller.getX(Hand.kRight) * TURN_FACTOR;
   }
 
-  @Override
   public double getProportionalSpeed() {
     return -(controller.getY(Hand.kLeft) * SPEED_FACTOR);
   }
 
-  @Override
   public int getEncoderTurnDifferential() {
     double input = Utility.deadband(controller.getX(Hand.kRight), deadband);
     int turnRate = (int) (input * gunnerEncoderTurnRate);
     return turnRate;
   }
 
-  @Override
   public int getEncoderSpeed() {
     double input = Utility.deadband(controller.getY(Hand.kLeft), deadband);
     int speed = (int) (-input * gunnerEncoderSpeed);
