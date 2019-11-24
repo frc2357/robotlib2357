@@ -43,7 +43,7 @@ public class UtilityTest{
     @Test
     public void testGetAverageReturnsFiveWithTenElementArrayFromOneToTen(){
         int[] samples = {1,2,3,4,5,6,7,8,9,10};
-
+        
         assertEquals(Utility.getAverage(samples), 5, 0);
     }
 
