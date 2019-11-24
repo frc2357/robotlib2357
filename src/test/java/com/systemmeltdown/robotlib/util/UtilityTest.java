@@ -5,37 +5,37 @@ import static org.junit.Assert.*;
 
 public class UtilityTest{
 
-    //double clamp tests
+    //Double Clamp Tests
 
     @Test
-    public void testDoubleClampReturnsThreeAndTwoTenthsWhenMinIsNegativeFiveAndAHalfAndMaxIsFiveAndAHalfAndInputIsThreeAndTwoTenths(){
+    public void testDoubleClampReturnsInputWhenInputIsBetweenMinAndMax(){
         assertEquals(Utility.clamp(3.2,-5.5,5.5), 3.2, 0.0);
     }
 
     @Test
-    public void testDoubleClampReturnsNegativeFiveAndAHalfWhenMinIsNegativeFiveAndAHalfAndMaxIsFiveAndAHalfAndInputIsNegativeSevenAndAHalf(){
+    public void testDoubleClampReturnsMinWhenImputIsLessThanMin(){
         assertEquals(Utility.clamp(-7.5,-5.5,5.5), -5.5, 0.0);
     }
 
     @Test
-    public void testDoubleClampReturnsFiveAndAHalfWhenMinIsNegativeFiveAndAHalfAndMaxIsFiveAndAHalfAndInputIsEightAndTwoTenths(){
+    public void testDoubleClampReturnsMaxWhenInputIsGreaterThanMax(){
         assertEquals(Utility.clamp(8.2,-5.5,5.5), 5.5, 0.0);
     }
 
     //int clamp tests
 
     @Test
-    public void testIntClampReturnsThreeWhenMinIsNegativeFiveAndMaxIsFiveAndInputIsThree(){
+    public void testIntClampReturnsInputWhenInputIsBetweenMinAndMax(){
         assertEquals(Utility.clamp(3,-5,5), 3, 0);
     }
 
     @Test
-    public void testIntClampReturnsNegativeFiveWhenMinIsNegativeFiveAndMaxIsFiveAndInputIsNegativeSeven(){
+    public void testIntClampReturnsMinWhenInputIsLessThanMin(){
         assertEquals(Utility.clamp(-7,-5,5), -5, 0);
     }
 
     @Test
-    public void testIntClampReturnsFiveWhenMinIsNegativeFiveAndMaxIsFiveAndInputIsEight(){
+    public void testIntClampReturnsMaxWhenInputIsGreaterThanMax(){
         assertEquals(Utility.clamp(8,-5,5), 5, 0);
     }
 
@@ -50,17 +50,17 @@ public class UtilityTest{
     //Deadband Tests
 
     @Test
-    public void testDeadbandReturnsOneWhenInputIsOneAndDeadbandIsOneHalf(){
+    public void testDeadbandReturnsInputWhenInputIsLessThanDeadband(){
         assertEquals(Utility.deadband(1.0,0.5), 0.9, 1.0);
     }
 
     @Test 
-    public void testDeadbandReturnsZeroWhenInputIsOneHalfAndDeadbandIsOne(){
+    public void testDeadbandReturnsZeroWhenInputIsGreaterThanDeadband(){
         assertEquals(Utility.deadband(0.5,1.0), 0.0, 0.0);
     }
 
     @Test
-    public void testDeadbandReturnsNegativeOneWhenInputIsNegativeOneAndDeadbandIsOneHalf(){
+    public void testDeadbandReturnsInputWhenABSOfNegativeInputIsLessThanDeadband(){
         assertEquals(Utility.deadband(-1.0,0.5), -1.0, -0.9);
     }
 }
