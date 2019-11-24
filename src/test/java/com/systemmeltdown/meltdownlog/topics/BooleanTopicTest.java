@@ -1,0 +1,32 @@
+package com.systemmeltdown.meltdownlog.topics;
+
+import com.systemmeltdown.meltdownlog.lib.LogEntryWriter;
+
+import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+
+public class BooleanTopicTest {
+	@Test
+	public void testLog() {
+		final LogEntryWriter writer = Mockito.mock(LogEntryWriter.class);
+		final BooleanTopic topic = new BooleanTopic("boolean-topic");
+		final long nanos = System.nanoTime();
+		topic.addSubscriber(writer);
+
+		topic.log(false, nanos + 0);
+		topic.log(true, nanos + 100);
+		topic.log(true, nanos + 200);
+		topic.log(true, nanos + 300);
+		topic.log(false, nanos + 400);
+		topic.log(false, nanos + 500);
+		topic.log(false, nanos + 600);
+		topic.log(true, nanos + 700);
+
+		InOrder inOrder = Mockito.inOrder(writer);
+		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 0);
+		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 100);
+		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 400);
+		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 700);
+	}
+}
