@@ -40,6 +40,10 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 	private int m_maxSpeedClicksPerSecond = 0;
 	private boolean m_ClosedLoopEnabled = true;
 
+	public int getClicksPerInch() {
+		return m_clicksPerInch;
+	}
+
 	public void configure(Map<String, Object> config) {
 		m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
 		m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
