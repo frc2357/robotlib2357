@@ -70,8 +70,10 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     protected void initDefaultCommand() {
         if (isFailsafeActive()) {
             // TODO: make DriveProportional command
+            // setDefaultCommand(new DriveProportional());
         } else {
             // TODO: make DriveWithEncoders command
+            // setDefaultCommand(new DriveWithEncoders());
         }
     }
 
