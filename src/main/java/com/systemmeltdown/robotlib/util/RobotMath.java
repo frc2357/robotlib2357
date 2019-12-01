@@ -27,9 +27,10 @@ package com.systemmeltdown.robotlib.util;
 	 * @param wheelbaseWidthInches The width between the centers of the wheels.
 	 * @return The differential in inches for the desired angle.
 	 */
+	 //Switched asignment fractionalRotation from 360 / degrees to degrees / 360.
 	 public static double turnDegreesToInches(double degrees, double wheelbaseWidthInches) {
 		 double circumferenceInches = Math.PI * wheelbaseWidthInches;
-		 double fractionalRotation = 360 / degrees;
+		 double fractionalRotation = degrees / 360;
 		 double turnDistanceInches = circumferenceInches * fractionalRotation;
 		 return turnDistanceInches;
 	 }
@@ -42,9 +43,10 @@ package com.systemmeltdown.robotlib.util;
 	  * @param wheelbaseWidthInches
 	  * @return
 	  */
+	 //Switched asignment fractionalRotation from circumferenceInches / inches to inches / circumference inches. 
 	 public static double turnInchesToDegrees(double inches, double wheelbaseWidthInches) {
 		 double circumferenceInches = Math.PI * wheelbaseWidthInches;
-		 double fractionalRotation = circumferenceInches / inches;
+		 double fractionalRotation = inches / circumferenceInches;
 		 double degrees = fractionalRotation * 360;
 		 return degrees;
 	 }
