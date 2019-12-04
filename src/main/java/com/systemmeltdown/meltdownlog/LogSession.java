@@ -18,11 +18,11 @@ public abstract class LogSession implements NanoTimeReference {
 		m_topicRegistry = topicRegistry;
 	}
 
-	public boolean addTopicOutput(final LogOutput output, final String topicName) {
-		return addTopicOutput(output, topicName, System.nanoTime());
+	public boolean subscribeTopic(final LogOutput output, final String topicName) {
+		return subscribeTopic(output, topicName, System.nanoTime());
 	}
 
-	protected boolean addTopicOutput(final LogOutput output, final String topicName, final long nanos) {
+	protected boolean subscribeTopic(final LogOutput output, final String topicName, final long nanos) {
 		final LogTopic topic = m_topicRegistry.getTopic(topicName);
 
 		if (topic == null) {
@@ -34,11 +34,11 @@ public abstract class LogSession implements NanoTimeReference {
 		return true;
 	}
 
-	public boolean removeTopicOutput(final LogOutput output, final String topicName) {
-		return removeTopicOutput(output, topicName, System.nanoTime());
+	public boolean unsubscribeTopic(final LogOutput output, final String topicName) {
+		return unsubscribeTopic(output, topicName, System.nanoTime());
 	}
 
-	protected boolean removeTopicOutput(final LogOutput output, final String topicName, final long nanos) {
+	protected boolean unsubscribeTopic(final LogOutput output, final String topicName, final long nanos) {
 		final LogTopic topic = m_topicRegistry.getTopic(topicName);
 
 		if (topic == null) {
@@ -73,6 +73,7 @@ public abstract class LogSession implements NanoTimeReference {
 		}
 
 		m_startNanos = nanos;
+		onStart();
 	}
 
 	public void stop() {
@@ -86,5 +87,16 @@ public abstract class LogSession implements NanoTimeReference {
 		}
 
 		m_stopNanos = nanos;
+		onStop();
 	}
+
+	/**
+	 * Called when this session is started.
+	 */
+	protected abstract void onStart();
+
+	/**
+	 * Called when this session is stopped.
+	 */
+	protected abstract void onStop();
 }
