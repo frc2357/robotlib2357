@@ -1,6 +1,6 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
-import com.systemmeltdown.meltdownlog.lib.Utils;
+import com.systemmeltdown.robotlog.lib.Utils;
 
 public class DoubleTopic extends LogTopic {
 	private double m_roundingFactor;

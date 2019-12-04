@@ -1,4 +1,4 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
 public class BooleanTopic extends LogTopic {
 	private boolean m_lastValue = false;

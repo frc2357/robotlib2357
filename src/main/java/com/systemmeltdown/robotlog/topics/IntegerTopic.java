@@ -1,6 +1,6 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
-import com.systemmeltdown.meltdownlog.lib.Utils;
+import com.systemmeltdown.robotlog.lib.Utils;
 
 /**
  * Logs integers as a data topic.

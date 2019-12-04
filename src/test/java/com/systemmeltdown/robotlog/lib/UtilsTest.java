@@ -1,4 +1,4 @@
-package com.systemmeltdown.meltdownlog.lib;
+package com.systemmeltdown.robotlog.lib;
 
 import org.junit.Test;
 import org.junit.Assert;

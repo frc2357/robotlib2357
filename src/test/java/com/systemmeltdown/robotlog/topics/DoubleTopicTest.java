@@ -1,6 +1,6 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
-import com.systemmeltdown.meltdownlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.lib.LogEntryWriter;
 
 import org.junit.Test;
 import org.mockito.InOrder;
