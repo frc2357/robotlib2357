@@ -81,7 +81,7 @@ public class CompetitionLogSession extends LogSession {
 	// Write to files in /home/lvuser/logs/competition-log-##.zip
 	LogOutput logFile = new FileLogOutput(this, "~/logs", "competition-log-");
 
-	public void onStart() {
+	protected void onStart() {
 		subscribeTopic("drive-error", stdErr);
 
 		subscribeTopic("drive-status", stdOut);
