@@ -1,4 +1,4 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
 import org.junit.Test;
 import org.mockito.Mockito;

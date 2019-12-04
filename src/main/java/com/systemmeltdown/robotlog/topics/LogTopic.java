@@ -1,9 +1,9 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.systemmeltdown.meltdownlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.lib.LogEntryWriter;
 
 /**
  * Represents a single logging topic.

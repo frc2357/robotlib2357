@@ -1,4 +1,4 @@
-package com.systemmeltdown.meltdownlog.topics;
+package com.systemmeltdown.robotlog.topics;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 
-import com.systemmeltdown.meltdownlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.lib.LogEntryWriter;
 
 public class LogTopicTest {
 	@Ignore
