@@ -27,7 +27,7 @@ public class LogTopicRegistry {
 	 * This constructor is intentionally not public to restrict creation of registries
 	 * to within this package.
 	 */
-	protected LogTopicRegistry() {
+	LogTopicRegistry() {
 		m_topics = new HashMap<String, LogTopic>();
 	}
 
@@ -49,7 +49,7 @@ public class LogTopicRegistry {
 	 * @param topic The topic to be added
 	 * @throws RuntimeException If a topic by the same name already exists.
 	 */
-	protected void addTopic(final LogTopic topic) {
+	void addTopic(final LogTopic topic) {
 		if (m_topics.get(topic.getName()) != null) {
 			// This is one of the few times we want to throw an exception in robot code.
 			// These exceptions should always happen when subsystems are created so they should be "fail fast" 
