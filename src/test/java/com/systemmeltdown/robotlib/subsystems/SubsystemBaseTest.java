@@ -1,47 +1,59 @@
 package com.systemmeltdown.robotlib.subsystems;
 
 import org.junit.Test;
+
+import edu.wpi.first.wpilibj.command.Subsystem;
+
 import org.junit.Ignore;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class SubsystemBaseTest {
 	@Test
-	public void testSetFailsafeActive() {
-		SubsystemBase subBase = new TestSubsystem();
+	public void testSetFailsafeIsActiveWhenSetToTrue() {
+		TestSubsystem testSub = new TestSubsystem();
 
-		subBase.setFailsafeActive(true);
+		testSub.setFailsafeActive(true);
     
-		assertEquals(subBase.isFailsafeActive(), true );
+		assertEquals(testSub.isFailsafeActive(), true );
 
-		subBase.close();
+		testSub.close();
 	}
 
 	@Test
-	public void testSetFailsafeNotActive() {
-		SubsystemBase subBase = new TestSubsystem();
+	public void testSetFailsafeIsNotActiveWhenSetToFalse() {
+		TestSubsystem testSub = new TestSubsystem();
 
-		subBase.setFailsafeActive(false);
+		testSub.setFailsafeActive(false);
     
-		assertEquals(subBase.isFailsafeActive(), false );
+		assertEquals(testSub.isFailsafeActive(), false );
 
-		subBase.close();
+		testSub.close();
 	}
 
 	@Test
-	public void testIsFailsafeActive() {
-        SubsystemBase subBase = mock(SubsystemBase.class);
-        
-		assertEquals( subBase.isFailsafeActive(), false );
+	public void testIsFailsafeIsNotActiveByDeefault() {
+		TestSubsystem testSub = new TestSubsystem();
 
-		subBase.close();
+		assertEquals( testSub.isFailsafeActive(), false );
+
+		testSub.close();
 	}
 
 	@Ignore
-	public static class TestSubsystem extends SubsystemBase {
+	public static class TestSubsystem extends Subsystem implements Fallible {
+		private boolean failsafeActive = false;
 		@Override
 		public void initDefaultCommand(){
 		}
+
+		@Override
+		public boolean isFailsafeActive() {
+			return this.failsafeActive;
+		}
+	
+		@Override
+		public void setFailsafeActive(boolean failsafeActive) {
+			this.failsafeActive = failsafeActive;
+		}
 	}
 }
-
