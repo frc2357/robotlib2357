@@ -1,4 +1,4 @@
-package com.systemmeltdown.meltdownlog;
+package com.systemmeltdown.robotlog;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -8,10 +8,10 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.systemmeltdown.meltdownlog.outputs.LogOutput;
-import com.systemmeltdown.meltdownlog.topics.LogTopic;
-import com.systemmeltdown.meltdownlog.topics.LogTopicRegistry;
-import com.systemmeltdown.meltdownlog.topics.LogTopicRegistryTest;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
+import com.systemmeltdown.robotlog.topics.LogTopic;
+import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
+import com.systemmeltdown.robotlog.topics.LogTopicRegistryTest;
 
 public class LogSessionTest {
 	@Ignore

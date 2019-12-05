@@ -1,7 +1,7 @@
-package com.systemmeltdown.meltdownlog.outputs;
+package com.systemmeltdown.robotlog.outputs;
 
-import com.systemmeltdown.meltdownlog.lib.LogEntryWriter;
-import com.systemmeltdown.meltdownlog.lib.NanoTimeReference;
+import com.systemmeltdown.robotlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.lib.NanoTimeReference;
 
 /**
  * Base class for any type of logging output

@@ -1,9 +1,9 @@
-package com.systemmeltdown.meltdownlog;
+package com.systemmeltdown.robotlog;
 
-import com.systemmeltdown.meltdownlog.lib.NanoTimeReference;
-import com.systemmeltdown.meltdownlog.outputs.LogOutput;
-import com.systemmeltdown.meltdownlog.topics.LogTopic;
-import com.systemmeltdown.meltdownlog.topics.LogTopicRegistry;
+import com.systemmeltdown.robotlog.lib.NanoTimeReference;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
+import com.systemmeltdown.robotlog.topics.LogTopic;
+import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
 
 /**
  * Represents a time-based session of logging. Each session is pre-configured
