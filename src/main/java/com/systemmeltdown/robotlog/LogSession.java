@@ -14,6 +14,10 @@ public abstract class LogSession implements NanoTimeReference {
 	protected long m_startNanos = Long.MIN_VALUE;
 	protected long m_stopNanos = Long.MIN_VALUE;
 
+	public LogSession() {
+		this(LogTopicRegistry.getInstance());
+	}
+
 	public LogSession(final LogTopicRegistry topicRegistry) {
 		m_topicRegistry = topicRegistry;
 	}
