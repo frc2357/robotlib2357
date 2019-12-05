@@ -116,6 +116,11 @@ public abstract class LogTopic {
 	 *              via System.nanoTime())
 	 */
 	protected final void writeEntry(final Object value, final long nanos) {
+		if (!m_valueType.isInstance(value)) {
+			System.err.println("LogTopic: attempt to write incompatible entry: " + value + " (expected " + m_valueType + ")");
+			return;
+		}
+
 		if (hasSubscribers()) {
 			for (LogEntryWriter subscriber : m_subscribers) {
 				subscriber.writeEntry(m_name, value, nanos);
