@@ -1,40 +1,48 @@
 package com.systemmeltdown.robotlib.util;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.Ignore;
 import static org.junit.Assert.*;
 
 public class FailsafeHandlerTest {
+	private TestFailsafeHandler testFailsafe;
+	
+	@Before
+  	public void setup() {
+		testFailsafe = new TestFailsafeHandler();
+  	}
+
 	@Test
 	public void testSetFailsafeIsActiveWhenSetToTrue() {
-		TestFailsafeHandler testSub = new TestFailsafeHandler();
-
-		testSub.setFailsafeActive(true);
+		testFailsafe.setFailsafeActive(true);
     
-		assertEquals(testSub.isFailsafeActive(), true );
+		assertEquals(testFailsafe.isFailsafeActive(), true );
 
-		testSub.close();
+		testFailsafe.close();
 	}
 
 	@Test
 	public void testSetFailsafeIsNotActiveWhenSetToFalse() {
-		TestFailsafeHandler testSub = new TestFailsafeHandler();
-
-		testSub.setFailsafeActive(false);
+		testFailsafe.setFailsafeActive(false);
     
-		assertEquals(testSub.isFailsafeActive(), false );
+		assertEquals(testFailsafe.isFailsafeActive(), false );
 
-		testSub.close();
+		testFailsafe.close();
 	}
 
 	@Test
 	public void testIsFailsafeIsNotActiveByDeefault() {
-		TestFailsafeHandler testSub = new TestFailsafeHandler();
+		assertEquals( testFailsafe.isFailsafeActive(), false );
 
-		assertEquals( testSub.isFailsafeActive(), false );
+		testFailsafe.close();
+	}
 
-		testSub.close();
+	@After
+	public void after() {
+		testFailsafe.close();
 	}
 
 	@Ignore
