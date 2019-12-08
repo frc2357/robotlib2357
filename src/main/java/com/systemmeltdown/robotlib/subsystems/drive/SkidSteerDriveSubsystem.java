@@ -2,7 +2,7 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import java.util.Map;
 
-import com.systemmeltdown.robotlib.subsystems.Fallible;
+import com.systemmeltdown.robotlib.util.FailsafeHandler;
 import com.systemmeltdown.robotlib.util.RobotMath;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * This makes assumptions that we will use encoders and velocity drive.
  * However, this makes zero assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem extends Subsystem implements Fallible {
+public abstract class SkidSteerDriveSubsystem extends Subsystem implements FailsafeHandler {
 	/**
 	 * The distance between the drive wheels.
 	 * Measure from the center of the left wheels to the center of the right.

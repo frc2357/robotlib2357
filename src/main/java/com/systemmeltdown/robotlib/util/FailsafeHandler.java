@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlib.subsystems;
+package com.systemmeltdown.robotlib.util;
 
-public interface Fallible {
+public interface FailsafeHandler {
 
   public boolean isFailsafeActive();
 
