@@ -1,6 +1,8 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
@@ -14,9 +16,11 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 
         // init right master
         m_rightMaster = new WPI_TalonSRX(rightMasterId);
+        m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // init left master
         m_leftMaster = new WPI_TalonSRX(leftMasterId);
+        m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         // init right slaves
         m_rightSlaves = new WPI_TalonSRX[rightSlaveIds.length];
@@ -37,18 +41,14 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 
     @Override
     protected int getCurrentSpeedLeftClicksPerSecond() {
-        double proportion = m_leftMaster.get();
-        double inches = proportion * getMaxSpeedInchesPerSecond();
-        double clicks = inches * getClicksPerInch();
-        return (int) clicks;
+        return m_leftMaster.getSelectedSensorPosition();
+
     }
 
     @Override
     protected int getCurrentSpeedRightClicksPerSecond() {
-        double proportion = m_rightMaster.get();
-        double inches = proportion * getMaxSpeedInchesPerSecond();
-        double clicks = inches * getClicksPerInch();
-        return (int) clicks;
+        return m_rightMaster.getSelectedSensorPosition();
+
     }
 
     @Override
@@ -58,12 +58,9 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     }
 
     @Override
-    protected void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond) {
-        double leftClicksPer100ms = leftClicksPerSecond / 10;
-        double rightClicksPer100ms = rightClicksPerSecond / 10;
 
-        m_leftMaster.set(ControlMode.Velocity, leftClicksPer100ms);
-        m_rightMaster.set(ControlMode.Velocity, rightClicksPer100ms);
+    protected void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond) {
+        // TODO implement PID Loop
     }
 
     @Override
