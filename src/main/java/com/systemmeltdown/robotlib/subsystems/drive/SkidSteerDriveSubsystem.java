@@ -2,7 +2,7 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import java.util.Map;
 
-import com.systemmeltdown.robotlib.util.FailsafeHandler;
+import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * This makes assumptions that we will use encoders and velocity drive.
  * However, this makes zero assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem extends Subsystem implements FailsafeHandler {
+public abstract class SkidSteerDriveSubsystem extends Subsystem implements ClosedLoopSystem {
 	/**
 	 * The distance between the drive wheels.
 	 * Measure from the center of the left wheels to the center of the right.
@@ -38,7 +38,7 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Fails
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
-	private boolean failsafeActive = false;
+	private boolean m_ClosedLoopEnabled = false;
 
 	public void configure(Map<String, Object> config) {
 		m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
@@ -74,7 +74,7 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Fails
 	}
 
 	public final void driveVelocity(double speedInchesPerSecond, double turnDegreesPerSecond) {
-		if (this.isFailsafeActive()) {
+		if (this.isClosedLoopEnabled()) {
 			System.err.println("Drive: Cannot driveVelocity while failsafe is active!");
 			return;
 		}
@@ -121,12 +121,12 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Fails
 
 
 	@Override
-	public boolean isFailsafeActive() {
-		return this.failsafeActive;
+	public boolean isClosedLoopEnabled() {
+		return this.m_ClosedLoopEnabled;
 	}
 
 	@Override
-	public void setFailsafeActive(boolean failsafeActive) {
-		this.failsafeActive = failsafeActive;
+	public void setClosedLoopEnabled(boolean failsafeActive) {
+		this.m_ClosedLoopEnabled = failsafeActive;
 	}
 }
