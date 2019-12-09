@@ -22,47 +22,53 @@ public class LogSessionTest {
 	}
 
 	@Test
-	public void testAddRemoveOutput() {
-		final LogTopicRegistry topicRegistry = Mockito.mock(LogTopicRegistry.class);
-		final LogTopic testTopic = new TestTopic("test-topic", topicRegistry);
-		when(topicRegistry.getTopic("test-topic")).thenReturn(testTopic);
-
-		final LogOutput output = Mockito.mock(LogOutput.class);
-		final LogSession session = new TestSession(topicRegistry);
-
-		session.subscribeTopic(output, "test-topic", 1000000000L);
-		verify(output).notifySubscribe("test-topic", 1000000000L);
-
-		session.unsubscribeTopic(output, "test-topic", 2000000000L);
-		verify(output).notifyUnsubscribe("test-topic", 2000000000L);
-	}
-
-	@Test
 	public void testStartStop() {
 		final LogTopicRegistry topicRegistry = LogTopicRegistryTest.createTestRegistry();
-		final TestSession session = new TestSession(topicRegistry);
+
+		final LogOutput testOutput = Mockito.mock(LogOutput.class);
+		when(testOutput.getName()).thenReturn("test-output");
+
+		final TestSession session = new TestSession(new LogOutput[] { testOutput }, topicRegistry);
 
 		long startNanos = 1000000000L;
 		long stopNanos = 3000000000L;
 
-		Assert.assertEquals(-1, session.convertNanosToRelative(1003000000L));
+		Assert.assertEquals(-1, session.timeSinceStartNanos(1003000000L));
 
 		session.start(startNanos);
+
 		Assert.assertEquals(1, session.onStartCalled);
 		Assert.assertEquals(0, session.onStopCalled);
 
-		Assert.assertEquals(startNanos, session.m_startNanos);
-
-		Assert.assertEquals(1L, session.convertNanosToRelative(1000000001L));
-		Assert.assertEquals(3000000L, session.convertNanosToRelative(1003000000L));
-		Assert.assertEquals(8000000000L, session.convertNanosToRelative(9000000000L));
-		Assert.assertEquals(2000000000L, session.convertNanosToRelative(stopNanos));
+		Assert.assertEquals(1L, session.timeSinceStartNanos(1000000001L));
+		Assert.assertEquals(3000000L, session.timeSinceStartNanos(1003000000L));
+		Assert.assertEquals(8000000000L, session.timeSinceStartNanos(9000000000L));
+		Assert.assertEquals(2000000000L, session.timeSinceStartNanos(stopNanos));
 
 		session.stop(stopNanos);
 		Assert.assertEquals(1, session.onStartCalled);
 		Assert.assertEquals(1, session.onStopCalled);
+	}
 
-		Assert.assertEquals(stopNanos, session.m_stopNanos);
+	@Test
+	public void testSubscribeUnsubscribe() {
+		final LogTopicRegistry topicRegistry = Mockito.mock(LogTopicRegistry.class);
+		final LogTopic testTopic = new TestTopic("test-topic", topicRegistry);
+		when(topicRegistry.getTopic("test-topic")).thenReturn(testTopic);
+
+		final LogOutput testOutput = Mockito.mock(LogOutput.class);
+		when(testOutput.getName()).thenReturn("test-output");
+
+		final LogSession session = new TestSession(new LogOutput[] { testOutput }, topicRegistry);
+		session.start(1000000000L);
+
+		session.subscribeTopic("test-topic", "test-output", 1000000000L);
+		verify(testOutput).notifySubscribe("test-topic", 1000000000L);
+
+		session.unsubscribeTopic("test-topic", "test-output", 2000000000L);
+		verify(testOutput).notifyUnsubscribe("test-topic", 2000000000L);
+
+		session.stop(3000000000L);
 	}
 
 	@Ignore
@@ -70,8 +76,8 @@ public class LogSessionTest {
 		int onStartCalled = 0;
 		int onStopCalled = 0;
 
-		TestSession(LogTopicRegistry topicRegistry) {
-			super(topicRegistry);
+		TestSession(LogOutput[] outputs, LogTopicRegistry topicRegistry) {
+			super(outputs, topicRegistry);
 		}
 
 		protected void onStart() {

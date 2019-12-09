@@ -1,6 +1,8 @@
 package com.systemmeltdown.robotlog;
 
-import com.systemmeltdown.robotlog.lib.NanoTimeReference;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.systemmeltdown.robotlog.outputs.LogOutput;
 import com.systemmeltdown.robotlog.topics.LogTopic;
 import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
@@ -9,28 +11,49 @@ import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
  * Represents a time-based session of logging. Each session is pre-configured
  * and logs to its outputs after it's started until it is stoppped.
  */
-public abstract class LogSession implements NanoTimeReference {
+public abstract class LogSession {
 	protected final LogTopicRegistry m_topicRegistry;
-	protected long m_startNanos = Long.MIN_VALUE;
-	protected long m_stopNanos = Long.MIN_VALUE;
+	protected final Map<String, LogOutput> m_logOutputs = new HashMap<String, LogOutput>();
+	private long m_startTimeNanos = Long.MIN_VALUE;
+	private long m_stopTimeNanos = Long.MIN_VALUE;
 
-	public LogSession() {
-		this(LogTopicRegistry.getInstance());
+	public LogSession(LogOutput[] logOutputs) {
+		this(logOutputs, LogTopicRegistry.getInstance());
 	}
 
-	public LogSession(final LogTopicRegistry topicRegistry) {
+	public LogSession(LogOutput[] logOutputs, final LogTopicRegistry topicRegistry) {
 		m_topicRegistry = topicRegistry;
+		for (LogOutput output : logOutputs) {
+			m_logOutputs.put(output.getName(), output);
+		}
 	}
 
-	public boolean subscribeTopic(final LogOutput output, final String topicName) {
-		return subscribeTopic(output, topicName, System.nanoTime());
+	public final long timeSinceStartNanos(long nanos) {
+		if (m_startTimeNanos == Long.MIN_VALUE) {
+			System.err.println("LogOutput.timeSinceStartNanos: Should not be called before session started");
+			return -1;
+		}
+		if (nanos < m_startTimeNanos) {
+			System.err.println("LogOutput.timeSinceStartNanos: nanos should not be before start.");
+			return -1;
+		}
+		return nanos - m_startTimeNanos;
 	}
 
-	protected boolean subscribeTopic(final LogOutput output, final String topicName, final long nanos) {
+	public final boolean subscribeTopic(final String topicName, final String outputName) {
+		return subscribeTopic(topicName, outputName, System.nanoTime());
+	}
+
+	protected final boolean subscribeTopic(final String topicName, final String outputName, final long nanos) {
 		final LogTopic topic = m_topicRegistry.getTopic(topicName);
+		final LogOutput output = m_logOutputs.get(outputName);
 
 		if (topic == null) {
-			System.err.println("LogSession.addTopicOutput: topic by name '" + topicName + "' does not exist.");
+			System.err.println("LogSession.subscribeTopic: topic by name '" + topicName + "' does not exist.");
+			return false;
+		}
+		if (output == null) {
+			System.err.println("LogSession.subscribeTopic: output by name '" + outputName + "' does not exist.");
 			return false;
 		}
 
@@ -38,69 +61,88 @@ public abstract class LogSession implements NanoTimeReference {
 		return true;
 	}
 
-	public boolean unsubscribeTopic(final LogOutput output, final String topicName) {
-		return unsubscribeTopic(output, topicName, System.nanoTime());
+	public final boolean unsubscribeTopic(final String topicName, final String outputName) {
+		return unsubscribeTopic(topicName, outputName, System.nanoTime());
 	}
 
-	protected boolean unsubscribeTopic(final LogOutput output, final String topicName, final long nanos) {
+	protected final boolean unsubscribeTopic(final String topicName, final String outputName, final long nanos) {
 		final LogTopic topic = m_topicRegistry.getTopic(topicName);
+		final LogOutput output = m_logOutputs.get(outputName);
 
 		if (topic == null) {
-			System.err.println("LogSession.removeTopicOutput: topic by name '" + topicName + "' does not exist.");
+			System.err.println("LogSession.unsubscribeTopic: topic by name '" + topicName + "' does not exist.");
+			return false;
+		}
+		if (output == null) {
+			System.err.println("LogSession.unsubscribeTopic: output by name '" + outputName + "' does not exist.");
 			return false;
 		}
 
 		final boolean wasRemoved = topic.removeSubscriber(output, nanos);
 
 		if (!wasRemoved) {
-			System.err.println("LogSession.removeTopicOutput: output wasn't subscribed to topic '" + topicName + "'");
+			System.err.println("LogSession.unsubscribeTopic: output wasn't subscribed to topic '" + topicName + "'");
+			return false;
 		}
 
 		return true;
 	}
 
-	public long convertNanosToRelative(final long nanos) {
-		if (m_startNanos == Long.MIN_VALUE) {
-			return -1;
-		}
-		return nanos - m_startNanos;
+	public final boolean start() {
+		return start(System.nanoTime());
 	}
 
-	public void start() {
-		start(System.nanoTime());
-	}
-
-	protected void start(final long nanos) {
-		if (m_startNanos != Long.MIN_VALUE) {
-			System.err.println("LogSession: Cannot start again, sessions are NOT reusable. Create a new one.");
-			return;
+	protected final boolean start(final long nanos) {
+		if (m_startTimeNanos != Long.MIN_VALUE) {
+			System.err.println("LogSession.start: Cannot start again, sessions are NOT reusable. Create a new one.");
+			return false;
 		}
 
-		m_startNanos = nanos;
+		m_startTimeNanos = nanos;
+
+		for (LogOutput output : m_logOutputs.values()) {
+			output.start(this::timeSinceStartNanos, nanos);
+		}
+
 		onStart();
+		return true;
 	}
 
-	public void stop() {
-		stop(System.nanoTime());
+	public final boolean stop() {
+		return stop(System.nanoTime());
 	}
 
-	protected void stop(final long nanos) {
-		if (m_startNanos == Long.MIN_VALUE) {
-			System.err.println("LogSession: Cannot stop. Session not yet started");
-			return;
+	protected final boolean stop(final long nanos) {
+		if (m_startTimeNanos == Long.MIN_VALUE) {
+			System.err.println("LogSession.stop: Cannot stop. Session not yet started");
+			return false;
+		}
+		if (m_stopTimeNanos != Long.MIN_VALUE) {
+			System.err.println("LogSession.stop: Cannot stop more than once.");
+			return false;
 		}
 
-		m_stopNanos = nanos;
+		m_stopTimeNanos = nanos;
+
+		for (LogOutput output : m_logOutputs.values()) {
+			output.stop(nanos);
+		}
+
 		onStop();
+		return true;
 	}
 
 	/**
 	 * Called when this session is started.
 	 */
-	protected abstract void onStart();
+	protected void onStart() {
+		// Default implementation does nothing.
+	}
 
 	/**
 	 * Called when this session is stopped.
 	 */
-	protected abstract void onStop();
+	protected void onStop() {
+		// Default implementation does nothing.
+	}
 }
