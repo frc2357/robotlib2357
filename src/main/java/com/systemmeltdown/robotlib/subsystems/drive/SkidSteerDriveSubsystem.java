@@ -38,7 +38,7 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
-	private boolean m_ClosedLoopEnabled = false;
+	private boolean m_ClosedLoopEnabled = true;
 
 	public void configure(Map<String, Object> config) {
 		m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
@@ -126,7 +126,7 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 	}
 
 	@Override
-	public void setClosedLoopEnabled(boolean failsafeActive) {
-		this.m_ClosedLoopEnabled = failsafeActive;
+	public void setClosedLoopEnabled(boolean ClosedLoopEnabled) {
+		this.m_ClosedLoopEnabled = ClosedLoopEnabled;
 	}
 }
