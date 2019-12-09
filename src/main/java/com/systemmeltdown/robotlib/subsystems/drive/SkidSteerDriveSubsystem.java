@@ -2,15 +2,17 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import java.util.Map;
 
-import com.systemmeltdown.robotlib.subsystems.SubsystemBase;
+import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
+import edu.wpi.first.wpilibj.command.Subsystem;
+
 
 /**
  * Base class for any kind of "Skid Steer" drive base.
  * This makes assumptions that we will use encoders and velocity drive.
  * However, this makes zero assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem extends SubsystemBase {
+public abstract class SkidSteerDriveSubsystem extends Subsystem implements ClosedLoopSystem {
 	/**
 	 * The distance between the drive wheels.
 	 * Measure from the center of the left wheels to the center of the right.
@@ -36,6 +38,7 @@ public abstract class SkidSteerDriveSubsystem extends SubsystemBase {
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
+	private boolean m_ClosedLoopEnabled = false;
 
 	public void configure(Map<String, Object> config) {
 		m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
@@ -71,7 +74,7 @@ public abstract class SkidSteerDriveSubsystem extends SubsystemBase {
 	}
 
 	public final void driveVelocity(double speedInchesPerSecond, double turnDegreesPerSecond) {
-		if (isFailsafeActive()) {
+		if (this.isClosedLoopEnabled()) {
 			System.err.println("Drive: Cannot driveVelocity while failsafe is active!");
 			return;
 		}
@@ -114,4 +117,16 @@ public abstract class SkidSteerDriveSubsystem extends SubsystemBase {
 	 * @param rightClicksPerSecond Speed of right drive in clicks per second (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
+
+
+
+	@Override
+	public boolean isClosedLoopEnabled() {
+		return this.m_ClosedLoopEnabled;
+	}
+
+	@Override
+	public void setClosedLoopEnabled(boolean failsafeActive) {
+		this.m_ClosedLoopEnabled = failsafeActive;
+	}
 }
