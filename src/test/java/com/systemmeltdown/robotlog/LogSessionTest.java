@@ -1,5 +1,6 @@
 package com.systemmeltdown.robotlog;
 
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,11 +25,8 @@ public class LogSessionTest {
 	@Test
 	public void testStartStop() {
 		final LogTopicRegistry topicRegistry = LogTopicRegistryTest.createTestRegistry();
-
 		final LogOutput testOutput = Mockito.mock(LogOutput.class);
-		when(testOutput.getName()).thenReturn("test-output");
-
-		final TestSession session = new TestSession(new LogOutput[] { testOutput }, topicRegistry);
+		final TestSession session = new TestSession(Map.of("test-output", testOutput), topicRegistry);
 
 		long startNanos = 1000000000L;
 		long stopNanos = 3000000000L;
@@ -57,9 +55,7 @@ public class LogSessionTest {
 		when(topicRegistry.getTopic("test-topic")).thenReturn(testTopic);
 
 		final LogOutput testOutput = Mockito.mock(LogOutput.class);
-		when(testOutput.getName()).thenReturn("test-output");
-
-		final LogSession session = new TestSession(new LogOutput[] { testOutput }, topicRegistry);
+		final LogSession session = new TestSession(Map.of("test-output", testOutput), topicRegistry);
 		session.start(1000000000L);
 
 		session.subscribeTopic("test-topic", "test-output", 1000000000L);
@@ -76,7 +72,7 @@ public class LogSessionTest {
 		int onStartCalled = 0;
 		int onStopCalled = 0;
 
-		TestSession(LogOutput[] outputs, LogTopicRegistry topicRegistry) {
+		TestSession(Map<String, LogOutput> outputs, LogTopicRegistry topicRegistry) {
 			super(outputs, topicRegistry);
 		}
 

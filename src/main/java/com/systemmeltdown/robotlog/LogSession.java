@@ -1,6 +1,5 @@
 package com.systemmeltdown.robotlog;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.systemmeltdown.robotlog.outputs.LogOutput;
@@ -13,19 +12,17 @@ import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
  */
 public abstract class LogSession {
 	protected final LogTopicRegistry m_topicRegistry;
-	protected final Map<String, LogOutput> m_logOutputs = new HashMap<String, LogOutput>();
+	protected final Map<String, LogOutput> m_logOutputs;
 	private long m_startTimeNanos = Long.MIN_VALUE;
 	private long m_stopTimeNanos = Long.MIN_VALUE;
 
-	public LogSession(LogOutput[] logOutputs) {
+	public LogSession(final Map<String, LogOutput> logOutputs) {
 		this(logOutputs, LogTopicRegistry.getInstance());
 	}
 
-	public LogSession(LogOutput[] logOutputs, final LogTopicRegistry topicRegistry) {
+	public LogSession(final Map<String, LogOutput> logOutputs, final LogTopicRegistry topicRegistry) {
 		m_topicRegistry = topicRegistry;
-		for (LogOutput output : logOutputs) {
-			m_logOutputs.put(output.getName(), output);
-		}
+		m_logOutputs = logOutputs;
 	}
 
 	public final long timeSinceStartNanos(long nanos) {

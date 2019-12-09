@@ -72,23 +72,26 @@ Use LogSession to create outputs and link them to topics.
 
 ```
 public class CompetitionLogSession extends LogSession {
-	// Write informational messages to output (viewable in driver station)
-	LogOutput stdOut = new PrintStreamLogOutput(this, System.out);
+	public CompetitionLogSession() {
+		// "stdout" Writes informational messages to output (viewable in driver station)
+		// "stderr" Writes errors to stderr output (viewable in driver station)
+		// "logfile" Writes to files in /home/lvuser/logs/competition-log-##.zip
 
-	// Write errors to stderr output (viewable in driver station)
-	LogOutput stdErr = new PrintStreamLogOutput(this, System.err);
-
-	// Write to files in /home/lvuser/logs/competition-log-##.zip
-	LogOutput logFile = new FileLogOutput(this, "~/logs", "competition-log-");
+		super(Map.of(
+			"stdout", new PrintStreamLogOutput(System.out),
+			"stderr", new PrintStreamLogOutput(System.err),
+			"logfile", new FileLogOutput("~/logs", "competition-log-"),
+		));
+	}
 
 	protected void onStart() {
-		subscribeTopic("drive-error", stdErr);
+		subscribeTopic("drive-error", "stderr");
 
-		subscribeTopic("drive-status", stdOut);
+		subscribeTopic("drive-status", "stdout");
 
-		subscribeTopic("drive-error", logFile);
-		subscribeTopic("drive-status", logFile);
-		subscribeTopic("drive-amps", logFile);
+		subscribeTopic("drive-error", "logfile");
+		subscribeTopic("drive-status", "logfile");
+		subscribeTopic("drive-amps", "logfile");
 	}
 }
 ```

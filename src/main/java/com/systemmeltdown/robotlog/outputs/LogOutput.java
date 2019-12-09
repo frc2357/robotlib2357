@@ -7,16 +7,7 @@ import com.systemmeltdown.robotlog.lib.RelativeTimeSource;
  * Base class for any type of logging output
  */
 public abstract class LogOutput implements LogEntryWriter {
-	private final String m_name;
 	private RelativeTimeSource m_timeSource;
-
-	public LogOutput(String name) {
-		m_name = name;
-	}
-
-	public String getName() {
-		return m_name;
-	}
 
 	public final boolean start(RelativeTimeSource timeSource, long nanos) {
 		if (m_timeSource != null) {
