@@ -27,5 +27,6 @@ public abstract class DataTopic extends LogTopic {
 
 		// Now we don't have any unreported values.
 		m_lastDuplicateNanos = Long.MIN_VALUE;
+		m_lastValue = value;
 	}
 }

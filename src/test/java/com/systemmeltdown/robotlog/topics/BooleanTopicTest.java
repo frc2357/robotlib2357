@@ -26,7 +26,9 @@ public class BooleanTopicTest {
 		InOrder inOrder = Mockito.inOrder(writer);
 		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 0);
 		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 100);
+		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 300);
 		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 400);
+		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 600);
 		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 700);
 	}
 }
