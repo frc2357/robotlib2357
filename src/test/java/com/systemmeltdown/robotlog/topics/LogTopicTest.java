@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 
-import com.systemmeltdown.robotlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
 
 public class LogTopicTest {
 	@Ignore
@@ -29,8 +29,8 @@ public class LogTopicTest {
 	public void testSubscribers() {
 		final LogTopicRegistry registry = Mockito.mock(LogTopicRegistry.class);
 		final TestTopic topic = new TestTopic("test-topic", registry);
-		final LogEntryWriter subscriber1 = Mockito.mock(LogEntryWriter.class);
-		final LogEntryWriter subscriber2 = Mockito.mock(LogEntryWriter.class);
+		final LogOutput subscriber1 = Mockito.mock(LogOutput.class);
+		final LogOutput subscriber2 = Mockito.mock(LogOutput.class);
 
 		Assert.assertFalse(topic.hasSubscribers());
 

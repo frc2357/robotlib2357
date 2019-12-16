@@ -1,6 +1,6 @@
 package com.systemmeltdown.robotlog.topics;
 
-import com.systemmeltdown.robotlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -9,10 +9,10 @@ import org.mockito.Mockito;
 public class IntegerTopicTest {
 	@Test
 	public void testLog() {
-		final LogEntryWriter writer = Mockito.mock(LogEntryWriter.class);
+		final LogOutput output = Mockito.mock(LogOutput.class);
 		final IntegerTopic topic = new IntegerTopic("integer-topic", 50);
 		final long nanos = System.nanoTime();
-		topic.addSubscriber(writer);
+		topic.addSubscriber(output);
 
 		topic.log(30, nanos + 0);
 		topic.log(80, nanos + 100);
@@ -23,11 +23,11 @@ public class IntegerTopicTest {
 		topic.log(65, nanos + 600);
 		topic.log(85, nanos + 700);
 
-		InOrder inOrder = Mockito.inOrder(writer);
-		inOrder.verify(writer).writeEntry("integer-topic", 50, nanos + 0);
-		inOrder.verify(writer).writeEntry("integer-topic", 100, nanos + 100);
-		inOrder.verify(writer).writeEntry("integer-topic", 50, nanos + 200);
-		inOrder.verify(writer).writeEntry("integer-topic", 50, nanos + 600);
-		inOrder.verify(writer).writeEntry("integer-topic", 100, nanos + 700);
+		InOrder inOrder = Mockito.inOrder(output);
+		inOrder.verify(output).writeEntry("integer-topic", 50, nanos + 0);
+		inOrder.verify(output).writeEntry("integer-topic", 100, nanos + 100);
+		inOrder.verify(output).writeEntry("integer-topic", 50, nanos + 200);
+		inOrder.verify(output).writeEntry("integer-topic", 50, nanos + 600);
+		inOrder.verify(output).writeEntry("integer-topic", 100, nanos + 700);
 	}
 }

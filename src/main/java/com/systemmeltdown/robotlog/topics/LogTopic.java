@@ -3,7 +3,7 @@ package com.systemmeltdown.robotlog.topics;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.systemmeltdown.robotlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
 
 /**
  * Represents a single logging topic.
@@ -14,7 +14,7 @@ import com.systemmeltdown.robotlog.lib.LogEntryWriter;
 public abstract class LogTopic {
 	private final String m_name;
 	private final Class<?> m_valueType;
-	private List<LogEntryWriter> m_subscribers;
+	private List<LogOutput> m_subscribers;
 
 	/**
 	 * Topic constructor.
@@ -35,7 +35,7 @@ public abstract class LogTopic {
 	protected LogTopic(final String name, final Class<?> valueType, final LogTopicRegistry registry) {
 		m_name = name;
 		m_valueType = valueType;
-		m_subscribers = new ArrayList<LogEntryWriter>();
+		m_subscribers = new ArrayList<LogOutput>();
 		registry.addTopic(this);
 
 	}
@@ -74,11 +74,11 @@ public abstract class LogTopic {
 	 * @param subscriber The subscriber to be added
 	 * @return True if successful, false if already subscribed
 	 */
-	public boolean addSubscriber(LogEntryWriter subscriber) {
+	public boolean addSubscriber(LogOutput subscriber) {
 		return addSubscriber(subscriber, System.nanoTime());
 	}
 
-	public boolean addSubscriber(LogEntryWriter subscriber, long nanos) {
+	public boolean addSubscriber(LogOutput subscriber, long nanos) {
 		if (m_subscribers.contains(subscriber)) {
 			System.err.println("LogTopic: Cannot add subscriber, topic already has subscriber");
 			return false;
@@ -94,11 +94,11 @@ public abstract class LogTopic {
 	 * @param subscriber The previously added subscriber to be removed
 	 * @return True if successful, false if not found
 	 */
-	public boolean removeSubscriber(LogEntryWriter subscriber) {
+	public boolean removeSubscriber(LogOutput subscriber) {
 		return removeSubscriber(subscriber, System.nanoTime());
 	}
 
-	public boolean removeSubscriber(LogEntryWriter subscriber, long nanos) {
+	public boolean removeSubscriber(LogOutput subscriber, long nanos) {
 		if (!m_subscribers.contains(subscriber)) {
 			System.err.println("LogTopic: Cannot remove subscriber, subscriber not found");
 			return false;
@@ -122,7 +122,7 @@ public abstract class LogTopic {
 		}
 
 		if (hasSubscribers()) {
-			for (LogEntryWriter subscriber : m_subscribers) {
+			for (LogOutput subscriber : m_subscribers) {
 				subscriber.writeEntry(m_name, value, nanos);
 			}
 		}

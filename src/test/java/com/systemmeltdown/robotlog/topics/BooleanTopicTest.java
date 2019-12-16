@@ -1,6 +1,6 @@
 package com.systemmeltdown.robotlog.topics;
 
-import com.systemmeltdown.robotlog.lib.LogEntryWriter;
+import com.systemmeltdown.robotlog.outputs.LogOutput;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -9,10 +9,10 @@ import org.mockito.Mockito;
 public class BooleanTopicTest {
 	@Test
 	public void testLog() {
-		final LogEntryWriter writer = Mockito.mock(LogEntryWriter.class);
+		final LogOutput output = Mockito.mock(LogOutput.class);
 		final BooleanTopic topic = new BooleanTopic("boolean-topic");
 		final long nanos = System.nanoTime();
-		topic.addSubscriber(writer);
+		topic.addSubscriber(output);
 
 		topic.log(false, nanos + 0);
 		topic.log(true, nanos + 100);
@@ -23,12 +23,12 @@ public class BooleanTopicTest {
 		topic.log(false, nanos + 600);
 		topic.log(true, nanos + 700);
 
-		InOrder inOrder = Mockito.inOrder(writer);
-		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 0);
-		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 100);
-		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 300);
-		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 400);
-		inOrder.verify(writer).writeEntry("boolean-topic", false, nanos + 600);
-		inOrder.verify(writer).writeEntry("boolean-topic", true, nanos + 700);
+		InOrder inOrder = Mockito.inOrder(output);
+		inOrder.verify(output).writeEntry("boolean-topic", false, nanos + 0);
+		inOrder.verify(output).writeEntry("boolean-topic", true, nanos + 100);
+		inOrder.verify(output).writeEntry("boolean-topic", true, nanos + 300);
+		inOrder.verify(output).writeEntry("boolean-topic", false, nanos + 400);
+		inOrder.verify(output).writeEntry("boolean-topic", false, nanos + 600);
+		inOrder.verify(output).writeEntry("boolean-topic", true, nanos + 700);
 	}
 }
