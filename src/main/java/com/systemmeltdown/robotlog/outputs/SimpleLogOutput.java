@@ -13,6 +13,13 @@ public class SimpleLogOutput implements LogOutput {
 		m_logWriter = logWriter;
 	}
 
+	private long convertToRelativeNanos(long nanos) {
+		if (m_timeSource == null) {
+			return -1;
+		}
+		return m_timeSource.convertToRelativeNanos(nanos);
+	}
+
 	@Override
 	public final boolean start(RelativeTimeSource timeSource, long nanos) {
 		if (m_timeSource != null) {
@@ -21,7 +28,7 @@ public class SimpleLogOutput implements LogOutput {
 		}
 
 		m_timeSource = timeSource;
-		m_logWriter.onStart(m_timeSource.convertToRelativeNanos(nanos));
+		m_logWriter.onStart(convertToRelativeNanos(nanos));
 		return true;
 	}
 
@@ -32,23 +39,23 @@ public class SimpleLogOutput implements LogOutput {
 			return false;
 		}
 
-		m_logWriter.onStop(m_timeSource.convertToRelativeNanos(nanos));
+		m_logWriter.onStop(convertToRelativeNanos(nanos));
 		m_timeSource = null;
 		return true;
 	}
 
 	@Override
 	public final void notifySubscribe(String topicName, long nanos) {
-		m_logWriter.onSubscribe(topicName, m_timeSource.convertToRelativeNanos(nanos));
+		m_logWriter.onSubscribe(topicName, convertToRelativeNanos(nanos));
 	}
 
 	@Override
 	public final void notifyUnsubscribe(String topicName, long nanos) {
-		m_logWriter.onUnsubscribe(topicName, m_timeSource.convertToRelativeNanos(nanos));
+		m_logWriter.onUnsubscribe(topicName, convertToRelativeNanos(nanos));
 	}
 
 	@Override
 	public final void writeEntry(String topicName, Object value, long nanos) {
-		m_logWriter.onEntry(topicName, value, m_timeSource.convertToRelativeNanos(nanos));
+		m_logWriter.onEntry(topicName, value, convertToRelativeNanos(nanos));
 	}
 }
