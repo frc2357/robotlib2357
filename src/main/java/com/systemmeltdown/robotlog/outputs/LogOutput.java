@@ -1,58 +1,44 @@
 package com.systemmeltdown.robotlog.outputs;
 
-import com.systemmeltdown.robotlog.lib.LogEntryWriter;
 import com.systemmeltdown.robotlog.lib.RelativeTimeSource;
 
-/**
- * Base class for any type of logging output
- */
-public abstract class LogOutput implements LogEntryWriter {
-	private RelativeTimeSource m_timeSource;
+public interface LogOutput {
 
-	public final boolean start(RelativeTimeSource timeSource, long nanos) {
-		if (m_timeSource != null) {
-			System.err.println("LogOutput.start: Already started.");
-			return false;
-		}
 
-		m_timeSource = timeSource;
-		onStart(m_timeSource.convertToRelativeNanos(nanos));
-		return true;
-	}
+	/**
+	 * Starts this log output.
+	 * @param timeSource The time source to use as a start reference (the LogSession)
+	 * @param nanos The current System.nanoTime() of start.
+	 * @return True if successfully started, false if not.
+	 */
+	public boolean start(RelativeTimeSource timeSource, long nanos);
 
-	public final boolean stop(long nanos) {
-		if (m_timeSource == null) {
-			System.err.println("LogOutput.stop: Cannot stop. Not yet started");
-			return false;
-		}
+	/**
+	 * Stops this log output.
+	 * @param nanos The current System.nanoTime() of the stop.
+	 * @return True if successfully stopped, false othwersie.
+	 */
+	public boolean stop(long nanos);
 
-		onStop(m_timeSource.convertToRelativeNanos(nanos));
-		m_timeSource = null;
-		return true;
-	}
+	/**
+	 * Notifies a writer that it has been subscribed to a topic.
+	 * @param topicName The name of the topic which has been subscribed
+	 * @param nanos The System.nanoTime() value for when the subscription occurred
+	 */
+	public void notifySubscribe(String topicName, long nanos);
 
-	@Override
-	public final void notifySubscribe(String topicName, long nanos) {
-		onSubscribe(topicName, m_timeSource.convertToRelativeNanos(nanos));
-	}
+	/**
+	 * Notifies a writer that it has been unsubscribed from a topic.
+	 * @param topicName The name of the topic which has been unsubscribed
+	 * @param nanos The System.nanoTime() value for when the unsubscription occurred
+	 */
+	public void notifyUnsubscribe(String topicName, long nanos);
 
-	@Override
-	public final void notifyUnsubscribe(String topicName, long nanos) {
-		onUnsubscribe(topicName, m_timeSource.convertToRelativeNanos(nanos));
-	}
-
-	@Override
-	public final void writeEntry(String topicName, Object value, long nanos) {
-		onEntry(topicName, value, m_timeSource.convertToRelativeNanos(nanos));
-	}
-
-	protected abstract void onStart(long relativeNanos);
-
-	protected abstract void onStop(long relativeNanos);
-
-	protected abstract void onSubscribe(String topicName, long relativeNanos);
-
-	protected abstract void onUnsubscribe(String topicName, long relativeNanos);
-
-	protected abstract void onEntry(String topicName, Object value, long relativeNanos);
+	/**
+	 * Notifies when a log entry occurs.
+	 * @param topicName The name of the topic to log
+	 * @param value The value to be written
+	 * @param nanos The System.nanoTime() value for this entry
+	 */
+	public void writeEntry(String topicName, Object value, long nanos);
 }
