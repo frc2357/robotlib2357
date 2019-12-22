@@ -1,6 +1,25 @@
-package com.systemmeltdown.robotlog.lib;
+package com.systemmeltdown.robotlog.outputs;
 
-public interface LogEntryWriter {
+import com.systemmeltdown.robotlog.lib.RelativeTimeSource;
+
+public interface LogOutput {
+
+
+	/**
+	 * Starts this log output.
+	 * @param timeSource The time source to use as a start reference (the LogSession)
+	 * @param nanos The current System.nanoTime() of start.
+	 * @return True if successfully started, false if not.
+	 */
+	public boolean start(RelativeTimeSource timeSource, long nanos);
+
+	/**
+	 * Stops this log output.
+	 * @param nanos The current System.nanoTime() of the stop.
+	 * @return True if successfully stopped, false othwersie.
+	 */
+	public boolean stop(long nanos);
+
 	/**
 	 * Notifies a writer that it has been subscribed to a topic.
 	 * @param topicName The name of the topic which has been subscribed
