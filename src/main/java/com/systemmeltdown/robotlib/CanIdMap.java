@@ -15,13 +15,12 @@ public class CanIdMap {
    * Drive Base Devices
    */
   public static final int DRIVE_MOTOR_LEFT_1 = 11;
-  public static final int DRIVE_MOTOR_LEFT_2 = 12;
-  public static final int DRIVE_MOTOR_LEFT_3 = 13;
-  public static final int DRIVE_MOTOR_LEFT_4 = 14;
-
-  public static final int DRIVE_MOTOR_RIGHT_1 = 15;
-  public static final int DRIVE_MOTOR_RIGHT_2 = 16;
-  public static final int DRIVE_MOTOR_RIGHT_3 = 17;
+  public static final int DRIVE_MOTOR_RIGHT_1 = 12;
+  public static final int DRIVE_MOTOR_LEFT_2 = 13;
+  public static final int DRIVE_MOTOR_RIGHT_2 = 14;
+  public static final int DRIVE_MOTOR_LEFT_3 = 15;
+  public static final int DRIVE_MOTOR_RIGHT_3 = 16;
+  public static final int DRIVE_MOTOR_LEFT_4 = 17;
   public static final int DRIVE_MOTOR_RIGHT_4 = 18;
 
   /**
