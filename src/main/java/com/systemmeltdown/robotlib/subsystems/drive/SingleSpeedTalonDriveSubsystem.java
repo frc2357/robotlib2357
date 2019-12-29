@@ -3,7 +3,6 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.systemmeltdown.robotlib.commands.DriveProportionalCommand;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     private WPI_TalonSRX m_rightMaster;
@@ -65,12 +64,7 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 
     @Override
     protected void initDefaultCommand() {
-        if (isFailsafeActive()) {
-             setDefaultCommand(new DriveProportionalCommand());
-        } else {
-            // TODO: make DriveWithEncoders command
-            // setDefaultCommand(new DriveWithEncoders());
-        }
+        // when initailizing, call setDefaultCommand
     }
 
 }
