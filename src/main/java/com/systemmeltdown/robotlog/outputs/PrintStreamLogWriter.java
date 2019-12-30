@@ -3,15 +3,25 @@ package com.systemmeltdown.robotlog.outputs;
 import java.io.PrintStream;
 
 class PrintStreamLogWriter implements LogWriter {
-	private final PrintStream m_stream;
+	public static int DEFAULT_DECIMAL_PLACES = 2;
 
-	public PrintStreamLogWriter(final PrintStream stream) {
-		m_stream = stream;
+	private final String m_prefix;
+	private final PrintStream m_stream;
+	private final int m_decimalPlaces;
+
+	public PrintStreamLogWriter(final String prefix, final PrintStream stream) {
+		this(prefix, stream, DEFAULT_DECIMAL_PLACES);
 	}
 
-	protected String nanosToTime(final long relativeNanos) {
+	public PrintStreamLogWriter(final String prefix, final PrintStream stream, final int decimalPlaces) {
+		m_prefix = prefix;
+		m_stream = stream;
+		m_decimalPlaces = decimalPlaces;
+	}
+
+	protected String nanosToTime(long relativeNanos) {
 		if (relativeNanos < 0) {
-			return "<invalid>";
+			relativeNanos = 0;
 		}
 
 		long relativeMillis = relativeNanos / 1000000L;
@@ -24,26 +34,33 @@ class PrintStreamLogWriter implements LogWriter {
 
 	@Override
 	public void onStart(long relativeNanos) {
-		m_stream.println(nanosToTime(relativeNanos) + " ( Session Start )");
+		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " ( Session Start )");
 	}
 
 	@Override
 	public void onStop(long relativeNanos) {
-		m_stream.println(nanosToTime(relativeNanos) + " ( Session Stop )");
+		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " ( Session Stop )");
 	}
 
 	@Override
 	public void onSubscribe(String topicName, long relativeNanos) {
-		m_stream.println(nanosToTime(relativeNanos) + " [" + topicName + "]( Subscribed )");
+		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " [" + topicName + "]( Subscribed )");
 	}
 
 	@Override
 	public void onUnsubscribe(String topicName, long relativeNanos) {
-		m_stream.println(nanosToTime(relativeNanos) + " [" + topicName + "]( Unsubscribed )");
+		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " [" + topicName + "]( Unsubscribed )");
 	}
 
 	@Override
 	public void onEntry(String topicName, Object value, long relativeNanos) {
-		m_stream.println(nanosToTime(relativeNanos) + " [" + topicName + "]: " + value);
+		String stringValue;
+		if (value instanceof Double) {
+			stringValue = String.format("%." + m_decimalPlaces + "f", value);
+		} else {
+			stringValue = value.toString();
+		}
+
+		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " [" + topicName + "]: " + stringValue);
 	}
 }
