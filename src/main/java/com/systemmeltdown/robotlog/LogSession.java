@@ -10,19 +10,20 @@ import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
  * Represents a time-based session of logging. Each session is pre-configured
  * and logs to its outputs after it's started until it is stoppped.
  */
-public abstract class LogSession {
+public class LogSession {
 	protected final LogTopicRegistry m_topicRegistry;
 	protected final Map<String, LogOutput> m_logOutputs;
 	private long m_startTimeNanos = Long.MIN_VALUE;
 	private long m_stopTimeNanos = Long.MIN_VALUE;
 
 	public LogSession(final Map<String, LogOutput> logOutputs) {
-		this(logOutputs, LogTopicRegistry.getInstance());
+		this(logOutputs, LogTopicRegistry.getInstance(), System.nanoTime());
 	}
 
-	public LogSession(final Map<String, LogOutput> logOutputs, final LogTopicRegistry topicRegistry) {
+	public LogSession(final Map<String, LogOutput> logOutputs, final LogTopicRegistry topicRegistry, final long nanoTime) {
 		m_topicRegistry = topicRegistry;
 		m_logOutputs = logOutputs;
+		start(nanoTime);
 	}
 
 	public final long timeSinceStartNanos(long nanos) {
@@ -81,27 +82,15 @@ public abstract class LogSession {
 			System.err.println("LogSession.unsubscribeTopic: output wasn't subscribed to topic '" + topicName + "'");
 			return false;
 		}
-
 		return true;
 	}
 
-	public final boolean start() {
-		return start(System.nanoTime());
-	}
-
 	protected final boolean start(final long nanos) {
-		if (m_startTimeNanos != Long.MIN_VALUE) {
-			System.err.println("LogSession.start: Cannot start again, sessions are NOT reusable. Create a new one.");
-			return false;
-		}
-
 		m_startTimeNanos = nanos;
 
 		for (LogOutput output : m_logOutputs.values()) {
 			output.start(this::timeSinceStartNanos, nanos);
 		}
-
-		onStart();
 		return true;
 	}
 
@@ -125,21 +114,7 @@ public abstract class LogSession {
 			output.stop(nanos);
 		}
 
-		onStop();
+		m_topicRegistry.removeAllSubscribers();
 		return true;
-	}
-
-	/**
-	 * Called when this session is started.
-	 */
-	protected void onStart() {
-		// Default implementation does nothing.
-	}
-
-	/**
-	 * Called when this session is stopped.
-	 */
-	protected void onStop() {
-		// Default implementation does nothing.
 	}
 }

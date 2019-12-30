@@ -24,28 +24,20 @@ public class LogSessionTest {
 
 	@Test
 	public void testStartStop() {
-		final LogTopicRegistry topicRegistry = LogTopicRegistryTest.createTestRegistry();
-		final LogOutput testOutput = Mockito.mock(LogOutput.class);
-		final TestSession session = new TestSession(Map.of("test-output", testOutput), topicRegistry);
-
 		long startNanos = 1000000000L;
 		long stopNanos = 3000000000L;
 
-		Assert.assertEquals(-1, session.timeSinceStartNanos(1003000000L));
-
-		session.start(startNanos);
-
-		Assert.assertEquals(1, session.onStartCalled);
-		Assert.assertEquals(0, session.onStopCalled);
+		final LogTopicRegistry topicRegistry = LogTopicRegistryTest.createTestRegistry();
+		final LogOutput testOutput = Mockito.mock(LogOutput.class);
+		final LogSession session = new LogSession(Map.of("test-output", testOutput), topicRegistry, startNanos);
 
 		Assert.assertEquals(1L, session.timeSinceStartNanos(1000000001L));
 		Assert.assertEquals(3000000L, session.timeSinceStartNanos(1003000000L));
 		Assert.assertEquals(8000000000L, session.timeSinceStartNanos(9000000000L));
 		Assert.assertEquals(2000000000L, session.timeSinceStartNanos(stopNanos));
 
-		session.stop(stopNanos);
-		Assert.assertEquals(1, session.onStartCalled);
-		Assert.assertEquals(1, session.onStopCalled);
+		Assert.assertTrue(session.stop(stopNanos));
+		Assert.assertFalse(session.stop(stopNanos));
 	}
 
 	@Test
@@ -55,8 +47,7 @@ public class LogSessionTest {
 		when(topicRegistry.getTopic("test-topic")).thenReturn(testTopic);
 
 		final LogOutput testOutput = Mockito.mock(LogOutput.class);
-		final LogSession session = new TestSession(Map.of("test-output", testOutput), topicRegistry);
-		session.start(1000000000L);
+		final LogSession session = new LogSession(Map.of("test-output", testOutput), topicRegistry, 1000000000L);
 
 		session.subscribeTopic("test-topic", "test-output", 1000000000L);
 		verify(testOutput).notifySubscribe("test-topic", 1000000000L);
@@ -65,23 +56,5 @@ public class LogSessionTest {
 		verify(testOutput).notifyUnsubscribe("test-topic", 2000000000L);
 
 		session.stop(3000000000L);
-	}
-
-	@Ignore
-	private class TestSession extends LogSession {
-		int onStartCalled = 0;
-		int onStopCalled = 0;
-
-		TestSession(Map<String, LogOutput> outputs, LogTopicRegistry topicRegistry) {
-			super(outputs, topicRegistry);
-		}
-
-		protected void onStart() {
-			onStartCalled++;
-		}
-
-		protected void onStop() {
-			onStopCalled++;
-		}
 	}
 }
