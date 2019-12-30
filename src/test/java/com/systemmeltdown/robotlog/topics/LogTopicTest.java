@@ -55,6 +55,20 @@ public class LogTopicTest {
 
 		topic.removeSubscriber(subscriber2);
 		Assert.assertFalse(topic.hasSubscribers());
+	}
 
+	@Test
+	public void testRemoveAllSubscribers() {
+		final LogTopicRegistry registry = Mockito.mock(LogTopicRegistry.class);
+		final TestTopic topic = new TestTopic("test-topic", registry);
+		final LogOutput subscriber1 = Mockito.mock(LogOutput.class);
+		final LogOutput subscriber2 = Mockito.mock(LogOutput.class);
+
+		topic.addSubscriber(subscriber1);
+		topic.addSubscriber(subscriber2);
+		Assert.assertTrue(topic.hasSubscribers());
+
+		topic.removeAllSubscribers();
+		Assert.assertFalse(topic.hasSubscribers());
 	}
 }

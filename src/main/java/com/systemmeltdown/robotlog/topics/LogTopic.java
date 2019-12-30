@@ -108,6 +108,17 @@ public abstract class LogTopic {
 		return true;
 	}
 
+	public void removeAllSubscribers() {
+		removeAllSubscribers(System.nanoTime());
+	}
+
+	public void removeAllSubscribers(long nanos) {
+		for(LogOutput subscriber : m_subscribers) {
+			subscriber.notifyUnsubscribe(m_name, nanos);
+		}
+		m_subscribers.clear();
+	}
+
 	/**
 	 * Writes a log entry out with a given time.
 	 * 
