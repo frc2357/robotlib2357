@@ -29,3 +29,22 @@ jar {
 		attributes 'Main-Class': 'com.systemmeltdown.robotlib.RobotLib2357'
 	}
 }
+
+sourceSets {
+	main {
+		java {
+			srcDir './utilities-src/main/java'
+		}
+	}
+}
+
+ext {
+	robotLogTestSession = "com.systemmeltdown.robotlog.testsession.RobotLogTestSession"
+}
+
+task robotlogtestsession(type: JavaExec) {
+	group = "Execution"
+	description = "Run the RobotLogTestSession"
+	classpath = sourceSets.main.runtimeClasspath
+	main = robotLogTestSession
+}
