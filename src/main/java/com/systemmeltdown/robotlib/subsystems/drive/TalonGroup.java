@@ -1,5 +1,6 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -33,5 +34,13 @@ public class TalonGroup {
             slaveTalon.configFactoryDefault();
             slaveTalon.setInverted(isInverted);
         }
+    }
+
+    public void set(ControlMode mode, double value) {
+        m_masterTalon.set(mode, value);
+    }
+
+    public int getSelectedSensorPosition() {
+        return m_masterTalon.getSelectedSensorPosition();
     }
 }
