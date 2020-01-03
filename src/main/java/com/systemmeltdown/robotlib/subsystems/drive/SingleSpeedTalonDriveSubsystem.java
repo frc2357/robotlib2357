@@ -6,9 +6,11 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     private TalonGroup m_rightTalonGroup;
     private TalonGroup m_leftTalonGroup;
 
-    public SingleSpeedTalonDriveSubsystem(TalonGroup rightTalonGroup, TalonGroup leftTalonGroup) {
-        m_rightTalonGroup = rightTalonGroup;
-        m_leftTalonGroup = leftTalonGroup;
+    public SingleSpeedTalonDriveSubsystem(
+        TalonGroup rightTalonGroup,
+        TalonGroup leftTalonGroup) {
+            m_rightTalonGroup = rightTalonGroup;
+            m_leftTalonGroup = leftTalonGroup;
     }
 
     @Override

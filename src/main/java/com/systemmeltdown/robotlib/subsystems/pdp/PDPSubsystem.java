@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Manages logging and info for PDP
  * 
  * TODO: Add unit tests.
-<<<<<<< HEAD
  * TODO: Add amperage threshold logging to info
-=======
->>>>>>> Add PDPSubsystem
  */
 public class PDPSubsystem extends Subsystem {
   private final StringTopic errorTopic = new StringTopic("PDP Error");
@@ -21,11 +18,7 @@ public class PDPSubsystem extends Subsystem {
   private final StringTopic debugTopic = new StringTopic("PDP Debug");
   private final DoubleTopic batteryVoltsTopic = new DoubleTopic("Battery Volts", 0.25);
   private final DoubleTopic totalAmpsTopic = new DoubleTopic("Total Amps", 0.25);
-<<<<<<< HEAD
   private final DoubleTopic temperatureTopic = new DoubleTopic("PDP Temp", 5.0);
-=======
-  private final DoubleTopic temperatureTopic = new DoubleTopic("PDP Temp", 1.0);
->>>>>>> Add PDPSubsystem
   private final PowerDistributionPanel m_pdp;
 
   public PDPSubsystem(int canId) {
