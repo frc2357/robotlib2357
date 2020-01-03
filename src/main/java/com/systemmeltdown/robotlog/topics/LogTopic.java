@@ -84,7 +84,7 @@ public abstract class LogTopic {
 			return false;
 		}
 		m_subscribers.add(subscriber);
-		subscriber.notifySubscribe(m_name, nanos);
+		subscriber.notifySubscribe(m_name, m_valueType, nanos);
 		return true;
 	}
 

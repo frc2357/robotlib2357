@@ -5,7 +5,7 @@ public interface LogWriter {
 
 	public abstract void onStop(long relativeNanos);
 
-	public abstract void onSubscribe(String topicName, long relativeNanos);
+	public abstract void onSubscribe(String topicName, Class<?> valueType, long relativeNanos);
 
 	public abstract void onUnsubscribe(String topicName, long relativeNanos);
 

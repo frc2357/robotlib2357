@@ -43,7 +43,7 @@ class PrintStreamLogWriter implements LogWriter {
 	}
 
 	@Override
-	public void onSubscribe(String topicName, long relativeNanos) {
+	public void onSubscribe(String topicName, Class<?> valueType, long relativeNanos) {
 		m_stream.println(m_prefix + ": " + nanosToTime(relativeNanos) + " [" + topicName + "]( Subscribed )");
 	}
 
