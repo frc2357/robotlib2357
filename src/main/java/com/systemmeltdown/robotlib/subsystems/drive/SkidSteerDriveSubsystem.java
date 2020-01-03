@@ -65,8 +65,8 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 	}
 
 	public final void driveProportional(double speedProportion, double turnProportion) {
-		double leftProportion = speedProportion + turnProportion;
-		double rightProportion = speedProportion - turnProportion;
+		double leftProportion = speedProportion - turnProportion;
+		double rightProportion = speedProportion + turnProportion;
 		setProportional(leftProportion, rightProportion);
 	}
 
