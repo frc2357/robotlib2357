@@ -2,6 +2,9 @@ package com.systemmeltdown.robotlog.topics;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.systemmeltdown.robotlog.outputs.LogOutput;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 
@@ -27,6 +30,28 @@ public class LogTopicRegistryTest {
 		Assert.assertEquals(topic1, registry.getTopic("test-topic-1"));
 		Assert.assertEquals(topic2, registry.getTopic("test-topic-2"));
 		Assert.assertNull(registry.getTopic("test-topic-3"));
+	}
+
+	@Test
+	public void testRemoveAllSubscribers() {
+		final LogTopicRegistry registry = new LogTopicRegistry();
+
+		final LogTopic topic1 = new TestTopic("test-topic-1");
+		final LogTopic topic2 = new TestTopic("test-topic-2");
+
+		registry.addTopic(topic1);
+		registry.addTopic(topic2);
+
+		topic1.addSubscriber(Mockito.mock(LogOutput.class));
+		topic2.addSubscriber(Mockito.mock(LogOutput.class));
+
+		Assert.assertTrue(topic1.hasSubscribers());
+		Assert.assertTrue(topic2.hasSubscribers());
+
+		registry.removeAllSubscribers();
+
+		Assert.assertFalse(topic1.hasSubscribers());
+		Assert.assertFalse(topic2.hasSubscribers());
 	}
 
 	@Ignore

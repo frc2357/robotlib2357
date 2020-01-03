@@ -42,6 +42,15 @@ public class LogTopicRegistry {
 	}
 
 	/**
+	 * Unsubscribes all subscribers from all topics
+	 */
+	public void removeAllSubscribers() {
+		for(LogTopic topic : m_topics.values()) {
+			topic.removeAllSubscribers();
+		}
+	}
+
+	/**
 	 * Adds a topic to this registry.
 	 * 
 	 * Note: This function intentionally not public to restrict usage to this package.
