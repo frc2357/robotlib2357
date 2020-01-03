@@ -24,12 +24,14 @@ public class DriverControls implements ArcadeAxisInput {
   @Override
   public double getSpeed() {
     double value = m_controller.getY(Hand.kLeft);
+    System.out.println("Left value: " + value);
     return Utility.deadband(value, m_deadband);
   }
 
   @Override
   public double getTurn() {
     double value = m_controller.getX(Hand.kRight);
+    System.out.println("right value: " + value);
     return Utility.deadband(value, m_deadband);
   }
 }
