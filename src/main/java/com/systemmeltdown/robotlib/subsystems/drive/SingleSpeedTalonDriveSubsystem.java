@@ -11,36 +11,32 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     private WPI_TalonSRX[] m_leftSlaves;
 
     public SingleSpeedTalonDriveSubsystem(
-        int rightMasterId, 
-        int leftMasterId, 
-        int[] rightSlaveIds,
-        int[] leftSlaveIds,
-        boolean invertRight,
-        boolean invertLeft) {
+        TalonIDGroup rightTalonIDs,
+        TalonIDGroup leftTalonIDs) {
 
         // init right master
-        m_rightMaster = new WPI_TalonSRX(rightMasterId);
+        m_rightMaster = new WPI_TalonSRX(rightTalonIDs.getMasterTalonID());
         m_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        m_rightMaster.setInverted(invertRight);
+        m_rightMaster.setInverted(rightTalonIDs.getInvert());
 
         // init left master
-        m_leftMaster = new WPI_TalonSRX(leftMasterId);
+        m_leftMaster = new WPI_TalonSRX(leftTalonIDs.getMasterTalonID());
         m_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        m_leftMaster.setInverted(invertLeft);
+        m_leftMaster.setInverted(leftTalonIDs.getInvert());
 
         // init right slaves
-        m_rightSlaves = new WPI_TalonSRX[rightSlaveIds.length];
+        m_rightSlaves = new WPI_TalonSRX[rightTalonIDs.getSlaveTalonIDs().length];
         for (int i = 0; i < m_rightSlaves.length; i++) {
-            m_rightSlaves[i] = new WPI_TalonSRX(rightSlaveIds[i]);
-            m_rightSlaves[i].setInverted(invertRight);
+            m_rightSlaves[i] = new WPI_TalonSRX(rightTalonIDs.getSlaveTalonIDs()[i]);
+            m_rightSlaves[i].setInverted(rightTalonIDs.getInvert());
             m_rightSlaves[i].follow(m_rightMaster);
         }
 
         // init left slaves
-        m_leftSlaves = new WPI_TalonSRX[leftSlaveIds.length];
+        m_leftSlaves = new WPI_TalonSRX[leftTalonIDs.getSlaveTalonIDs().length];
         for (int i = 0; i < m_leftSlaves.length; i++) {
-            m_leftSlaves[i] = new WPI_TalonSRX(leftSlaveIds[i]);
-            m_leftSlaves[i].setInverted(invertLeft);
+            m_leftSlaves[i] = new WPI_TalonSRX(leftTalonIDs.getSlaveTalonIDs()[i]);
+            m_leftSlaves[i].setInverted(leftTalonIDs.getInvert());
             m_leftSlaves[i].follow(m_leftMaster);
         }
 
@@ -50,13 +46,11 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     @Override
     protected int getCurrentSpeedLeftClicksPerSecond() {
         return m_leftMaster.getSelectedSensorPosition();
-
     }
 
     @Override
     protected int getCurrentSpeedRightClicksPerSecond() {
         return m_rightMaster.getSelectedSensorPosition();
-
     }
 
     @Override
