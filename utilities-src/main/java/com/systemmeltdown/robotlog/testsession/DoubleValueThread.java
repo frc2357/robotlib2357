@@ -4,14 +4,14 @@ import com.systemmeltdown.robotlog.topics.DoubleTopic;
 
 public abstract class DoubleValueThread implements Runnable {
   public static final double DEFAULT_SAMPLE_RATE_SECONDS = 0.01D;
-	private static final int THREAD_PRIORITY = Thread.NORM_PRIORITY;
+  private static final int THREAD_PRIORITY = Thread.NORM_PRIORITY;
 
-	private static ThreadGroup m_threadGroup = initThreadGroup();
-	
-	private static ThreadGroup initThreadGroup() {
-		final ThreadGroup threadGroup = new ThreadGroup("ThreadLogOutputs");
-		threadGroup.setMaxPriority(THREAD_PRIORITY);
-		return threadGroup;
+  private static ThreadGroup m_threadGroup = initThreadGroup();
+
+  private static ThreadGroup initThreadGroup() {
+    final ThreadGroup threadGroup = new ThreadGroup("ThreadLogOutputs");
+    threadGroup.setMaxPriority(THREAD_PRIORITY);
+    return threadGroup;
   }
 
   private final double m_sampleRateSeconds;
