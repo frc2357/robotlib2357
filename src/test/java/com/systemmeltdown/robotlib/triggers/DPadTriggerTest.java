@@ -19,8 +19,6 @@ public class DPadTriggerTest {
 		DPadTrigger Dpad = new DPadTrigger(controller,triggerValue);
 
 		assertEquals(Dpad.get(), true);
-
-		Dpad.close();
 	}
 
 	@Test
@@ -34,9 +32,5 @@ public class DPadTriggerTest {
 		DPadTrigger Dpad = new DPadTrigger(controller,triggerValue);
 
 		assertEquals(Dpad.get(), false);
-
-		Dpad.close();
-
-		
 	}
 }

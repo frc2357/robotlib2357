@@ -16,8 +16,6 @@ public class AxisThresholdTriggerTest {
     AxisThresholdTrigger trigger = new AxisThresholdTrigger(controller, Hand.kRight, .25);
 
     assertEquals( trigger.get(), true );
-
-    trigger.close();
   }
 
   @Test
@@ -29,8 +27,6 @@ public class AxisThresholdTriggerTest {
     AxisThresholdTrigger trigger = new AxisThresholdTrigger(controller, Hand.kRight, .25);
 
 	  assertEquals( trigger.get(), false );
-
-	  trigger.close();
   }
 
   @Test
@@ -42,8 +38,6 @@ public class AxisThresholdTriggerTest {
     AxisThresholdTrigger trigger = new AxisThresholdTrigger(controller, Hand.kRight, .25);
 
 	  assertEquals( trigger.get(), false );
-
-	  trigger.close();
   }
 
   @Test
@@ -55,8 +49,6 @@ public class AxisThresholdTriggerTest {
     AxisThresholdTrigger trigger = new AxisThresholdTrigger(controller, Hand.kRight, .25);
 
 	  assertEquals( trigger.get(), true );
-
-	  trigger.close();
   }
 
   @Test
@@ -68,7 +60,5 @@ public class AxisThresholdTriggerTest {
     AxisThresholdTrigger trigger = new AxisThresholdTrigger(controller, Hand.kRight, .25);
 
 	  assertEquals( trigger.get(), false );
-
-	  trigger.close();
   }
 }

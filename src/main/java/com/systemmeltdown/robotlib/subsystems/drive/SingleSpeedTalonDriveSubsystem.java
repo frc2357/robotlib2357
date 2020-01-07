@@ -52,10 +52,4 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     protected void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond) {
         // TODO implement PID Loop
     }
-
-    @Override
-    protected void initDefaultCommand() {
-        // when initailizing, call setDefaultCommand
-    }
-
 }

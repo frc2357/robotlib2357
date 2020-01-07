@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 
 /**
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * that we will use encoders and velocity drive. However, this makes zero
  * assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem extends Subsystem implements ClosedLoopSystem {
+public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSystem {
 	/**
 	 * The distance between the drive wheels. Measure from the center of the left
 	 * wheels to the center of the right. Value: double (positive)

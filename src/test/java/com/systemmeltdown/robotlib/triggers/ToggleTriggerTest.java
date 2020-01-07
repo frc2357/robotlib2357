@@ -12,31 +12,24 @@ import static org.junit.Assert.*;
 public class ToggleTriggerTest {
 	@Test
 	public void testGetReturnsTrue() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    NetworkTableEntry entry = tab.add("Get Returns True", true)
-      .withWidget(BuiltInWidgets.kToggleButton)
-      .getEntry();
+		ShuffleboardTab tab = Shuffleboard.getTab("Test");
+		NetworkTableEntry entry = tab.add("Get Returns True", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
-		ToggleTrigger trigger = new ToggleTrigger( entry );
+		ToggleTrigger trigger = new ToggleTrigger(entry);
 
-		assertEquals( trigger.get(), true );
-
-		trigger.close();
+		assertEquals(trigger.get(), true);
 	}
 
 	@Test
 	public void testGetReturnsFalseAfterClick() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    NetworkTableEntry entry = tab.add("Get Returns False After Click", true)
-      .withWidget(BuiltInWidgets.kToggleButton)
-      .getEntry();
+		ShuffleboardTab tab = Shuffleboard.getTab("Test");
+		NetworkTableEntry entry = tab.add("Get Returns False After Click", true)
+				.withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
-    ToggleTrigger trigger = new ToggleTrigger( entry );
+		ToggleTrigger trigger = new ToggleTrigger(entry);
 
-    entry.setBoolean(false);
+		entry.setBoolean(false);
 
-		assertEquals( trigger.get(), false );
-
-		trigger.close();
+		assertEquals(trigger.get(), false);
 	}
 }
