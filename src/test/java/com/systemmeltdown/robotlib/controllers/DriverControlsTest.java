@@ -18,7 +18,7 @@ public class DriverControlsTest{
 
   @Test
   public void testGetSpeed() {
-    DriverControlsBase controls = new DriverControlsBase(controller, 0.1);
+    DriverControls controls = new DriverControls(controller, 0.1);
 
     when(controller.getY(Hand.kLeft)).thenReturn(1.0);
     assertEquals(controls.getSpeed(), 1.0, 0.0);
@@ -41,7 +41,7 @@ public class DriverControlsTest{
 
   @Test
   public void testGetTurn() {
-    DriverControlsBase controls = new DriverControlsBase(controller, 0.1);
+    DriverControls controls = new DriverControls(controller, 0.1);
 
     when(controller.getX(Hand.kRight)).thenReturn(1.0);
     assertEquals(controls.getTurn(), 1.0, 0.0);
