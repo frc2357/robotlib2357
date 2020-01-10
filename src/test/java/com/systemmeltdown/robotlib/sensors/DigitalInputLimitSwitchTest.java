@@ -19,8 +19,6 @@ public class DigitalInputLimitSwitchTest {
 
 		when( input.get() ).thenReturn( false );
 		assertFalse( limit.isAtLimit() );
-
-		limit.close();
 	}
 
 	@Test
@@ -34,7 +32,5 @@ public class DigitalInputLimitSwitchTest {
 
 		when( input.get() ).thenReturn( false );
 		assertTrue( limit.isAtLimit() );
-
-		limit.close();
 	}
 }
