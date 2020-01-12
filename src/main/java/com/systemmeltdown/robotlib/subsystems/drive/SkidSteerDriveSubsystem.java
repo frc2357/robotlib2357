@@ -4,34 +4,31 @@ import java.util.Map;
 
 import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 
 /**
- * Base class for any kind of "Skid Steer" drive base.
- * This makes assumptions that we will use encoders and velocity drive.
- * However, this makes zero assumptions about hardware or implementation of such.
+ * Base class for any kind of "Skid Steer" drive base. This makes assumptions
+ * that we will use encoders and velocity drive. However, this makes zero
+ * assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem extends Subsystem implements ClosedLoopSystem {
+public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSystem {
 	/**
-	 * The distance between the drive wheels.
-	 * Measure from the center of the left wheels to the center of the right.
-	 * Value: double (positive)
+	 * The distance between the drive wheels. Measure from the center of the left
+	 * wheels to the center of the right. Value: double (positive)
 	 */
 	public static final String CONFIG_WHEELBASE_WIDTH_INCHES = "wheelbase_width_inches";
 
 	/**
-	 * The number of encoder clicks per inch of drive base travel.
-	 * Calculated with gear ratios and wheel diameter.
-	 * Verify with measurement of working robot travel for best accuracy.
-	 * Value: int (positive)
+	 * The number of encoder clicks per inch of drive base travel. Calculated with
+	 * gear ratios and wheel diameter. Verify with measurement of working robot
+	 * travel for best accuracy. Value: int (positive)
 	 */
 	public static final String CONFIG_CLICKS_PER_INCH = "clicks_per_inch";
 
 	/**
-	 * The number of encoder clicks per minute when running at max speed.
-	 * Measure top running speed with no load (up on blocks)
-	 * Value: int (positive)
+	 * The number of encoder clicks per minute when running at max speed. Measure
+	 * top running speed with no load (up on blocks) Value: int (positive)
 	 */
 	public static final String CONFIG_MAX_SPEED_CLICKS_PER_SECOND = "max_speed_clicks_per_minute";
 
@@ -68,8 +65,8 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 	}
 
 	public final void driveProportional(double speedProportion, double turnProportion) {
-		double leftProportion = speedProportion + turnProportion;
-		double rightProportion = speedProportion - turnProportion;
+		double leftProportion = speedProportion - turnProportion;
+		double rightProportion = speedProportion + turnProportion;
 		setProportional(leftProportion, rightProportion);
 	}
 
@@ -79,10 +76,7 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 			return;
 		}
 
-		double turnInchesPerSecond = RobotMath.turnDegreesToInches(
-			turnDegreesPerSecond,
-			m_wheelbaseWidthInches
-		);
+		double turnInchesPerSecond = RobotMath.turnDegreesToInches(turnDegreesPerSecond, m_wheelbaseWidthInches);
 		int turnClicksPerSecond = (int) Math.round(turnInchesPerSecond * m_clicksPerInch);
 		int speedClicksPerSecond = (int) Math.round(speedInchesPerSecond * m_clicksPerInch);
 
@@ -94,27 +88,35 @@ public abstract class SkidSteerDriveSubsystem extends Subsystem implements Close
 
 	/**
 	 * Gets the current speed of the left drive system
+	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
 	protected abstract int getCurrentSpeedLeftClicksPerSecond();
 
 	/**
 	 * Gets the current speed of the right drive system
+	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
 	protected abstract int getCurrentSpeedRightClicksPerSecond();
 
 	/**
 	 * Set the proportional speed of the drive base.
-	 * @param leftProportion Speed of left drive (-1.0 to 1.0, negative = backwards)
-	 * @param rightProportion Speed of right drive (-1.0 to 1.0, negative = backwards)
+	 * 
+	 * @param leftProportion  Speed of left drive (-1.0 to 1.0, negative =
+	 *                        backwards)
+	 * @param rightProportion Speed of right drive (-1.0 to 1.0, negative =
+	 *                        backwards)
 	 */
 	protected abstract void setProportional(double leftProportion, double rightProportion);
 
 	/**
 	 * Set the valocity speed of the drive base.
-	 * @param leftClicksPerSecond Speed of left drive in clicks per second (negative = backwards)
-	 * @param rightClicksPerSecond Speed of right drive in clicks per second (negative = backwards)
+	 * 
+	 * @param leftClicksPerSecond  Speed of left drive in clicks per second
+	 *                             (negative = backwards)
+	 * @param rightClicksPerSecond Speed of right drive in clicks per second
+	 *                             (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
 

@@ -1,7 +1,7 @@
 package com.systemmeltdown.robotlib.triggers;
 
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class ButtonChordTrigger extends Trigger {
   private JoystickButton[] buttons;

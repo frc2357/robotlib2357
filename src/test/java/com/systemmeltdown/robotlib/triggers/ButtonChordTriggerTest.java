@@ -1,6 +1,6 @@
 package com.systemmeltdown.robotlib.triggers;
 
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -21,8 +21,6 @@ public class ButtonChordTriggerTest {
 		ButtonChordTrigger trigger = new ButtonChordTrigger( buttons );
 
 		assertEquals( trigger.get(), true );
-
-		trigger.close();
 	}
 
 	@Test
@@ -40,8 +38,6 @@ public class ButtonChordTriggerTest {
 		ButtonChordTrigger trigger = new ButtonChordTrigger( buttons );
 
 		assertEquals( trigger.get(), false );
-
-		trigger.close();
 	}
 
 	@Test
@@ -59,7 +55,5 @@ public class ButtonChordTriggerTest {
 		ButtonChordTrigger trigger = new ButtonChordTrigger( buttons );
 
 		assertEquals( trigger.get(), false );
-
-		trigger.close();
 	}
 }

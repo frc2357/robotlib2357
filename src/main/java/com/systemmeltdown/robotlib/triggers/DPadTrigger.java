@@ -1,7 +1,7 @@
 package com.systemmeltdown.robotlib.triggers;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.systemmeltdown.robotlib.util.DPadValue;
 
 public class DPadTrigger extends Trigger {
