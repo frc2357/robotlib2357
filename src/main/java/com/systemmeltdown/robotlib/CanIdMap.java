@@ -28,4 +28,8 @@ public class CanIdMap {
    * Mechanisms and other devices (robot specific)
    */
 
+  public static final int[] LEFT_ENCODER_PORTS = new int[]{11, 13};
+  public static final int[] RIGHT_ENCODER_PORTS = new int[]{12, 14};
+
+
 }

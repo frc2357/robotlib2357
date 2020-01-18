@@ -4,7 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class TalonGroup {
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+
+public class TalonGroup extends SpeedControllerGroup {
     WPI_TalonSRX m_masterTalon;
     WPI_TalonSRX[] m_slaveTalons;
 
@@ -17,7 +19,6 @@ public class TalonGroup {
             m_slaveTalons[i].follow(m_masterTalon);
         }
     }
-
     public WPI_TalonSRX getMasterTalon() {
         return m_masterTalon;
     }
