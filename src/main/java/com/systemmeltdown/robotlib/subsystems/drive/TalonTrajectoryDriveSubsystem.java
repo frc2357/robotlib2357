@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
-public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidSteerDriveSubsystem {
+public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
     /**
 	 * Whether or not the left talon group needs to be inverted Value: boolean
 	 */
@@ -37,7 +37,6 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
   
-
     private TalonGroup m_rightTalonGroup;
     private TalonGroup m_leftTalonGroup;
 
@@ -51,9 +50,9 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @param encoderDistancePerPulse The encoder distance per pulse.
      * @param gyroReversed Boolean deciding whether the gyro is reversed or not.
      */
-    public SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem(
-        TalonGroup rightTalonGroup, TalonGroup leftTalonGroup, Encoder leftEncoder,
-        Encoder rightEncoder, PigeonIMU gyro, double encoderDistancePerPulse, boolean gyroReversed) {
+    public TalonTrajectoryDriveSubsystem(
+        TalonGroup rightTalonGroup, TalonGroup leftTalonGroup, Encoder leftEncoder, Encoder rightEncoder,
+        PigeonIMU gyro, double encoderDistancePerPulse, boolean gyroReversed) {
             m_rightTalonGroup = rightTalonGroup;
             m_leftTalonGroup = leftTalonGroup;
             m_rightEncoder = rightEncoder;
@@ -111,7 +110,7 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      */
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
-      }
+    }
   
     /**
      * Resets the odometry to the specified pose.
@@ -139,8 +138,9 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @param rightVolts the commanded right output
      */
     public void setTankDriveVolts(double leftVolts, double rightVolts) {
-        m_rightTalonGroup.setMasterTalonVolts(leftVolts);
-        m_leftTalonGroup.setMasterTalonVolts(-rightVolts);
+        m_leftTalonGroup.setMasterTalonVolts(leftVolts);
+        //rightVolts is negative because the right motors are inverted.
+        m_rightTalonGroup.setMasterTalonVolts(-rightVolts);
     }
     
     /**
@@ -157,7 +157,7 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
     }
 
     /**
@@ -166,7 +166,7 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @return the left drive encoder
      */
     public Encoder getLeftEncoder() {
-    return m_leftEncoder;
+        return m_leftEncoder;
     }
 
     /**
@@ -175,17 +175,8 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @return the right drive encoder
      */
     public Encoder getRightEncoder() {
-    return m_rightEncoder;
+        return m_rightEncoder;
     }
-
-    /**
-     * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
-     *Currently commented out as it is currently uneeded, and creates an error.
-     * @param maxOutput the maximum output to which the drive will be constrained
-     */
-  /*  public void setMaxOutput(double maxOutput) {
-        m_drive.setMaxOutput(maxOutput);
-    } */
 
     /**
      * Zeroes the heading of the robot.
