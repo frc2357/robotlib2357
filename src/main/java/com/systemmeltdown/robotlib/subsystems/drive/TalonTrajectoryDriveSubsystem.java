@@ -14,16 +14,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
 public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
-    /**
-	 * Whether or not the left talon group needs to be inverted Value: boolean
-	 */
-    public static final String CONFIG_IS_LEFT_INVERTED = "is_left_inverted";
-    
-    /**
-	 * Whether or not the right talon group needs to be inverted Value: boolean
-	 */
-    public static final String CONFIG_IS_RIGHT_INVERTED = "is_right_inverted";
-    
     // The left-side drive encoder
     private final Encoder m_leftEncoder;
       
@@ -32,13 +22,33 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
   
     // The gyro sensor
     private PigeonIMU m_gyro;
-    private boolean m_gyroReversed;
+    private boolean m_isGyroReversed;
    
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
   
     private TalonGroup m_rightTalonGroup;
     private TalonGroup m_leftTalonGroup;
+
+    private boolean m_isLeftInverted;
+    private boolean m_isRightInverted;
+
+    public static class Configuration extends SkidSteerDriveSubsystem.Configuration{
+        /**
+         * Whether or not the left talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isLeftInverted = false;
+        
+        /**
+         * Whether or not the right talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isRightInverted = true;
+        
+        /**
+         * Whether or not the gyro is reversed Value: boolean
+         */
+        public boolean m_isGyroReversed = true;
+    }
 
     /**
      * 
@@ -48,16 +58,14 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
      * @param rightEncoder The encoder used on the right side of the drivebase.
      * @param gyro The Pigeon IMU to use as the gyro.
      * @param encoderDistancePerPulse The encoder distance per pulse.
-     * @param gyroReversed Boolean deciding whether the gyro is reversed or not.
      */
     public TalonTrajectoryDriveSubsystem(
         TalonGroup rightTalonGroup, TalonGroup leftTalonGroup, Encoder leftEncoder, Encoder rightEncoder,
-        PigeonIMU gyro, double encoderDistancePerPulse, boolean gyroReversed) {
+        PigeonIMU gyro, double encoderDistancePerPulse) {
             m_rightTalonGroup = rightTalonGroup;
             m_leftTalonGroup = leftTalonGroup;
             m_rightEncoder = rightEncoder;
             m_leftEncoder = leftEncoder;
-            m_gyroReversed = gyroReversed;
 
             m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
             m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
@@ -91,11 +99,12 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
         m_rightTalonGroup.set(ControlMode.PercentOutput, rightProportion);
     }
 
-    @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Configuration config) {
         super.configure(config);
-        m_leftTalonGroup.configure(((Boolean) config.get(CONFIG_IS_LEFT_INVERTED)).booleanValue());
-        m_rightTalonGroup.configure(((Boolean) config.get(CONFIG_IS_RIGHT_INVERTED)).booleanValue());
+        m_isLeftInverted = config.m_isLeftInverted;
+        m_isRightInverted = config.m_isRightInverted;
+        m_isGyroReversed = config.m_isGyroReversed;
+
     }
 
     @Override

@@ -13,40 +13,39 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * assumptions about hardware or implementation of such.
  */
 public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSystem {
-	/**
-	 * The distance between the drive wheels. Measure from the center of the left
-	 * wheels to the center of the right. Value: double (positive)
-	 */
-	public static final String CONFIG_WHEELBASE_WIDTH_INCHES = "wheelbase_width_inches";
-
-	/**
-	 * The number of encoder clicks per inch of drive base travel. Calculated with
-	 * gear ratios and wheel diameter. Verify with measurement of working robot
-	 * travel for best accuracy. Value: int (positive)
-	 */
-	public static final String CONFIG_CLICKS_PER_INCH = "clicks_per_inch";
-
-	/**
-	 * The number of encoder clicks per minute when running at max speed. Measure
-	 * top running speed with no load (up on blocks) Value: int (positive)
-	 */
-	public static final String CONFIG_MAX_SPEED_CLICKS_PER_SECOND = "max_speed_clicks_per_minute";
 
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
 	private boolean m_ClosedLoopEnabled = true;
 
-	public void configure(Map<String, Object> config) {
-		if (config.containsKey(CONFIG_WHEELBASE_WIDTH_INCHES)) {
-			m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
-		}
-		if (config.containsKey(CONFIG_CLICKS_PER_INCH)) {
-			m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
-		}
-		if (config.containsKey(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)) {
-			m_maxSpeedClicksPerSecond = ((Integer) config.get(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)).intValue();
-		}
+	public static class Configuration {
+		/**
+		 * The distance between the drive wheels. Measure from the center of the left
+		 * wheels to the center of the right. Value: double (positive)
+		 */
+		public double m_wheelbaseWidthInches = 6;
+		
+		/**
+		 * The number of encoder clicks per inch of drive base travel. Calculated with
+		 * gear ratios and wheel diameter. Verify with measurement of working robot
+		 * travel for best accuracy. Value: int (positive)
+		 */
+		public int m_clicksPerInch = 5;
+
+		/**
+		 * The number of encoder clicks per minute when running at max speed. Measure
+		 * top running speed with no load (up on blocks) Value: int (positive)
+		 */
+		public int m_maxSpeedClicksPerSecond = 1024;
+	}
+
+	public void configure(Configuration config) {
+			m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
+
+			m_clicksPerInch = config.m_clicksPerInch;
+		
+			m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
