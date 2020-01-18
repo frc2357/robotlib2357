@@ -1,12 +1,11 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.systemmeltdown.robotlib.subsystems.drive.controllerGroups.TalonGroup;
-
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.systemmeltdown.robotlib.subsystems.drive.controllerGroups.FalconGroup;
 
-public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
+public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
     /**
 	 * Whether or not the left talon group needs to be inverted Value: boolean
 	 */
@@ -17,37 +16,37 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 	 */
 	public static final String CONFIG_IS_RIGHT_INVERTED = "is_right_inverted";
 
-    private TalonGroup m_rightTalonGroup;
-    private TalonGroup m_leftTalonGroup;
+    private FalconGroup m_rightFalconGroup;
+    private FalconGroup m_leftFalconGroup;
 
-    public SingleSpeedTalonDriveSubsystem(
-        TalonGroup rightTalonGroup,
-        TalonGroup leftTalonGroup) {
-            m_rightTalonGroup = rightTalonGroup;
-            m_leftTalonGroup = leftTalonGroup;
+    public SingleSpeedFalconDriveSubsystem(
+        FalconGroup rightFalconGroup,
+        FalconGroup leftFalconGroup) {
+            m_rightFalconGroup = rightFalconGroup;
+            m_leftFalconGroup = leftFalconGroup;
     }
 
     @Override
     protected int getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftTalonGroup.getSelectedSensorPosition();
+        return m_leftFalconGroup.getSelectedSensorPosition();
     }
 
     @Override
     protected int getCurrentSpeedRightClicksPerSecond() {
-        return m_rightTalonGroup.getSelectedSensorPosition();
+        return m_rightFalconGroup.getSelectedSensorPosition();
     }
 
     @Override
     protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftTalonGroup.set(ControlMode.PercentOutput, leftProportion);
-        m_rightTalonGroup.set(ControlMode.PercentOutput, rightProportion);
+        m_leftFalconGroup.set(ControlMode.PercentOutput, leftProportion);
+        m_rightFalconGroup.set(ControlMode.PercentOutput, rightProportion);
     }
 
     @Override
     public void configure(Map<String, Object> config) {
         super.configure(config);
-        m_leftTalonGroup.configure(((Boolean) config.get(CONFIG_IS_LEFT_INVERTED)).booleanValue());
-        m_rightTalonGroup.configure(((Boolean) config.get(CONFIG_IS_RIGHT_INVERTED)).booleanValue());
+        m_leftFalconGroup.configure(((Boolean) config.get(CONFIG_IS_LEFT_INVERTED)).booleanValue());
+        m_rightFalconGroup.configure(((Boolean) config.get(CONFIG_IS_RIGHT_INVERTED)).booleanValue());
     }
 
     @Override
