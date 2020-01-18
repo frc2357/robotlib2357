@@ -4,16 +4,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-
-public class TalonGroup extends SpeedControllerGroup {
+public class TalonGroup {
     WPI_TalonSRX m_masterTalon;
     WPI_TalonSRX[] m_slaveTalons;
 
     public TalonGroup(int masterTalonID, int[] slaveTalonIDs) {
         m_masterTalon = new WPI_TalonSRX(masterTalonID);
         m_slaveTalons = new WPI_TalonSRX[slaveTalonIDs.length];
-
         for (int i = 0; i < slaveTalonIDs.length; i++) {
             m_slaveTalons[i] = new WPI_TalonSRX(slaveTalonIDs[i]);
             m_slaveTalons[i].follow(m_masterTalon);
@@ -44,5 +41,9 @@ public class TalonGroup extends SpeedControllerGroup {
 
     public int getSelectedSensorPosition() {
         return m_masterTalon.getSelectedSensorPosition();
+    }
+
+    public void setMasterTalonVolts(double outputVolts) {
+        m_masterTalon.setVoltage(outputVolts);
     }
 }

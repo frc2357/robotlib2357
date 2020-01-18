@@ -130,8 +130,8 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      * @param rightVolts the commanded right output
      */
     public void setTankDriveVolts(double leftVolts, double rightVolts) {
-        m_rightTalonGroup.setVoltage(leftVolts);
-        m_leftTalonGroup.setVoltage(-rightVolts);
+        m_rightTalonGroup.setMasterTalonVolts(leftVolts);
+        m_leftTalonGroup.setMasterTalonVolts(-rightVolts);
     }
     
     /**
