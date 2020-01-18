@@ -8,18 +8,13 @@ import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidSteerDriveSubsystem {
     /**
@@ -176,12 +171,12 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
 
     /**
      * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
-     *
+     *Currently commented out as it is currently uneeded, and creates an error.
      * @param maxOutput the maximum output to which the drive will be constrained
      */
-    public void setMaxOutput(double maxOutput) {
+  /*  public void setMaxOutput(double maxOutput) {
         m_drive.setMaxOutput(maxOutput);
-    }
+    } */
 
     /**
      * Zeroes the heading of the robot.
