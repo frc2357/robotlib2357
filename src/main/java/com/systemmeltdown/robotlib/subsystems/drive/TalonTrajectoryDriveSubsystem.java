@@ -202,7 +202,7 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
      */
     public double getHeading() {
         double[] ypr = getYawPitchAndRoll();
-        return Math.IEEEremainder(ypr[0], 360) * (m_gyroReversed ? -1.0 : 1.0);
+        return Math.IEEEremainder(ypr[0], 360) * (m_isGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -212,7 +212,7 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
      */
     public double getTurnRate() {
         double[] ypr = getYawPitchAndRoll();
-        return ypr[1] * (m_gyroReversed ? -1.0 : 1.0);
+        return ypr[1] * (m_isGyroReversed ? -1.0 : 1.0);
     }
 
     public double[] getYawPitchAndRoll() {
