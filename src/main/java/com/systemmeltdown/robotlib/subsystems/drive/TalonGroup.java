@@ -10,8 +10,9 @@ public class TalonGroup {
 
     public TalonGroup(int masterTalonID, int[] slaveTalonIDs) {
         m_masterTalon = new WPI_TalonSRX(masterTalonID);
+        m_slaveTalons = new WPI_TalonSRX[slaveTalonIDs.length];
 
-        for (int i = 0; i <= slaveTalonIDs.length; i++) {
+        for (int i = 0; i < slaveTalonIDs.length; i++) {
             m_slaveTalons[i] = new WPI_TalonSRX(slaveTalonIDs[i]);
             m_slaveTalons[i].follow(m_masterTalon);
         }
