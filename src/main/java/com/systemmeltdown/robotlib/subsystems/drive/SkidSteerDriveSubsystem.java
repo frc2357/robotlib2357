@@ -38,9 +38,9 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	private boolean m_ClosedLoopEnabled = true;
 
 	public void configure(Map<String, Object> config) {
-		m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
-		m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
-		m_maxSpeedClicksPerSecond = ((Integer) config.get(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)).intValue();
+		// m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
+		// m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
+		// m_maxSpeedClicksPerSecond = ((Integer) config.get(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)).intValue();
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
