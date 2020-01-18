@@ -1,8 +1,6 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.systemmeltdown.robotlib.CanIdMap;
 import com.systemmeltdown.robotlib.subsystems.drive.TalonGroup;
-import com.systemmeltdown.robotlib.util.Constants;
 
 import java.util.Map;
 
@@ -14,7 +12,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-//import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 
 public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidSteerDriveSubsystem {
     /**
@@ -28,16 +25,14 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
     public static final String CONFIG_IS_RIGHT_INVERTED = "is_right_inverted";
     
     // The left-side drive encoder
-    private final Encoder m_leftEncoder =
-        new Encoder(CanIdMap.LEFT_ENCODER_PORTS[0], CanIdMap.LEFT_ENCODER_PORTS[1], 
-                    Constants.LEFT_ENCODER_REVERSED);
+    private final Encoder m_leftEncoder;
+      
     // The right-side drive encoder
-    private final Encoder m_rightEncoder =
-        new Encoder(CanIdMap.RIGHT_ENCODER_PORTS[0], CanIdMap.RIGHT_ENCODER_PORTS[1],
-                    Constants.RIGHT_ENCODER_REVERSED);
+    private final Encoder m_rightEncoder;
   
     // The gyro sensor
     private PigeonIMU m_gyro;
+    private boolean m_gyroReversed;
    
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
@@ -46,16 +41,30 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
     private TalonGroup m_rightTalonGroup;
     private TalonGroup m_leftTalonGroup;
 
+    /**
+     * 
+     * @param rightTalonGroup The talons used for the right side of the drivebase.
+     * @param leftTalonGroup The talons used for the left side of the drivebase.
+     * @param leftEncoder The encoder used on the left side of the drivebase.
+     * @param rightEncoder The encoder used on the right side of the drivebase.
+     * @param gyro The Pigeon IMU to use as the gyro.
+     * @param encoderDistancePerPulse The encoder distance per pulse.
+     * @param gyroReversed Boolean deciding whether the gyro is reversed or not.
+     */
     public SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem(
-        TalonGroup rightTalonGroup,
-        TalonGroup leftTalonGroup, int gyroID) {
+        TalonGroup rightTalonGroup, TalonGroup leftTalonGroup, Encoder leftEncoder,
+        Encoder rightEncoder, PigeonIMU gyro, double encoderDistancePerPulse, boolean gyroReversed) {
             m_rightTalonGroup = rightTalonGroup;
             m_leftTalonGroup = leftTalonGroup;
-            m_leftEncoder.setDistancePerPulse(Constants.ENCODER_DISTANCE_PER_PULSE);
-            m_rightEncoder.setDistancePerPulse(Constants.ENCODER_DISTANCE_PER_PULSE);
+            m_rightEncoder = rightEncoder;
+            m_leftEncoder = leftEncoder;
+            m_gyroReversed = gyroReversed;
+
+            m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
+            m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
         
             resetEncoders();
-            m_gyro = new PigeonIMU(gyroID);
+            m_gyro = gyro;
             m_gyro.configFactoryDefault();
             m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     }
@@ -193,7 +202,7 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      */
     public double getHeading() {
         double[] ypr = getYawPitchAndRoll();
-        return Math.IEEEremainder(ypr[0], 360) * (Constants.GYRO_REVERSED ? -1.0 : 1.0);
+        return Math.IEEEremainder(ypr[0], 360) * (m_gyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -203,7 +212,7 @@ public class SingleSpeedTalonDriveSubsystemWithTrajectorySubsystem extends SkidS
      */
     public double getTurnRate() {
         double[] ypr = getYawPitchAndRoll();
-        return ypr[1] * (Constants.GYRO_REVERSED ? -1.0 : 1.0);
+        return ypr[1] * (m_gyroReversed ? -1.0 : 1.0);
     }
 
     public double[] getYawPitchAndRoll() {
