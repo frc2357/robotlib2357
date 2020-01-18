@@ -39,7 +39,7 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 
 	public void configure(Map<String, Object> config) {
 		if (config.containsKey(CONFIG_WHEELBASE_WIDTH_INCHES)) {
-			m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();	
+			m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
 		}
 		if (config.containsKey(CONFIG_CLICKS_PER_INCH)) {
 			m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
