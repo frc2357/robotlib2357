@@ -2,8 +2,6 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import com.systemmeltdown.robotlib.subsystems.drive.TalonGroup;
 
-import java.util.Map;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -33,7 +31,7 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
     private boolean m_isLeftInverted;
     private boolean m_isRightInverted;
 
-    public static class Configuration extends SkidSteerDriveSubsystem.Configuration{
+    public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
         /**
          * Whether or not the left talon group needs to be inverted Value: boolean
          */
@@ -101,10 +99,9 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
 
     public void configure(Configuration config) {
         super.configure(config);
-        m_isLeftInverted = config.m_isLeftInverted;
-        m_isRightInverted = config.m_isRightInverted;
-        m_isGyroReversed = config.m_isGyroReversed;
-
+        m_leftTalonGroup.configure(config.m_isLeftInverted);
+        m_rightTalonGroup.configure(config.m_isRightInverted);
+        m_isGyroReversed.configure(config.m_isGyroReversed);
     }
 
     @Override

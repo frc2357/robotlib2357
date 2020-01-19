@@ -41,11 +41,11 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	}
 
 	public void configure(Configuration config) {
-			m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
+		m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
 
-			m_clicksPerInch = config.m_clicksPerInch;
+		m_clicksPerInch = config.m_clicksPerInch;
 		
-			m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
+		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
