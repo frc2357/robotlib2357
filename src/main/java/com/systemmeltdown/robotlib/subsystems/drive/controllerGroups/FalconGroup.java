@@ -12,10 +12,10 @@ public class FalconGroup {
         m_masterFalcon = new TalonFX(masterFalconID);
         m_slaveFalcons = new TalonFX[slaveFalconIDs.length];
 
-        // for (int i = 0; i < slaveFalconIDs.length; i++) {
-        //     m_slaveFalcons[i] = new TalonFX(slaveFalconIDs[i]);
-        //     m_slaveFalcons[i].follow(m_masterFalcon);
-        // }
+        for (int i = 0; i < slaveFalconIDs.length; i++) {
+            m_slaveFalcons[i] = new TalonFX(slaveFalconIDs[i]);
+            m_slaveFalcons[i].follow(m_masterFalcon);
+        }
     }
 
     public TalonFX getMasterFalcon() {
@@ -31,10 +31,10 @@ public class FalconGroup {
         m_masterFalcon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         m_masterFalcon.setInverted(isInverted);
 
-        // for (TalonFX slaveFalcon : m_slaveFalcons) {
-        //     slaveFalcon.configFactoryDefault();
-        //     slaveFalcon.setInverted(isInverted);
-        // }
+        for (TalonFX slaveFalcon : m_slaveFalcons) {
+            slaveFalcon.configFactoryDefault();
+            slaveFalcon.setInverted(isInverted);
+        }
     }
 
     public void set(ControlMode mode, double value) {
