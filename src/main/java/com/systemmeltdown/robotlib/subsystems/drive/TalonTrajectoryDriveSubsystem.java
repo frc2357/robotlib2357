@@ -101,7 +101,7 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
         super.configure(config);
         m_leftTalonGroup.configure(config.m_isLeftInverted);
         m_rightTalonGroup.configure(config.m_isRightInverted);
-        m_isGyroReversed.configure(config.m_isGyroReversed);
+        m_isGyroReversed = config.m_isGyroReversed;
     }
 
     @Override
