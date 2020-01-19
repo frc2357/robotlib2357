@@ -35,11 +35,11 @@ public class SimpleLogOutputTest {
 		long stopNanos = initNanos + 3000000000L;
 
 		output.start(this::convertToRelativeNanos, startNanos);
-		output.notifySubscribe("test-topic", subscribeNanos);
+		output.notifySubscribe("test-topic", String.class, subscribeNanos);
 		output.notifyUnsubscribe("test-topic", unsubscribeNanos);
 		output.stop(stopNanos);
 
-		verify(writer).onSubscribe("test-topic", 1000000000L);
+		verify(writer).onSubscribe("test-topic", String.class, 1000000000L);
 		verify(writer).onUnsubscribe("test-topic", 2000000000L);
 	}
 
@@ -52,11 +52,11 @@ public class SimpleLogOutputTest {
 		long startNanos = initNanos;
 		long stopNanos = initNanos + 3000000000L;
 
-		output.notifySubscribe("test-topic", subscribeNanos);
+		output.notifySubscribe("test-topic", String.class, subscribeNanos);
 		output.start(this::convertToRelativeNanos, startNanos);
 		output.stop(stopNanos);
 
-		verify(writer).onSubscribe("test-topic", -1);
+		verify(writer).onSubscribe("test-topic", String.class, -1);
 	}
 
 	@Test
