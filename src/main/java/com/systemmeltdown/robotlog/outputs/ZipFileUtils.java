@@ -98,7 +98,7 @@ public class ZipFileUtils {
 
     for (Map.Entry<String, Object> entry : header.entrySet()) {
       String keyStr = "\"" + entry.getKey() + "\"";
-      String valueStr = "\"" + printValue(entry.getValue(), entry.getValue().getClass()) + "\"";
+      String valueStr = printValue(entry.getValue(), entry.getValue().getClass());
 
       if (needsComma) {
         sb.append(", ");
@@ -121,7 +121,7 @@ public class ZipFileUtils {
   public static String printEntry(String topicName, Object value, Class<?> valueType, double relativeNanos, double timeRoundingFactor) {
     String topicStr = "\"" + topicName + "\"";
     String valueStr = printValue(value, valueType);
-    double timeSeconds = Utils.roundByFactor(((double) relativeNanos) / 1000000000, timeRoundingFactor);
+    double timeSeconds = Utils.roundByFactor(((double) relativeNanos) / Utils.NANO, timeRoundingFactor);
     String timeStr = Double.toString(timeSeconds);
 
     return "{ \"topic\":" + topicStr + ", \"value\":" + valueStr + ", \"time\":" + timeStr + " }";
@@ -146,7 +146,8 @@ public class ZipFileUtils {
 
   public static String printValue(Object value, Class<?> valueType) {
     if (valueType == String.class) {
-      return (String) value;
+      // Escape double quotes
+      return "\"" + String.valueOf(value).replaceAll("\"", "\\\"") + "\"";
     }
     if (valueType == Double.class) {
       return Double.toString((double) value);
