@@ -1,7 +1,7 @@
 package com.systemmeltdown.robotlib.triggers;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * A Shuffleboard toggle button trigger.

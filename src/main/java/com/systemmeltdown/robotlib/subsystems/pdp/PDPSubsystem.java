@@ -4,7 +4,7 @@ import com.systemmeltdown.robotlog.topics.DoubleTopic;
 import com.systemmeltdown.robotlog.topics.StringTopic;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Manages logging and info for PDP
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * TODO: Add unit tests.
  * TODO: Add amperage threshold logging to info
  */
-public class PDPSubsystem extends Subsystem {
+public class PDPSubsystem implements Subsystem {
   private final StringTopic errorTopic = new StringTopic("PDP Error");
   private final StringTopic infoTopic = new StringTopic("PDP Info");
   private final StringTopic debugTopic = new StringTopic("PDP Debug");
@@ -22,7 +22,6 @@ public class PDPSubsystem extends Subsystem {
   private final PowerDistributionPanel m_pdp;
 
   public PDPSubsystem(int canId) {
-    super("PDP Subsystem");
     infoTopic.log("PDPSubsystem: canId=" + canId);
 
     m_pdp = new PowerDistributionPanel(canId);
@@ -34,7 +33,6 @@ public class PDPSubsystem extends Subsystem {
    * @param pdp PDP mock
    */
   PDPSubsystem(PowerDistributionPanel pdp) {
-    super("PDP Subsystem");
     m_pdp = pdp;
   }
 
@@ -53,13 +51,8 @@ public class PDPSubsystem extends Subsystem {
 
   @Override
   public void periodic() {
-    super.periodic();
     batteryVoltsTopic.log(m_pdp.getVoltage());
     totalAmpsTopic.log(m_pdp.getTotalCurrent());
     temperatureTopic.log(m_pdp.getTemperature());
-  }
-
-  @Override
-  protected void initDefaultCommand() {
   }
 }
