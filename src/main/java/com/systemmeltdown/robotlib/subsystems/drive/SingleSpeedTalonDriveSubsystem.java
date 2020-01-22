@@ -1,53 +1,56 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.systemmeltdown.robotlib.subsystems.drive.controllerGroups.TalonGroup;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import java.util.Map;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
-    /**
-	 * Whether or not the left talon group needs to be inverted Value: boolean
-	 */
-    public static final String CONFIG_IS_LEFT_INVERTED = "is_left_inverted";
-    
-    /**
-	 * Whether or not the right talon group needs to be inverted Value: boolean
-	 */
-	public static final String CONFIG_IS_RIGHT_INVERTED = "is_right_inverted";
 
-    private TalonGroup m_rightTalonGroup;
-    private TalonGroup m_leftTalonGroup;
+    public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
+        /**
+         * Whether or not the left talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isLeftInverted = false;
+        
+        /**
+         * Whether or not the right talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isRightInverted = false;
+    }
+
+    private WPI_TalonSRX m_leftTalonMaster;
+    private WPI_TalonSRX m_rightTalonMaster;
 
     public SingleSpeedTalonDriveSubsystem(
-        TalonGroup rightTalonGroup,
-        TalonGroup leftTalonGroup) {
-            m_rightTalonGroup = rightTalonGroup;
-            m_leftTalonGroup = leftTalonGroup;
+        WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
+        WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves
+        ) {
+            super(new SpeedControllerGroup(leftTalonMaster, leftTalonSlaves),
+                  new SpeedControllerGroup(rightTalonMaster, rightTalonSlaves));
+            m_leftTalonMaster = leftTalonMaster;
+            m_rightTalonMaster = rightTalonMaster;
     }
 
     @Override
-    protected int getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftTalonGroup.getSelectedSensorPosition();
+    protected double getCurrentSpeedLeftClicksPerSecond() {
+        return m_leftTalonMaster.get();
     }
 
     @Override
-    protected int getCurrentSpeedRightClicksPerSecond() {
-        return m_rightTalonGroup.getSelectedSensorPosition();
+    protected double getCurrentSpeedRightClicksPerSecond() {
+        return m_rightTalonMaster.get();
     }
 
     @Override
     protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftTalonGroup.set(ControlMode.PercentOutput, leftProportion);
-        m_rightTalonGroup.set(ControlMode.PercentOutput, rightProportion);
+        m_leftTalonMaster.set(leftProportion);
+        m_rightTalonMaster.set(rightProportion);
     }
 
-    @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Configuration config) {
         super.configure(config);
-        m_leftTalonGroup.configure(((Boolean) config.get(CONFIG_IS_LEFT_INVERTED)).booleanValue());
-        m_rightTalonGroup.configure(((Boolean) config.get(CONFIG_IS_RIGHT_INVERTED)).booleanValue());
+        m_leftTalonGroup.setInverted(config.m_isLeftInverted);
+        m_rightTalonGroup.setInverted(config.m_isRightInverted);
     }
 
     @Override

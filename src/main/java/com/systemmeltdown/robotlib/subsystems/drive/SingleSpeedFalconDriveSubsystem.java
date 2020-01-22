@@ -1,52 +1,51 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import java.util.Map;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.systemmeltdown.robotlib.subsystems.drive.controllerGroups.FalconGroup;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
-    /**
-	 * Whether or not the left talon group needs to be inverted Value: boolean
-	 */
-    public static final String CONFIG_IS_LEFT_INVERTED = "is_left_inverted";
     
-    /**
-	 * Whether or not the right talon group needs to be inverted Value: boolean
-	 */
-	public static final String CONFIG_IS_RIGHT_INVERTED = "is_right_inverted";
+    public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
+        /**
+         * Whether or not the left talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isLeftInverted = false;
+        
+        /**
+         * Whether or not the right talon group needs to be inverted Value: boolean
+         */
+        public boolean m_isRightInverted = false;
+    }
 
-    private FalconGroup m_rightFalconGroup;
-    private FalconGroup m_leftFalconGroup;
+    private SpeedControllerGroup m_rightFalconGroup;
+    private SpeedControllerGroup m_leftFalconGroup;
 
     public SingleSpeedFalconDriveSubsystem(
-        FalconGroup rightFalconGroup,
-        FalconGroup leftFalconGroup) {
+        SpeedControllerGroup rightFalconGroup,
+        SpeedControllerGroup leftFalconGroup) {
             m_rightFalconGroup = rightFalconGroup;
             m_leftFalconGroup = leftFalconGroup;
     }
 
     @Override
-    protected int getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftFalconGroup.getSelectedSensorPosition();
+    protected double getCurrentSpeedLeftClicksPerSecond() {
+        return m_leftFalconGroup.get();
     }
 
     @Override
-    protected int getCurrentSpeedRightClicksPerSecond() {
-        return m_rightFalconGroup.getSelectedSensorPosition();
+    protected double getCurrentSpeedRightClicksPerSecond() {
+        return m_rightFalconGroup.get();
     }
 
     @Override
     protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftFalconGroup.set(ControlMode.PercentOutput, leftProportion);
-        m_rightFalconGroup.set(ControlMode.PercentOutput, rightProportion);
+        m_leftFalconGroup.set(leftProportion);
+        m_rightFalconGroup.set(rightProportion);
     }
 
-    @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Configuration config) {
         super.configure(config);
-        m_leftFalconGroup.configure(((Boolean) config.get(CONFIG_IS_LEFT_INVERTED)).booleanValue());
-        m_rightFalconGroup.configure(((Boolean) config.get(CONFIG_IS_RIGHT_INVERTED)).booleanValue());
+        m_leftFalconGroup.setInverted(config.m_isLeftInverted);
+        m_rightFalconGroup.setInverted(config.m_isRightInverted);
     }
 
     @Override

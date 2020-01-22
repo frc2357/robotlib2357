@@ -1,9 +1,9 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import java.util.Map;
-
 import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
+
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 
@@ -13,40 +13,44 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * assumptions about hardware or implementation of such.
  */
 public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSystem {
-	/**
-	 * The distance between the drive wheels. Measure from the center of the left
-	 * wheels to the center of the right. Value: double (positive)
-	 */
-	public static final String CONFIG_WHEELBASE_WIDTH_INCHES = "wheelbase_width_inches";
 
-	/**
-	 * The number of encoder clicks per inch of drive base travel. Calculated with
-	 * gear ratios and wheel diameter. Verify with measurement of working robot
-	 * travel for best accuracy. Value: int (positive)
-	 */
-	public static final String CONFIG_CLICKS_PER_INCH = "clicks_per_inch";
+	public static class Configuration {
+		/**
+		 * The distance between the drive wheels. Measure from the center of the left
+		 * wheels to the center of the right. Value: double (positive)
+		 */
+		public double m_wheelbaseWidthInches = 1.0;
 
-	/**
-	 * The number of encoder clicks per minute when running at max speed. Measure
-	 * top running speed with no load (up on blocks) Value: int (positive)
-	 */
-	public static final String CONFIG_MAX_SPEED_CLICKS_PER_SECOND = "max_speed_clicks_per_minute";
+		/**
+		 * The number of encoder clicks per inch of drive base travel. Calculated with
+		 * gear ratios and wheel diameter. Verify with measurement of working robot
+		 * travel for best accuracy. Value: int (positive)
+		 */
+		public int m_clicksPerInch = 1;
+
+		/**
+		 * The number of encoder clicks per minute when running at max speed. Measure
+		 * top running speed with no load (up on blocks) Value: int (positive)
+		 */
+		public int m_maxSpeedClicksPerSecond = 1;
+	}
 
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
 	private boolean m_ClosedLoopEnabled = true;
+	protected SpeedControllerGroup m_leftControllers;
+	protected SpeedControllerGroup m_rightControllers;
 
-	public void configure(Map<String, Object> config) {
-		if (config.containsKey(CONFIG_WHEELBASE_WIDTH_INCHES)) {
-			m_wheelbaseWidthInches = ((Double) config.get(CONFIG_WHEELBASE_WIDTH_INCHES)).doubleValue();
-		}
-		if (config.containsKey(CONFIG_CLICKS_PER_INCH)) {
-			m_clicksPerInch = ((Integer) config.get(CONFIG_CLICKS_PER_INCH)).intValue();
-		}
-		if (config.containsKey(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)) {
-			m_maxSpeedClicksPerSecond = ((Integer) config.get(CONFIG_MAX_SPEED_CLICKS_PER_SECOND)).intValue();
-		}
+	public SkidSteerDriveSubsystem(SpeedControllerGroup leftControllers, SpeedControllerGroup rightcontrollers) {
+		m_leftControllers = leftControllers;
+		m_rightControllers = rightcontrollers;
+	}
+
+	public void configure(Configuration config) {
+		m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
+		m_clicksPerInch = config.m_clicksPerInch;
+		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
@@ -54,15 +58,15 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	}
 
 	public final double getCurrentSpeedInchesPerSecond() {
-		int leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
-		int rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
+		double leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
+		double rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
 		return (rightSpeedInches + leftSpeedInches) / 2;
 	}
 
 	public final double getCurrentTurnDegreesPerSecond() {
-		int leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
-		int rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
-		int rotationInches = (leftSpeedInches - rightSpeedInches) / 2;
+		double leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
+		double rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
+		double rotationInches = (leftSpeedInches - rightSpeedInches) / 2.0;
 		return RobotMath.turnInchesToDegrees(rotationInches, m_wheelbaseWidthInches);
 	}
 
@@ -97,14 +101,14 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
-	protected abstract int getCurrentSpeedLeftClicksPerSecond();
+	protected abstract double getCurrentSpeedLeftClicksPerSecond();
 
 	/**
 	 * Gets the current speed of the right drive system
 	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
-	protected abstract int getCurrentSpeedRightClicksPerSecond();
+	protected abstract double getCurrentSpeedRightClicksPerSecond();
 
 	/**
 	 * Set the proportional speed of the drive base.
@@ -114,7 +118,10 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 * @param rightProportion Speed of right drive (-1.0 to 1.0, negative =
 	 *                        backwards)
 	 */
-	protected abstract void setProportional(double leftProportion, double rightProportion);
+	protected void setProportional(double leftProportion, double rightProportion) {
+		m_leftControllers.set(leftProportion);
+		m_rightControllers.set(rightProportion);
+	};
 
 	/**
 	 * Set the valocity speed of the drive base.
