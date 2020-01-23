@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     // Left out of the abstract to use Talon Specific methods
-    private WPI_TalonSRX m_leftTalonMaster;
-    private WPI_TalonSRX m_rightTalonMaster;
+    protected WPI_TalonSRX m_leftTalonMaster;
+    protected WPI_TalonSRX m_rightTalonMaster;
 
     public SingleSpeedTalonDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
             WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves) {

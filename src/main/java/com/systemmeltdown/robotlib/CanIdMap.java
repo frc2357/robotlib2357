@@ -27,5 +27,4 @@ public class CanIdMap {
    * CAN IDS 21-60
    * Mechanisms and other devices (robot specific)
    */
-
 }
