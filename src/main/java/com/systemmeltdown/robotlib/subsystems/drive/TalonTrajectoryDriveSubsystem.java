@@ -1,6 +1,5 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -30,32 +29,31 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
          */
         public boolean m_isGyroReversed = true;
     }
-
     /**
      * 
-     * @param rightTalonGroup The talons used for the right side of the drivebase.
-     * @param leftTalonGroup The talons used for the left side of the drivebase.
-     * @param leftEncoder The encoder used on the left side of the drivebase.
-     * @param rightEncoder The encoder used on the right side of the drivebase.
-     * @param gyro The Pigeon IMU to use as the gyro.
-     * @param encoderDistancePerPulse The encoder distance per pulse.
+     * @param leftTalonMaster
+     * @param leftTalonSlaves
+     * @param rightTalonMaster
+     * @param rightTalonSlaves
+     * @param leftEncoder
+     * @param rightEncoder
+     * @param gyro
+     * @param encoderDistancePerPulse
      */
-    public TalonTrajectoryDriveSubsystem(
-        WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
-        WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves,
-        Encoder leftEncoder, Encoder rightEncoder,
-        PigeonIMU gyro, double encoderDistancePerPulse) {
-            super(leftTalonMaster, leftTalonSlaves, rightTalonMaster, rightTalonSlaves);
-            m_rightEncoder = rightEncoder;
-            m_leftEncoder = leftEncoder;
+    public TalonTrajectoryDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
+            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves, Encoder leftEncoder, Encoder rightEncoder,
+            PigeonIMU gyro, double encoderDistancePerPulse) {
+        super(leftTalonMaster, leftTalonSlaves, rightTalonMaster, rightTalonSlaves);
+        m_rightEncoder = rightEncoder;
+        m_leftEncoder = leftEncoder;
 
-            m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
-            m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
-        
-            resetEncoders();
-            m_gyro = gyro;
-            m_gyro.configFactoryDefault();
-            m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
+        m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
+
+        resetEncoders();
+        m_gyro = gyro;
+        m_gyro.configFactoryDefault();
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     }
 
     @Override
@@ -110,9 +108,9 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
      * @param rightVolts the commanded right output
      */
     public void setTankDriveVolts(double leftVolts, double rightVolts) {
-        super.m_leftTalonMaster.setVoltage(leftVolts);
-        // rightVolts is negative because the right motors are inverted.
-        super.m_rightTalonMaster.setVoltage(-rightVolts);
+        // negative if motors are inverted.
+        super.m_leftControllers.setVoltage(super.m_isLeftInverted ? -leftVolts : leftVolts);
+        super.m_rightControllers.setVoltage(super.m_isRightInverted ? -rightVolts : rightVolts);
     }
 
     /**

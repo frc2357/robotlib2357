@@ -17,6 +17,8 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
 	private boolean m_ClosedLoopEnabled = true;
+	protected boolean m_isLeftInverted = false;
+	protected boolean m_isRightInverted = false;
 
 	public static class Configuration {
 		/**
@@ -63,7 +65,9 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 		m_clicksPerInch = config.m_clicksPerInch;
 		
 		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
+		m_isLeftInverted = config.m_isLeftInverted;
 		m_leftControllers.setInverted(config.m_isLeftInverted);
+		m_isRightInverted = config.m_isRightInverted;
 		m_rightControllers.setInverted(config.m_isRightInverted);
 	}
 
