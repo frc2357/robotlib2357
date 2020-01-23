@@ -1,51 +1,30 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
-    
-    public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
-        /**
-         * Whether or not the left talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isLeftInverted = false;
-        
-        /**
-         * Whether or not the right talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isRightInverted = false;
-    }
+    // Left out of the abstract to use Falcon Specific
+    private WPI_TalonFX m_leftFalconMaster;
+    private WPI_TalonFX m_rightFalconMaster;
 
-    private SpeedControllerGroup m_rightFalconGroup;
-    private SpeedControllerGroup m_leftFalconGroup;
-
-    public SingleSpeedFalconDriveSubsystem(
-        SpeedControllerGroup rightFalconGroup,
-        SpeedControllerGroup leftFalconGroup) {
-            m_rightFalconGroup = rightFalconGroup;
-            m_leftFalconGroup = leftFalconGroup;
+    public SingleSpeedFalconDriveSubsystem(WPI_TalonFX leftFalconMaster, WPI_TalonFX[] leftFalconSlaves,
+            WPI_TalonFX rightFalconMaster, WPI_TalonFX[] rightFalconSlaves) {
+        super(new SpeedControllerGroup(leftFalconMaster, leftFalconSlaves),
+                new SpeedControllerGroup(rightFalconMaster, rightFalconSlaves));
+        m_leftFalconMaster = leftFalconMaster;
+        m_rightFalconMaster = rightFalconMaster;
     }
 
     @Override
     protected double getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftFalconGroup.get();
+        return m_leftFalconMaster.getSelectedSensorVelocity();
     }
 
     @Override
     protected double getCurrentSpeedRightClicksPerSecond() {
-        return m_rightFalconGroup.get();
-    }
-
-    @Override
-    protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftFalconGroup.set(leftProportion);
-        m_rightFalconGroup.set(rightProportion);
-    }
-
-    public void configure(Configuration config) {
-        super.configure(config);
-        m_leftFalconGroup.setInverted(config.m_isLeftInverted);
-        m_rightFalconGroup.setInverted(config.m_isRightInverted);
+        return m_rightFalconMaster.getSelectedSensorVelocity();
     }
 
     @Override

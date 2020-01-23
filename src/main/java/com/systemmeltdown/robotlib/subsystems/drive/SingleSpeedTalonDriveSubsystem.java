@@ -5,52 +5,32 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
-
-    public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
-        /**
-         * Whether or not the left talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isLeftInverted = false;
-        
-        /**
-         * Whether or not the right talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isRightInverted = false;
-    }
-
+    // Left out of the abstract to use Talon Specific methods
     private WPI_TalonSRX m_leftTalonMaster;
     private WPI_TalonSRX m_rightTalonMaster;
 
-    public SingleSpeedTalonDriveSubsystem(
-        WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
-        WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves
-        ) {
-            super(new SpeedControllerGroup(leftTalonMaster, leftTalonSlaves),
-                  new SpeedControllerGroup(rightTalonMaster, rightTalonSlaves));
-            m_leftTalonMaster = leftTalonMaster;
-            m_rightTalonMaster = rightTalonMaster;
+    public SingleSpeedTalonDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
+            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves) {
+        super(new SpeedControllerGroup(leftTalonMaster, leftTalonSlaves),
+                new SpeedControllerGroup(rightTalonMaster, rightTalonSlaves));
+        m_leftTalonMaster = leftTalonMaster;
+        m_rightTalonMaster = rightTalonMaster;
     }
 
     @Override
     protected double getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftTalonMaster.get();
+        int rawSensorUnitsPer100ms = m_leftTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in raw sensor units) per 100ms
+        int rawSensorUnitsPerSec = rawSensorUnitsPer100ms / 10;
+        // TODO: further changes?
+        return rawSensorUnitsPerSec;
     }
 
     @Override
     protected double getCurrentSpeedRightClicksPerSecond() {
-        return m_rightTalonMaster.get();
-    }
-
-    @Override
-    protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftTalonMaster.set(leftProportion);
-        m_rightTalonMaster.set(rightProportion);
-    }
-
-    public void configure(Configuration config) {
-        super.configure(config);
-        m_leftTalonGroup.setInverted(config.m_isLeftInverted);
-        m_rightTalonGroup.setInverted(config.m_isRightInverted);
+        int rawSensorUnitsPer100ms = m_rightTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in raw sensor units) per 100ms
+        int rawSensorUnitsPerSec = rawSensorUnitsPer100ms / 10;
+        // TODO: further changes?
+        return rawSensorUnitsPerSec; 
     }
 
     @Override

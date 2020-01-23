@@ -6,7 +6,6 @@ import com.systemmeltdown.robotlib.util.RobotMath;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-
 /**
  * Base class for any kind of "Skid Steer" drive base. This makes assumptions
  * that we will use encoders and velocity drive. However, this makes zero
@@ -33,6 +32,16 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 		 * top running speed with no load (up on blocks) Value: int (positive)
 		 */
 		public int m_maxSpeedClicksPerSecond = 1;
+
+		/**
+		 * Whether or not the left talon group needs to be inverted Value: boolean
+		 */
+		public boolean m_isLeftInverted = false;
+
+		/**
+		 * Whether or not the right talon group needs to be inverted Value: boolean
+		 */
+		public boolean m_isRightInverted = false;
 	}
 
 	private double m_wheelbaseWidthInches = 0;
@@ -51,6 +60,8 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 		m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
 		m_clicksPerInch = config.m_clicksPerInch;
 		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
+		m_leftControllers.setInverted(config.m_isLeftInverted);
+		m_rightControllers.setInverted(config.m_isRightInverted);
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
@@ -132,8 +143,6 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 *                             (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
-
-
 
 	@Override
 	public boolean isClosedLoopEnabled() {
