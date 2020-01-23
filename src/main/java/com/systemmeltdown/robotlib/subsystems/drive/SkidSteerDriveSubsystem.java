@@ -2,8 +2,9 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Base class for any kind of "Skid Steer" drive base. This makes assumptions
@@ -16,6 +17,8 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
 	private boolean m_ClosedLoopEnabled = true;
+	protected boolean m_isLeftInverted = false;
+	protected boolean m_isRightInverted = false;
 
 	public static class Configuration {
 		/**
@@ -35,7 +38,25 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 		 * The number of encoder clicks per minute when running at max speed. Measure
 		 * top running speed with no load (up on blocks) Value: int (positive)
 		 */
-		public int m_maxSpeedClicksPerSecond = 1024;
+		public int m_maxSpeedClicksPerSecond = 1;
+
+		/**
+		 * Whether or not the left talon group needs to be inverted Value: boolean
+		 */
+		public boolean m_isLeftInverted = false;
+
+		/**
+		 * Whether or not the right talon group needs to be inverted Value: boolean
+		 */
+		public boolean m_isRightInverted = false;
+	}
+
+	protected SpeedControllerGroup m_leftControllers;
+	protected SpeedControllerGroup m_rightControllers;
+
+	public SkidSteerDriveSubsystem(SpeedControllerGroup leftControllers, SpeedControllerGroup rightcontrollers) {
+		m_leftControllers = leftControllers;
+		m_rightControllers = rightcontrollers;
 	}
 
 	public void configure(Configuration config) {
@@ -44,6 +65,10 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 		m_clicksPerInch = config.m_clicksPerInch;
 		
 		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
+		m_isLeftInverted = config.m_isLeftInverted;
+		m_leftControllers.setInverted(config.m_isLeftInverted);
+		m_isRightInverted = config.m_isRightInverted;
+		m_rightControllers.setInverted(config.m_isRightInverted);
 	}
 
 	public final double getMaxSpeedInchesPerSecond() {
@@ -51,15 +76,15 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	}
 
 	public final double getCurrentSpeedInchesPerSecond() {
-		int leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
-		int rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
+		double leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
+		double rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
 		return (rightSpeedInches + leftSpeedInches) / 2;
 	}
 
 	public final double getCurrentTurnDegreesPerSecond() {
-		int leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
-		int rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
-		int rotationInches = (leftSpeedInches - rightSpeedInches) / 2;
+		double leftSpeedInches = getCurrentSpeedLeftClicksPerSecond() / m_clicksPerInch;
+		double rightSpeedInches = getCurrentSpeedRightClicksPerSecond() / m_clicksPerInch;
+		double rotationInches = (leftSpeedInches - rightSpeedInches) / 2.0;
 		return RobotMath.turnInchesToDegrees(rotationInches, m_wheelbaseWidthInches);
 	}
 
@@ -94,14 +119,14 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
-	protected abstract int getCurrentSpeedLeftClicksPerSecond();
+	protected abstract double getCurrentSpeedLeftClicksPerSecond();
 
 	/**
 	 * Gets the current speed of the right drive system
 	 * 
 	 * @return Speed in clicks per second (negative = backwards)
 	 */
-	protected abstract int getCurrentSpeedRightClicksPerSecond();
+	protected abstract double getCurrentSpeedRightClicksPerSecond();
 
 	/**
 	 * Set the proportional speed of the drive base.
@@ -111,7 +136,10 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 * @param rightProportion Speed of right drive (-1.0 to 1.0, negative =
 	 *                        backwards)
 	 */
-	protected abstract void setProportional(double leftProportion, double rightProportion);
+	protected void setProportional(double leftProportion, double rightProportion) {
+		m_leftControllers.set(leftProportion);
+		m_rightControllers.set(rightProportion);
+	};
 
 	/**
 	 * Set the valocity speed of the drive base.
@@ -122,8 +150,6 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 *                             (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
-
-
 
 	@Override
 	public boolean isClosedLoopEnabled() {

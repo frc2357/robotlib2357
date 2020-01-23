@@ -1,8 +1,6 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.systemmeltdown.robotlib.subsystems.drive.TalonGroup;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -11,96 +9,62 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
-public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
+public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsystem {
     // The left-side drive encoder
     private final Encoder m_leftEncoder;
-      
+
     // The right-side drive encoder
     private final Encoder m_rightEncoder;
-  
+
     // The gyro sensor
     private PigeonIMU m_gyro;
     private boolean m_isGyroReversed;
-   
+
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
-  
-    private TalonGroup m_rightTalonGroup;
-    private TalonGroup m_leftTalonGroup;
-
-    private boolean m_isLeftInverted;
-    private boolean m_isRightInverted;
 
     public static class Configuration extends SkidSteerDriveSubsystem.Configuration {
-        /**
-         * Whether or not the left talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isLeftInverted = false;
-        
-        /**
-         * Whether or not the right talon group needs to be inverted Value: boolean
-         */
-        public boolean m_isRightInverted = true;
-        
         /**
          * Whether or not the gyro is reversed Value: boolean
          */
         public boolean m_isGyroReversed = true;
     }
-
     /**
      * 
-     * @param rightTalonGroup The talons used for the right side of the drivebase.
-     * @param leftTalonGroup The talons used for the left side of the drivebase.
-     * @param leftEncoder The encoder used on the left side of the drivebase.
-     * @param rightEncoder The encoder used on the right side of the drivebase.
-     * @param gyro The Pigeon IMU to use as the gyro.
-     * @param encoderDistancePerPulse The encoder distance per pulse.
+     * @param leftTalonMaster
+     * @param leftTalonSlaves
+     * @param rightTalonMaster
+     * @param rightTalonSlaves
+     * @param leftEncoder
+     * @param rightEncoder
+     * @param gyro
+     * @param encoderDistancePerPulse
      */
-    public TalonTrajectoryDriveSubsystem(
-        TalonGroup rightTalonGroup, TalonGroup leftTalonGroup, Encoder leftEncoder, Encoder rightEncoder,
-        PigeonIMU gyro, double encoderDistancePerPulse) {
-            m_rightTalonGroup = rightTalonGroup;
-            m_leftTalonGroup = leftTalonGroup;
-            m_rightEncoder = rightEncoder;
-            m_leftEncoder = leftEncoder;
+    public TalonTrajectoryDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
+            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves, Encoder leftEncoder, Encoder rightEncoder,
+            PigeonIMU gyro, double encoderDistancePerPulse) {
+        super(leftTalonMaster, leftTalonSlaves, rightTalonMaster, rightTalonSlaves);
+        m_rightEncoder = rightEncoder;
+        m_leftEncoder = leftEncoder;
 
-            m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
-            m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
-        
-            resetEncoders();
-            m_gyro = gyro;
-            m_gyro.configFactoryDefault();
-            m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
+        m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
+
+        resetEncoders();
+        m_gyro = gyro;
+        m_gyro.configFactoryDefault();
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     }
 
     @Override
     public void periodic() {
-      // Update the odometry in the periodic block
-      m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(),
-                        m_rightEncoder.getDistance());
-    }
-
-    @Override
-    protected int getCurrentSpeedLeftClicksPerSecond() {
-        return m_leftTalonGroup.getSelectedSensorPosition();
-    }
-
-    @Override
-    protected int getCurrentSpeedRightClicksPerSecond() {
-        return m_rightTalonGroup.getSelectedSensorPosition();
-    }
-
-    @Override
-    protected void setProportional(double leftProportion, double rightProportion) {
-        m_leftTalonGroup.set(ControlMode.PercentOutput, leftProportion);
-        m_rightTalonGroup.set(ControlMode.PercentOutput, rightProportion);
+        // Update the odometry in the periodic block
+        m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(),
+                m_rightEncoder.getDistance());
     }
 
     public void configure(Configuration config) {
         super.configure(config);
-        m_leftTalonGroup.configure(config.m_isLeftInverted);
-        m_rightTalonGroup.configure(config.m_isRightInverted);
         m_isGyroReversed = config.m_isGyroReversed;
     }
 
@@ -117,7 +81,7 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
     public Pose2d getPose() {
         return m_odometry.getPoseMeters();
     }
-  
+
     /**
      * Resets the odometry to the specified pose.
      *
@@ -135,8 +99,8 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-      }
-    
+    }
+
     /**
      * Controls the left and right sides of the drive directly with voltages.
      *
@@ -144,11 +108,11 @@ public class TalonTrajectoryDriveSubsystem extends SkidSteerDriveSubsystem {
      * @param rightVolts the commanded right output
      */
     public void setTankDriveVolts(double leftVolts, double rightVolts) {
-        m_leftTalonGroup.setMasterTalonVolts(leftVolts);
-        //rightVolts is negative because the right motors are inverted.
-        m_rightTalonGroup.setMasterTalonVolts(-rightVolts);
+        // negative if motors are inverted.
+        super.m_leftControllers.setVoltage(super.m_isLeftInverted ? -leftVolts : leftVolts);
+        super.m_rightControllers.setVoltage(super.m_isRightInverted ? -rightVolts : rightVolts);
     }
-    
+
     /**
      * Resets the drive encoders to currently read a position of 0.
      */
