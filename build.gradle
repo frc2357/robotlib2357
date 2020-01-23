@@ -69,3 +69,22 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+sourceSets {
+	main {
+		java {
+			srcDir './utilities-src/main/java'
+		}
+	}
+}
+
+ext {
+	robotLogTestSession = "com.systemmeltdown.robotlog.testsession.RobotLogTestSession"
+}
+
+task robotlogtestsession(type: JavaExec) {
+	group = "Execution"
+	description = "Run the RobotLogTestSession"
+	classpath = sourceSets.main.runtimeClasspath
+	main = robotLogTestSession
+}
