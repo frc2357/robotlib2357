@@ -17,7 +17,7 @@ public class TalonGroup {
             m_slaveTalons[i].follow(m_masterTalon);
         }
     }
-
+    
     public WPI_TalonSRX getMasterTalon() {
         return m_masterTalon;
     }
@@ -43,5 +43,9 @@ public class TalonGroup {
 
     public int getSelectedSensorPosition() {
         return m_masterTalon.getSelectedSensorPosition();
+    }
+
+    public void setMasterTalonVolts(double outputVolts) {
+        m_masterTalon.setVoltage(outputVolts);
     }
 }
