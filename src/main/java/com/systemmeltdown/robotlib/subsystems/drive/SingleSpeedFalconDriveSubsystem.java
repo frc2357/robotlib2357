@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
     // Left out of the abstract to use Falcon Specific
-    private WPI_TalonFX m_leftFalconMaster;
-    private WPI_TalonFX m_rightFalconMaster;
+    protected WPI_TalonFX m_leftFalconMaster;
+    protected WPI_TalonFX m_rightFalconMaster;
 
     public SingleSpeedFalconDriveSubsystem(WPI_TalonFX leftFalconMaster, WPI_TalonFX[] leftFalconSlaves,
             WPI_TalonFX rightFalconMaster, WPI_TalonFX[] rightFalconSlaves) {
