@@ -3,18 +3,15 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
 public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsystem {
-    // The left-side drive encoder
-    private final Encoder m_leftEncoder;
-
-    // The right-side drive encoder
-    private final Encoder m_rightEncoder;
+    private double m_leftLastValue;
+    private double m_rightLastValue;
+    private double m_distancePerPulse;
 
     // The gyro sensor
     private PigeonIMU m_gyro;
@@ -29,26 +26,21 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
          */
         public boolean m_isGyroReversed = true;
     }
+
     /**
      * 
      * @param leftTalonMaster
      * @param leftTalonSlaves
      * @param rightTalonMaster
      * @param rightTalonSlaves
-     * @param leftEncoder
-     * @param rightEncoder
      * @param gyro
      * @param encoderDistancePerPulse
      */
     public TalonTrajectoryDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
-            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves, Encoder leftEncoder, Encoder rightEncoder,
-            PigeonIMU gyro, double encoderDistancePerPulse) {
+            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves, PigeonIMU gyro,
+            double encoderDistancePerPulse) {
         super(leftTalonMaster, leftTalonSlaves, rightTalonMaster, rightTalonSlaves);
-        m_rightEncoder = rightEncoder;
-        m_leftEncoder = leftEncoder;
-
-        m_leftEncoder.setDistancePerPulse(encoderDistancePerPulse);
-        m_rightEncoder.setDistancePerPulse(encoderDistancePerPulse);
+        m_distancePerPulse = encoderDistancePerPulse;
 
         resetEncoders();
         m_gyro = gyro;
@@ -59,8 +51,7 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
     @Override
     public void periodic() {
         // Update the odometry in the periodic block
-        m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(),
-                m_rightEncoder.getDistance());
+        m_odometry.update(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
     }
 
     public void configure(Configuration config) {
@@ -98,7 +89,8 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+        return new DifferentialDriveWheelSpeeds(super.m_leftTalonMaster.getSelectedSensorVelocity(),
+                super.m_rightTalonMaster.getSelectedSensorVelocity());
     }
 
     /**
@@ -117,8 +109,8 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
      * Resets the drive encoders to currently read a position of 0.
      */
     public void resetEncoders() {
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
+        getLeftDistance();
+        getRightDistance();
     }
 
     /**
@@ -127,25 +119,21 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+        return (getLeftDistance() + getRightDistance()) / 2.0;
     }
 
-    /**
-     * Gets the left drive encoder.
-     *
-     * @return the left drive encoder
-     */
-    public Encoder getLeftEncoder() {
-        return m_leftEncoder;
+    public double getLeftDistance() {
+        double encoderPositon = super.m_leftTalonMaster.getSelectedSensorPosition();
+        double difOfPostion = encoderPositon - m_leftLastValue;
+        m_leftLastValue = encoderPositon;
+        return difOfPostion * m_distancePerPulse;
     }
 
-    /**
-     * Gets the right drive encoder.
-     *
-     * @return the right drive encoder
-     */
-    public Encoder getRightEncoder() {
-        return m_rightEncoder;
+    public double getRightDistance() {
+        double encoderPositon = super.m_rightTalonMaster.getSelectedSensorPosition();
+        double difOfPostion = encoderPositon - m_rightLastValue;
+        m_rightLastValue = encoderPositon;
+        return difOfPostion * m_distancePerPulse;
     }
 
     /**
