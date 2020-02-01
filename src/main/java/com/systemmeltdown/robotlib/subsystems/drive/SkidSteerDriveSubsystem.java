@@ -16,7 +16,6 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem implem
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
-	private boolean m_ClosedLoopEnabled = true;
 	protected boolean m_isLeftInverted = false;
 	protected boolean m_isRightInverted = false;
 
@@ -150,14 +149,4 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem implem
 	 *                             (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
-
-	@Override
-	public boolean isClosedLoopEnabled() {
-		return this.m_ClosedLoopEnabled;
-	}
-
-	@Override
-	public void setClosedLoopEnabled(boolean ClosedLoopEnabled) {
-		this.m_ClosedLoopEnabled = ClosedLoopEnabled;
-	}
 }
