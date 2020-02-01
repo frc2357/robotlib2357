@@ -118,7 +118,7 @@ public class LimelightSubsystem extends SubsystemBase {
     public double m_TargetHeight = 1;
   }
 
-  private NetworkTable m_Table = NetworkTableInstance.getDefault().getTable("limelight");
+  protected NetworkTable m_Table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry m_Pipeline = m_Table.getEntry("pipeline");
   private NetworkTableEntry m_Tv = m_Table.getEntry("tv");
   private NetworkTableEntry m_Tx = m_Table.getEntry("tx");
