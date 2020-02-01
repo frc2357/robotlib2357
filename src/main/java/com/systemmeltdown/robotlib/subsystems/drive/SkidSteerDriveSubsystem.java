@@ -1,7 +1,7 @@
 package com.systemmeltdown.robotlib.subsystems.drive;
 
-import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
 import com.systemmeltdown.robotlib.util.RobotMath;
+import com.systemmeltdown.robotlib.subsystems.ClosedLoopSubsystem;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * that we will use encoders and velocity drive. However, this makes zero
  * assumptions about hardware or implementation of such.
  */
-public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSystem {
+public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem implements Subsystem {
 
 	private double m_wheelbaseWidthInches = 0;
 	private int m_clicksPerInch = 0;
 	private int m_maxSpeedClicksPerSecond = 0;
-	private boolean m_ClosedLoopEnabled = true;
 	protected boolean m_isLeftInverted = false;
 	protected boolean m_isRightInverted = false;
 
@@ -150,14 +149,4 @@ public abstract class SkidSteerDriveSubsystem implements Subsystem, ClosedLoopSy
 	 *                             (negative = backwards)
 	 */
 	protected abstract void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond);
-
-	@Override
-	public boolean isClosedLoopEnabled() {
-		return this.m_ClosedLoopEnabled;
-	}
-
-	@Override
-	public void setClosedLoopEnabled(boolean ClosedLoopEnabled) {
-		this.m_ClosedLoopEnabled = ClosedLoopEnabled;
-	}
 }
