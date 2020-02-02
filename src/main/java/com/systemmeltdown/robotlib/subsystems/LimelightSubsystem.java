@@ -10,12 +10,11 @@ package com.systemmeltdown.robotlib.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Controls the limelight camera options.
  */
-public class LimelightSubsystem extends SubsystemBase {
+public class LimelightSubsystem extends ClosedLoopSubsystem {
   /**
    * This class represents a snapshot of an acquired target.
    */
