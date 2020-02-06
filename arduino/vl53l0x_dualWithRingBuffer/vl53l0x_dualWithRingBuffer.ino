@@ -27,7 +27,13 @@ int lastDistance1 = -1;
 int currentDistance1 = -1;
 int lastDistance2 = -1;
 int currentDistance2 = -1;
-
+int actualDistance1 = -1;
+int actualDistance2 = -1;
+int TOF1Charactistics[6] = {408, 413, 253, 258, 45, 51};
+int TOF2Characteristics[6] = {446, 453, 258, 263, 46, 52};
+int midRange[2] = {130, 225};
+//int lowMidRange1 = 100;
+//int lowMidRange2 = 100;
 /*
     Reset all sensors by setting all of their XSHUT pins low for delay(10), then set all XSHUT high to bring out of reset
     Keep sensor #1 awake by keeping XSHUT pin high
@@ -116,7 +122,6 @@ void setup() {
   
   Serial.println("Starting...");
   setID();
- 
 }
 
 void loop() {
@@ -126,8 +131,8 @@ void loop() {
   currentDistance1 = getAverage1();
 
   if (currentDistance1 != lastDistance1) {
-    Serial.print("Distance of 1st TOF(mm): ");
-    Serial.println(currentDistance1);
+    //Serial.print("Distance of 1st TOF(Raw mm): ");
+    //Serial.println(currentDistance1);
     lastDistance1 = currentDistance1;
   }
 
@@ -135,11 +140,12 @@ void loop() {
    currentDistance2 = getAverage2();
    
    if (currentDistance2 != lastDistance2) {
-    //Serial.print("Distance of 2nd TOF(mm): ");
+    //Serial.print("Distance of 2nd TOF(Raw mm): ");
     //Serial.println(currentDistance2);
     lastDistance2 = currentDistance2;
   }
-  
+
+  countCells();
 }
 
 int getAverage1() {
@@ -201,4 +207,45 @@ int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ri
   ringBufferIndex = ringBufferIndex < (RINGBUFFER_LENGTH - 1) ? ringBufferIndex + 1 : 0;
 
   return distance;
+}
+
+String findSensor1Status() {
+   if(currentDistance1 >= midRange[0] && currentDistance1 <= midRange[1]){
+    return "mid";
+  }
+  if(currentDistance1 >= midRange[0]) {
+      return "far";
+   }  else {
+      return "close"; 
+   }
+}
+
+String findSensor2Status() {
+  if(currentDistance2 >= midRange[0] && currentDistance2 <= midRange[1]){
+    return "mid";
+  }
+  if(currentDistance2 >= midRange[0]) {
+      return "far";
+  } else {
+      return "close"; 
+  }
+}
+
+void countCells() {
+  String sensor1Status = findSensor1Status();
+  String sensor2Status = findSensor2Status();
+  
+  //Serial.println("Sensor1 Status: "+sensor1Status);
+  //Serial.println("Sensor2 Status: "+sensor2Status);
+  
+  if(sensor1Status == "far" && sensor2Status == "far") {
+    Serial.println("No cell detected");
+  }
+  
+  if(sensor1Status == "close" && sensor2Status == "close" || sensor1Status == "close" && sensor2Status == "mid" ||  sensor1Status == "mid" && sensor2Status == "close") {
+    Serial.println("Two cells detected");  
+  } 
+  if(sensor1Status == "mid" && sensor2Status == "mid" || sensor1Status == "close" && sensor2Status == "far" ||  sensor1Status == "far" && sensor2Status == "close" || sensor1Status == "far" && sensor2Status == "mid" ||  sensor1Status == "mid" && sensor2Status == "far") {
+    Serial.println("One cell detected"); 
+  }
 }
