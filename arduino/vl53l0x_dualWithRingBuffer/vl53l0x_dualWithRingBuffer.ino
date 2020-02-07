@@ -1,4 +1,7 @@
+#include <ArduinoJson.h>
+
 #include "Adafruit_VL53L0X.h"
+#include "serialstate.h"
 
 // address we will assign if dual sensor is present
 #define LOX1_ADDRESS 0x30
@@ -19,6 +22,14 @@ Adafruit_VL53L0X lox2 = Adafruit_VL53L0X();
 VL53L0X_RangingMeasurementData_t measure1;
 VL53L0X_RangingMeasurementData_t measure2;
 
+/*String name = "Intake TOFs";
+String initialState = "{name: '" + name + "', devices: {TOFs: {}}}";
+
+DynamicJsonDocument state(1024);
+SerialState serialState(&state, initialState);
+
+JsonObject laserToF = state["devices"]["example"];*/
+
 int ringBuffer1[RINGBUFFER_LENGTH];
 int ringBufferIndex1 = 0;
 int ringBuffer2[RINGBUFFER_LENGTH];
@@ -29,11 +40,10 @@ int lastDistance2 = -1;
 int currentDistance2 = -1;
 int actualDistance1 = -1;
 int actualDistance2 = -1;
-int TOF1Charactistics[6] = {408, 413, 253, 258, 45, 51};
-int TOF2Characteristics[6] = {446, 453, 258, 263, 46, 52};
 int midRange[2] = {130, 225};
-//int lowMidRange1 = 100;
-//int lowMidRange2 = 100;
+int currentNumOfCells = -1;
+int lastNumOfCells = -1;
+//double count = 0;
 /*
     Reset all sensors by setting all of their XSHUT pins low for delay(10), then set all XSHUT high to bring out of reset
     Keep sensor #1 awake by keeping XSHUT pin high
@@ -42,6 +52,7 @@ int midRange[2] = {130, 225};
     Keep sensor #1 awake, and now bring sensor #2 out of reset by setting its XSHUT pin high.
     Initialize sensor #2 with lox.begin(new_i2c_address) Pick any number but 0x29 and whatever you set the first sensor to
  */
+ 
 void setID() {
   // all reset
   digitalWrite(SHT_LOX1, LOW);    
@@ -74,37 +85,11 @@ void setID() {
   }
 }
 
-/*void read_dual_sensors() {
-  
-  lox1.rangingTest(&measure1, false); // pass in 'true' to get debug data printout!
-  lox2.rangingTest(&measure2, false); // pass in 'true' to get debug data printout!
-
-  // print sensor one reading
-  Serial.print("1: ");
-  if(measure1.RangeStatus != 4) {     // if not out of range
-    Serial.print(measure1.RangeMilliMeter);
-  } else {
-    Serial.print("Out of range");
-  }
-  
-  Serial.print(" ");
-
-  // print sensor two reading
-  Serial.print("2: ");
-  if(measure2.RangeStatus != 4) {
-    Serial.print(measure2.RangeMilliMeter);
-  } else {
-    Serial.print("Out of range");
-  }
-  
-  Serial.println();
-}*/
-
 void setup() {
+  //serialState.init();
+  Serial.begin(115200);
   initRingBuffer1();
   initRingBuffer2();
-   
-  Serial.begin(115200);
 
   // wait until serial port opens for native USB devices
   while (! Serial) { delay(1); }
@@ -125,7 +110,7 @@ void setup() {
 }
 
 void loop() {
- // read_dual_sensors();
+ // serialState.handleSerial();
 
   readDistance(lox1, ringBuffer1, ringBufferIndex1);
   currentDistance1 = getAverage1();
@@ -144,8 +129,22 @@ void loop() {
     //Serial.println(currentDistance2);
     lastDistance2 = currentDistance2;
   }
+  
+  currentNumOfCells = countCells();
+  if(currentNumOfCells != lastNumOfCells) {
+    lastNumOfCells = currentNumOfCells; 
+    Serial.print("Num of cells: "); 
+    Serial.println(currentNumOfCells);
+   // serialState.updateField(laserToF, "Count", currentNumOfCells);
+   // serialState.sendState();
+  }
 
-  countCells();
+  //countCells();
+
+  //count += 0.5;
+
+  //serialState.updateField(laserToF, "count", count);
+  //serialState.sendState();
 }
 
 int getAverage1() {
@@ -231,7 +230,7 @@ String findSensor2Status() {
   }
 }
 
-void countCells() {
+int countCells() {
   String sensor1Status = findSensor1Status();
   String sensor2Status = findSensor2Status();
   
@@ -239,13 +238,59 @@ void countCells() {
   //Serial.println("Sensor2 Status: "+sensor2Status);
   
   if(sensor1Status == "far" && sensor2Status == "far") {
-    Serial.println("No cell detected");
+    //Serial.println("No cell detected");
+    return 0;
   }
   
   if(sensor1Status == "close" && sensor2Status == "close" || sensor1Status == "close" && sensor2Status == "mid" ||  sensor1Status == "mid" && sensor2Status == "close") {
-    Serial.println("Two cells detected");  
+    //Serial.println("Two cells detected");  
+    return 2;
   } 
   if(sensor1Status == "mid" && sensor2Status == "mid" || sensor1Status == "close" && sensor2Status == "far" ||  sensor1Status == "far" && sensor2Status == "close" || sensor1Status == "far" && sensor2Status == "mid" ||  sensor1Status == "mid" && sensor2Status == "far") {
-    Serial.println("One cell detected"); 
+    //Serial.println("One cell detected"); 
+    return 1;
   }
+} 
+
+/*
+ * ArduinoUSB
+ *
+ * This is a firmware for Arduino microcontrollers communicating
+ * with the RoboRIO over USB
+ *
+ * The primary purpose of these Arduinos is to:
+ *  - Connect to sensors using established Arduino code
+ *  - Filter and debounce data from those sensors
+ *  - Send messages to the RoboRIO when sensor data is relevant
+ *
+ * USB Protocol
+ *  - Upon startup, the arduino will send its initial state in JSON format
+ *  - The USB host may send a partial JSON state which will be updated and a full state returned.
+ */
+ /*
+#include <ArduinoJson.h>
+
+#include "serialstate.h"
+
+String name = "Test Devices";
+String initialState = "{name: '" + name + "', devices: {example: {}}}";
+
+DynamicJsonDocument state(1024);
+SerialState serialState(&state, initialState);
+
+JsonObject laserToF = state["devices"]["example"];
+double count = 0;
+
+void setup() {
+  serialState.init();
 }
+
+void loop() {
+  serialState.handleSerial();
+  delay(500);
+
+  count += 0.5;
+
+  serialState.updateField(laserToF, "count", count);
+  serialState.sendState();
+} */

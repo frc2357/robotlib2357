@@ -39,4 +39,3 @@ void loop() {
   serialState.updateField(laserToF, "count", count);
   serialState.sendState();
 }
-
