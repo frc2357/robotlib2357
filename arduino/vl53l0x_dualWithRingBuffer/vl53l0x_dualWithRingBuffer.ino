@@ -176,7 +176,7 @@ int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ri
 }
 
 String findSensorStatus(int currentDistance) {
-  if (currentDistance >= midRange[0] && currentDistance1 <= midRange[1]) {
+  if (currentDistance >= midRange[0] && currentDistance <= midRange[1]) {
     return "mid";
   }
   if (currentDistance >= midRange[0]) {
