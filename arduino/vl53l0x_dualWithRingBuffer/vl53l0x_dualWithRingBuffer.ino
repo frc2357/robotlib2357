@@ -15,12 +15,13 @@
 #define RINGBUFFER_LENGTH 6
 
 String name = "Intake Power Cells";
-String initialState = "{name: '" + name + "', intakeStatus: {counter: {}}}";
+String initialState = "{name: '" + name + "', devices: {intakeCounter: {}}}";
 
 DynamicJsonDocument state(1024);
 SerialState serialState(&state, initialState);
 
-JsonObject intakeCells = state["intakeStatus"]["counter"];
+JsonObject devices = state["devices"];
+JsonObject intakeCounter = devices["intakeCounter"];
 
 // objects for the vl53l0x
 Adafruit_VL53L0X lox1 = Adafruit_VL53L0X();
@@ -129,7 +130,7 @@ void loop() {
   currentNumOfCells = countCells();
   if (currentNumOfCells != lastNumOfCells) {
     lastNumOfCells = currentNumOfCells;
-    serialState.updateField(intakeCells, "Cells", currentNumOfCells);
+    serialState.updateField(intakeCounter, "cells", currentNumOfCells);
     serialState.sendState();
   }
 
