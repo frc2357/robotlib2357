@@ -14,7 +14,7 @@ public class FalconTrajectoryDriveSubsystem extends SingleSpeedFalconDriveSubsys
     private double m_distancePerPulse;
 
     // The gyro sensor
-    private PigeonIMU m_gyro;
+    protected PigeonIMU m_gyro;
     private boolean m_isGyroReversed;
 
     // Odometry class for tracking robot pose

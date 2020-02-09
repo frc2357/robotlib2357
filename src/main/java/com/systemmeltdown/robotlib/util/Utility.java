@@ -1,5 +1,6 @@
 package com.systemmeltdown.robotlib.util;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Utility{
@@ -39,6 +40,21 @@ public class Utility{
     talon.config_kF(slotIdx, pid.kf);
     talon.config_IntegralZone(slotIdx, pid.izone);
     talon.configClosedLoopPeakOutput(slotIdx, pid.peak);
+  }
+
+  /**
+   *
+   * @param falcon The talon FX to config
+   * @param slotIdx Index of the profile slot to configure
+   * @param pid PID values to set
+   */
+  public static void configFalconPID(WPI_TalonFX falcon, int slotIdx, PIDValues pid) {
+    falcon.config_kP(slotIdx, pid.kp);
+    falcon.config_kI(slotIdx, pid.ki);
+    falcon.config_kD(slotIdx, pid.kd);
+    falcon.config_kF(slotIdx, pid.kf);
+    falcon.config_IntegralZone(slotIdx, pid.izone);
+    falcon.configClosedLoopPeakOutput(slotIdx, pid.peak);
   }
 
   public static int getAverage(int[] samples) {
