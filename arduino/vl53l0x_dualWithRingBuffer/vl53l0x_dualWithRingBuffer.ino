@@ -91,6 +91,10 @@ void setup() {
   initRingBuffer(ringBuffer1);
   initRingBuffer(ringBuffer2);
 
+  midRange[0] = intakeCounter["lowRange"].as<int>();
+  midRange[1] =  intakeCounter["highRange"].as<int>();
+
+
   // wait until serial port opens for native USB devices
   while (! Serial) {
     delay(1);
@@ -133,7 +137,7 @@ void loop() {
     serialState.updateField(intakeCounter, "cells", currentNumOfCells);
     serialState.sendState();
   }
-
+  
   countCells();
 }
 
@@ -177,6 +181,10 @@ int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ri
 }
 
 String findSensorStatus(int currentDistance) {
+
+//midRange[0] = intakeCounter["lowRange"].as<int>();
+//midRange[1] =  intakeCounter["highRange"].as<int>();
+
   if (currentDistance >= midRange[0] && currentDistance <= midRange[1]) {
     return "mid";
   }
