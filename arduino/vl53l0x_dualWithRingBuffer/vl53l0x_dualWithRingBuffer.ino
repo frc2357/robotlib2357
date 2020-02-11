@@ -132,7 +132,7 @@ void loop() {
     serialState.updateField(intakeCells, "Cells", currentNumOfCells);
     serialState.sendState();
   }
-
+  
   countCells();
 }
 
@@ -176,6 +176,7 @@ int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ri
 }
 
 String findSensorStatus(int currentDistance) {
+
   if (currentDistance >= midRange[0] && currentDistance <= midRange[1]) {
     return "mid";
   }
