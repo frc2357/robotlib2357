@@ -16,6 +16,7 @@
 byte gammatable[256];
 
 int lastRed = 0, lastGreen = 0, lastBlue = 0;
+String lastResultColor = "";
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
@@ -46,7 +47,7 @@ void setup() {
 
   // thanks PhilB for this gamma table!
   // it helps convert RGB colors to what humans see
-  for (int i=0; i<256; i++) {
+  for (int i = 0; i < 256; i++) {
     float x = i;
     x /= 255;
     x = pow(x, 2.5);
@@ -63,51 +64,54 @@ void setup() {
 void loop() {
 
   float currentRed, currentGreen, currentBlue;
-  
+
   tcs.setInterrupt(false);  // turn on LED
 
   delay(60);  // takes 50ms to read
 
   tcs.getRGB(&currentRed, &currentGreen, &currentBlue);
-  
+
   tcs.setInterrupt(true);  // turn off LED
 
-  //Serial.print("R:\t"); Serial.print(int(currentRed)); 
-  //Serial.print("\tG:\t"); Serial.print(int(currentGreen)); 
+  //Serial.print("R:\t"); Serial.print(int(currentRed));
+  //Serial.print("\tG:\t"); Serial.print(int(currentGreen));
   //Serial.print("\tB:\t"); Serial.print(int(currentBlue));
-  
-  Serial.print("\n");
 
-  if((float)lastRed != currentRed || (float)lastGreen != currentGreen || (float)lastBlue != currentBlue) {
+  //Serial.print("\n");
+
+  if ((float)lastRed != currentRed || (float)lastGreen != currentGreen || (float)lastBlue != currentBlue) {
     lastRed = (int)currentRed;
     lastGreen = (int)currentGreen;
     lastBlue = (int)currentBlue;
-  
+
     findColor(currentRed, currentGreen, currentBlue);
   }
 }
 
 void findColor(float red, float green, float blue) {
-int  R = (int)red;
-int  G = (int)green;
-int  B = (int)blue;
-String resultColor = "No Color";
+  int  R = (int)red;
+  int  G = (int)green;
+  int  B = (int)blue;
+  String resultColor = "No Color";
 
-  if(R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65){
-    resultColor = "GREEN";  
+  if (R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65) {
+    resultColor = "GREEN";
   }
 
-  if(R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40){
+  if (R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40) {
     resultColor = "YELLOW";
   }
 
-  if(R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45){
+  if (R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45) {
     resultColor = "RED";
   }
 
-  if(R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100){
+  if (R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100) {
     resultColor = "BLUE";
-  } 
+  }
 
-   Serial.println(resultColor);
+  if (resultColor != lastResultColor) {
+    lastResultColor = resultColor;
+    Serial.println(resultColor);
+  }
 }
