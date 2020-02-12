@@ -15,6 +15,8 @@
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
 
+int lastRed = 0, lastGreen = 0, lastBlue = 0;
+
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 void setup() {
@@ -55,79 +57,57 @@ void setup() {
     } else {
       gammatable[i] = x;
     }
-    //Serial.println(gammatable[i]);
   }
 }
 
-// The commented out code in loop is example of getRawData with clear value.
-// Processing example colorview.pde can work with this kind of data too, but It requires manual conversion to 
-// [0-255] RGB value. You can still uncomments parts of colorview.pde and play with clear value.
 void loop() {
 
-  float red, green, blue;
+  float currentRed, currentGreen, currentBlue;
   
   tcs.setInterrupt(false);  // turn on LED
 
   delay(60);  // takes 50ms to read
 
-  tcs.getRGB(&red, &green, &blue);
+  tcs.getRGB(&currentRed, &currentGreen, &currentBlue);
   
   tcs.setInterrupt(true);  // turn off LED
 
-  Serial.print("R:\t"); Serial.print(int(red)); 
-  Serial.print("\tG:\t"); Serial.print(int(green)); 
-  Serial.print("\tB:\t"); Serial.print(int(blue));
-
-//  Serial.print("\t");
-//  Serial.print((int)red, HEX); Serial.print((int)green, HEX); Serial.print((int)blue, HEX);
+  //Serial.print("R:\t"); Serial.print(int(currentRed)); 
+  //Serial.print("\tG:\t"); Serial.print(int(currentGreen)); 
+  //Serial.print("\tB:\t"); Serial.print(int(currentBlue));
+  
   Serial.print("\n");
 
-  findColor(red, green, blue);
-
-//  uint16_t red, green, blue, clear;
-//  
-//  tcs.setInterrupt(false);  // turn on LED
-//
-//  delay(60);  // takes 50ms to read
-//
-//  tcs.getRawData(&red, &green, &blue, &clear);
-//  
-//  tcs.setInterrupt(true);  // turn off LED
-//
-//  Serial.print("C:\t"); Serial.print(int(clear)); 
-//  Serial.print("R:\t"); Serial.print(int(red)); 
-//  Serial.print("\tG:\t"); Serial.print(int(green)); 
-//  Serial.print("\tB:\t"); Serial.print(int(blue));
-//  Serial.println();
-
-#if defined(ARDUINO_ARCH_ESP32)
-  ledcWrite(1, gammatable[(int)red]);
-  ledcWrite(2, gammatable[(int)green]);
-  ledcWrite(3, gammatable[(int)blue]);
-#else
-  analogWrite(redpin, gammatable[(int)red]);
-  analogWrite(greenpin, gammatable[(int)green]);
-  analogWrite(bluepin, gammatable[(int)blue]);
-#endif
+  if((float)lastRed != currentRed || (float)lastGreen != currentGreen || (float)lastBlue != currentBlue) {
+    lastRed = (int)currentRed;
+    lastGreen = (int)currentGreen;
+    lastBlue = (int)currentBlue;
+  
+    findColor(currentRed, currentGreen, currentBlue);
+  }
 }
 
 void findColor(float red, float green, float blue) {
 int  R = (int)red;
 int  G = (int)green;
 int  B = (int)blue;
+String resultColor = "No Color";
+
   if(R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65){
-    Serial.println("GREEN");  
+    resultColor = "GREEN";  
   }
 
   if(R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40){
-    Serial.println("YELLOW");  
+    resultColor = "YELLOW";
   }
 
   if(R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45){
-    Serial.println("RED");  
+    resultColor = "RED";
   }
 
   if(R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100){
-    Serial.println("BLUE");  
-  }
+    resultColor = "BLUE";
+  } 
+
+   Serial.println(resultColor);
 }
