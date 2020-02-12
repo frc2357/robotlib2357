@@ -18,6 +18,9 @@
   SerialState serialState(&state, initialState);
   JsonObject devices = state["devices"];
   JsonObject intakeCounter = devices["intakeCounter"];
+
+  int lowRange = intakeCounter["lowRange"];
+  int highRange = intakeCounter["highRange"];
   
   // objects for the vl53l0x
   Adafruit_VL53L0X lox1 = Adafruit_VL53L0X();
@@ -87,8 +90,8 @@
     initRingBuffer(ringBuffer1);
     initRingBuffer(ringBuffer2);
   
-    midRange[0] = intakeCounter["lowRange"].as<int>();
-    midRange[1] =  intakeCounter["highRange"].as<int>();
+    midRange[0] = intakeCounter["lowRange"];
+    midRange[1] =  intakeCounter["highRange"];
   
   
     // wait until serial port opens for native USB devices
