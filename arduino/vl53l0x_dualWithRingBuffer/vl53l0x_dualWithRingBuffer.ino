@@ -18,9 +18,9 @@ DynamicJsonDocument state(1024);
 SerialState serialState(&state, initialState);
 JsonObject devices = state["devices"];
 JsonObject intakeCounter = devices["intakeCounter"];
-
 int lowRange = intakeCounter["lowRange"];
 int highRange = intakeCounter["highRange"];
+boolean needsReset = intakeCounter["needsReset"];
 
 // objects for the vl53l0x
 Adafruit_VL53L0X lox1 = Adafruit_VL53L0X();
@@ -85,6 +85,9 @@ void setID() {
 }
 
 void setup() {
+  intakeCounter["lowRange"].clear();
+  intakeCounter["highRange"].clear();
+  intakeCounter["needsReset"].clear();
   serialState.init();
 
   initRingBuffer(ringBuffer1);
@@ -99,6 +102,8 @@ void setup() {
   intakeCounter["lowRange"] = 130;
   intakeCounter["highRange"] = 225;
 
+  intakeCounter["needsReset"] = false;
+
   pinMode(SHT_LOX1, OUTPUT);
   pinMode(SHT_LOX2, OUTPUT);
   Serial.println("Shutdown pins inited...");
@@ -111,6 +116,12 @@ void setup() {
 
 void loop() {
   serialState.handleSerial();
+
+  if (intakeCounter["needsReset"]) {
+    intakeCounter["needsReset"] = false;
+    setup();
+  }
+
   readDistance(lox1, ringBuffer1, ringBufferIndex1);
   currentDistance1 = getAverage(ringBuffer1);
 
@@ -126,7 +137,7 @@ void loop() {
   }
 
   currentNumOfCells = countCells();
-  
+
   if (currentNumOfCells != lastNumOfCells) {
     lastNumOfCells = currentNumOfCells;
     serialState.updateField(intakeCounter, "cells", currentNumOfCells);
@@ -201,7 +212,7 @@ String findSensorStatus(int currentDistance) {
 int countCells() {
   String sensor1Status = findSensorStatus(currentDistance1);
   String sensor2Status = findSensorStatus(currentDistance2);
-  
+
   if (sensor1Status == "far" && sensor2Status == "far") {
     return 0;
   }
