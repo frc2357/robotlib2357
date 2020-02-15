@@ -2,6 +2,9 @@ package com.systemmeltdown.robotlib.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/**
+ * @category Sensors
+ */
 public class DigitalInputLimitSwitch extends LimitSensor {
 	private DigitalInput digitalInput;
 	private boolean inverted;

@@ -24,6 +24,8 @@ import com.fazecast.jSerialComm.SerialPort;
  *     { name: 'limitReferse', active: false },
  *   }
  * }
+ * 
+ * @category Arduino
  */
 public class ArduinoUSBController implements Runnable {
 	private static String NAME = "name";

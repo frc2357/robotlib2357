@@ -2,6 +2,8 @@ package com.systemmeltdown.robotlib.controllers;
 
 /**
  * Informs commands on user inputs for arcade style drive
+ * 
+ * @category Controllers
  */
 public interface ArcadeAxisInput {
 	/**

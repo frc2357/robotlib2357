@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 /**
  * Base class for a Limit Sensor
  * This doesn't assume a hardware implementation, but handles the rest.
+ * 
+ * @category Sensors
  */
 public abstract class LimitSensor extends Sensor {
 	/**

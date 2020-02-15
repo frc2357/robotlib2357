@@ -6,6 +6,8 @@ import com.systemmeltdown.robotlib.util.Utility;
 
 /**
  * Set of control inputs for the Driver position.
+ * 
+ * @category Controllers
  */
 public class DriverControls implements ArcadeAxisInput {
   private XboxController m_controller;
