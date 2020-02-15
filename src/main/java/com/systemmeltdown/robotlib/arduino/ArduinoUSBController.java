@@ -173,6 +173,20 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
+	 * @param deviceName The device upon which to set the fields.
+	 * @param fieldNames The name of the field to set.
+	 * @param fieldValue The desired value of the field.
+	 */
+	public void setDeviceField(String deviceName, String[] fieldNames, int[] fieldValues) {
+		ObjectNode root = m_objectMapper.createObjectNode();
+		for(int i = 0; i < fieldNames.length; i++) {
+			root.with("devices").with(deviceName).put(fieldNames[i], fieldValues[i]);
+		}
+		write(root.toString());
+	}
+
+	/**
+	 * Sends a request to the Arduino to set a given field.
 	 * @param deviceName The device upon which to set the field.
 	 * @param fieldName The name of the field to set.
 	 * @param fieldValue The desired value of the field.
