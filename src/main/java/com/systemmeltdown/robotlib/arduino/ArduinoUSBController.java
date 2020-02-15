@@ -175,7 +175,7 @@ public class ArduinoUSBController implements Runnable {
 	 * Sends a request to the Arduino to set a given field.
 	 * 
 	 * @param deviceName The device upon which to set the field.
-	 * @param fieldName The name of the field to set.
+	 * @param fieldName  The name of the field to set.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, String fieldName, int fieldValue) {
@@ -186,24 +186,25 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
+	 * 
 	 * @param deviceName The device upon which to set the fields.
-	 * @param fieldName The name of the field to set, should always be a string.
+	 * @param fieldName  The name of the field to set, should always be a string.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, Map<String, Object> fields) {
 		ObjectNode root = m_objectMapper.createObjectNode();
 
-		for(String fieldName : fields.keySet()){
-			if(Integer.class.isInstance(fields.get(fieldName))) {
+		for (String fieldName : fields.keySet()) {
+			if (Integer.class.isInstance(fields.get(fieldName))) {
 				int value = (int) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			} else if(Double.class.isInstance(fields.get(fieldName))) {
+			} else if (Double.class.isInstance(fields.get(fieldName))) {
 				double value = (double) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			} else if(Boolean.class.isInstance(fields.get(fieldName))) {
+			} else if (Boolean.class.isInstance(fields.get(fieldName))) {
 				boolean value = (boolean) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			} else if(String.class.isInstance(fields.get(fieldName))) {
+			} else if (String.class.isInstance(fields.get(fieldName))) {
 				String value = (String) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
 			}
