@@ -1,6 +1,7 @@
 package com.systemmeltdown.robotlib.arduino;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,19 +12,13 @@ import com.fazecast.jSerialComm.SerialPort;
 /**
  * Controls an Arduino over USB via state.
  * 
- * The Arduino code operates on a JSON state object. The Arduino is the
- * owner of its own state, but will receive updates to state in the
- * form of partial JSON objects.
+ * The Arduino code operates on a JSON state object. The Arduino is the owner of
+ * its own state, but will receive updates to state in the form of partial JSON
+ * objects.
  * 
- * e.g.
- * {
- *   name: 'Intake Sensors',
- *   devices: {
- *     { name: 'laserToF', distance_mm: 50.5 },
- *     { name: 'limitForward', active: false },
- *     { name: 'limitReferse', active: false },
- *   }
- * }
+ * e.g. { name: 'Intake Sensors', devices: { { name: 'laserToF', distance_mm:
+ * 50.5 }, { name: 'limitForward', active: false }, { name: 'limitReferse',
+ * active: false }, } }
  */
 public class ArduinoUSBController implements Runnable {
 	private static String NAME = "name";
@@ -61,8 +56,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets the "name" field from the Arduino state.
-	 * @return The name given, "(disconnected)" if not yet connected, or "(unnamed)" if
-	 * the arduino state contains no name.
+	 * 
+	 * @return The name given, "(disconnected)" if not yet connected, or "(unnamed)"
+	 *         if the arduino state contains no name.
 	 */
 	public String getName() {
 		if (!isConnected()) {
@@ -74,7 +70,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets the current error returned from the Arduino state.
-	 * @return A string containing the last error message from the Arduino, or null if none.
+	 * 
+	 * @return A string containing the last error message from the Arduino, or null
+	 *         if none.
 	 */
 	public String getError() {
 		JsonNode errorNode = m_state.get(ERROR);
@@ -84,15 +82,10 @@ public class ArduinoUSBController implements Runnable {
 	/**
 	 * Checks if the Arduino state contains a given device.
 	 * 
-	 * This checks if the state's top-level devices object contains
-	 * an object with a name that matches the name given to this method.
+	 * This checks if the state's top-level devices object contains an object with a
+	 * name that matches the name given to this method.
 	 * 
-	 * e.g.
-	 * {
-	 *   devices: [
-	 *     { name: 'myDevice' },
-	 *   ]
-	 * }
+	 * e.g. { devices: [ { name: 'myDevice' }, ] }
 	 * 
 	 * @param deviceName The name of the device to check.
 	 * @return true if the Arduino state contains the given device by name.
@@ -103,8 +96,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Checks if a device is available and has a given field.
+	 * 
 	 * @param deviceName The device upon which to read the field.
-	 * @param fieldName The name of the field to get.
+	 * @param fieldName  The name of the field to get.
 	 * @return true if the device exists and has the given field, false otherwise.
 	 */
 	public boolean hasDeviceField(String deviceName, String fieldName) {
@@ -117,8 +111,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets a string value from a given device.
+	 * 
 	 * @param deviceName The device upon which to read the field.
-	 * @param fieldName The name of the field to get.
+	 * @param fieldName  The name of the field to get.
 	 * @return The current value of the field, or null if not available.
 	 */
 	public String getDeviceFieldString(String deviceName, String fieldName) {
@@ -128,9 +123,11 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets an int value from a given device.
+	 * 
 	 * @param deviceName The device upon which to read the field.
-	 * @param fieldName The name of the field to get.
-	 * @return The current value of the field, or Integer.MIN_VALUE if not available.
+	 * @param fieldName  The name of the field to get.
+	 * @return The current value of the field, or Integer.MIN_VALUE if not
+	 *         available.
 	 */
 	public int getDeviceFieldInt(String deviceName, String fieldName) {
 		JsonNode field = getDeviceField(deviceName, fieldName);
@@ -139,8 +136,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets an double value from a given device.
+	 * 
 	 * @param deviceName The device upon which to read the field.
-	 * @param fieldName The name of the field to get.
+	 * @param fieldName  The name of the field to get.
 	 * @return The current value of the field, or Double.NaN if not available.
 	 */
 	public double getDeviceFieldDouble(String deviceName, String fieldName) {
@@ -150,8 +148,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Gets an boolean value from a given device.
+	 * 
 	 * @param deviceName The device upon which to read the field.
-	 * @param fieldName The name of the field to get.
+	 * @param fieldName  The name of the field to get.
 	 * @return The current value of the field, or false if not available.
 	 */
 	public boolean getDeviceFieldBoolean(String deviceName, String fieldName) {
@@ -161,8 +160,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
+	 * 
 	 * @param deviceName The device upon which to set the field.
-	 * @param fieldName The name of the field to set.
+	 * @param fieldName  The name of the field to set.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, String fieldName, String fieldValue) {
@@ -173,22 +173,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
-	 * @param deviceName The device upon which to set the fields.
-	 * @param fieldNames The name of the field to set.
-	 * @param fieldValue The desired value of the field.
-	 */
-	public void setDeviceField(String deviceName, String[] fieldNames, int[] fieldValues) {
-		ObjectNode root = m_objectMapper.createObjectNode();
-		for(int i = 0; i < fieldNames.length; i++) {
-			root.with("devices").with(deviceName).put(fieldNames[i], fieldValues[i]);
-		}
-		write(root.toString());
-	}
-
-	/**
-	 * Sends a request to the Arduino to set a given field.
+	 * 
 	 * @param deviceName The device upon which to set the field.
-	 * @param fieldName The name of the field to set.
+	 * @param fieldName  The name of the field to set.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, String fieldName, int fieldValue) {
@@ -199,8 +186,37 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
+	 * 
+	 * @param deviceName The device upon which to set the fields.
+	 * @param fieldName  The name of the field to set, should always be a string.
+	 * @param fieldValue The desired value of the field.
+	 */
+	public void setDeviceField(String deviceName, Map<String, Object> fields) {
+		ObjectNode root = m_objectMapper.createObjectNode();
+
+		for (String fieldName : fields.keySet()) {
+			if (Integer.class.isInstance(fields.get(fieldName))) {
+				int value = (int) fields.get(fieldName);
+				root.with("devices").with(deviceName).put(fieldName, value);
+			} else if (Double.class.isInstance(fields.get(fieldName))) {
+				double value = (double) fields.get(fieldName);
+				root.with("devices").with(deviceName).put(fieldName, value);
+			} else if (Boolean.class.isInstance(fields.get(fieldName))) {
+				boolean value = (boolean) fields.get(fieldName);
+				root.with("devices").with(deviceName).put(fieldName, value);
+			} else if (String.class.isInstance(fields.get(fieldName))) {
+				String value = (String) fields.get(fieldName);
+				root.with("devices").with(deviceName).put(fieldName, value);
+			}
+		}
+		write(root.toString());
+	}
+
+	/**
+	 * Sends a request to the Arduino to set a given field.
+	 * 
 	 * @param deviceName The device upon which to set the field.
-	 * @param fieldName The name of the field to set.
+	 * @param fieldName  The name of the field to set.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, String fieldName, double fieldValue) {
@@ -211,8 +227,9 @@ public class ArduinoUSBController implements Runnable {
 
 	/**
 	 * Sends a request to the Arduino to set a given field.
+	 * 
 	 * @param deviceName The device upon which to set the field.
-	 * @param fieldName The name of the field to set.
+	 * @param fieldName  The name of the field to set.
 	 * @param fieldValue The desired value of the field.
 	 */
 	public void setDeviceField(String deviceName, String fieldName, boolean fieldValue) {
@@ -224,8 +241,8 @@ public class ArduinoUSBController implements Runnable {
 	/**
 	 * Starts to read data from the Arduino.
 	 * 
-	 * This starts an internal thread that blocks on data from the Arduino,
-	 * which then processes complete JSON state objects as they are received.
+	 * This starts an internal thread that blocks on data from the Arduino, which
+	 * then processes complete JSON state objects as they are received.
 	 */
 	public void start() {
 		if (m_thread != null) {
@@ -260,14 +277,15 @@ public class ArduinoUSBController implements Runnable {
 	/**
 	 * The run loop for the internal thread of this controller.
 	 * 
-	 * This is not meant to be called directly. It's an implementation of the Runnable interface.
+	 * This is not meant to be called directly. It's an implementation of the
+	 * Runnable interface.
 	 */
 	@Override
 	public void run() {
-		while(m_thread != null) {
+		while (m_thread != null) {
 			try {
 				read();
-			} catch(IOException ioe) {
+			} catch (IOException ioe) {
 				// TODO: Use logging for this.
 				ioe.printStackTrace();
 			}
@@ -318,13 +336,15 @@ public class ArduinoUSBController implements Runnable {
 		JsonNode device = getDevice(deviceName);
 		if (device == null) {
 			// TODO: Use logging for this.
-			System.err.println("device '" + deviceName + "' not found for Arduino " + getName() + " on " + m_serialPort.getSystemPortName());
+			System.err.println("device '" + deviceName + "' not found for Arduino " + getName() + " on "
+					+ m_serialPort.getSystemPortName());
 			return null;
 		}
 		JsonNode field = device.get(fieldName);
 		if (field == null) {
 			// TODO: Use logging for this.
-			System.err.println("devices '" + deviceName + "' field '" + fieldName + "' not found for Arduino " + getName() + " on " + m_serialPort.getSystemPortName());
+			System.err.println("devices '" + deviceName + "' field '" + fieldName + "' not found for Arduino "
+					+ getName() + " on " + m_serialPort.getSystemPortName());
 			return null;
 		}
 		return field;
@@ -333,13 +353,14 @@ public class ArduinoUSBController implements Runnable {
 	protected JsonNode getDevice(String deviceName) {
 		if (m_state == null) {
 			// TODO: Use logging for this.
-			System.err.println("state not yet available for Arduino on " + m_serialPort.getSystemPortName() );
+			System.err.println("state not yet available for Arduino on " + m_serialPort.getSystemPortName());
 			return null;
 		}
 		JsonNode devices = m_state.get("devices");
 		if (devices == null) {
 			// TODO: Use logging for this.
-			System.err.println("devices not found for Arduino " + getName() + " on " + m_serialPort.getSystemPortName());
+			System.err
+					.println("devices not found for Arduino " + getName() + " on " + m_serialPort.getSystemPortName());
 			return null;
 		}
 		return devices.get(deviceName);
