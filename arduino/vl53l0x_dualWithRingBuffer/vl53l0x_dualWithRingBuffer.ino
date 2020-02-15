@@ -1,5 +1,4 @@
 #include <ArduinoJson.h>
-
 #include "Adafruit_VL53L0X.h"
 #include "serialstate.h"
 
@@ -10,17 +9,18 @@
 // set the pins to shutdown
 #define SHT_LOX1 7
 #define SHT_LOX2 6
-
 #define VL53L0X_MAX_DISTANCE 2000
 #define RINGBUFFER_LENGTH 6
 
 String name = "Intake Power Cells";
-String initialState = "{name: '" + name + "', intakeStatus: {counter: {}}}";
-
+String initialState = "{name: '" + name + "', devices: {intakeCounter: {}}}";
 DynamicJsonDocument state(1024);
 SerialState serialState(&state, initialState);
-
-JsonObject intakeCells = state["intakeStatus"]["counter"];
+JsonObject devices = state["devices"];
+JsonObject intakeCounter = devices["intakeCounter"];
+int lowRange = intakeCounter["lowRange"];
+int highRange = intakeCounter["highRange"];
+boolean needsReset = intakeCounter["needsReset"];
 
 // objects for the vl53l0x
 Adafruit_VL53L0X lox1 = Adafruit_VL53L0X();
@@ -40,7 +40,6 @@ int lastDistance2 = -1;
 int currentDistance2 = -1;
 int actualDistance1 = -1;
 int actualDistance2 = -1;
-int midRange[2] = {130, 225};
 int currentNumOfCells = -1;
 int lastNumOfCells = -1;
 /*
@@ -51,12 +50,13 @@ int lastNumOfCells = -1;
     Keep sensor #1 awake, and now bring sensor #2 out of reset by setting its XSHUT pin high.
     Initialize sensor #2 with lox.begin(new_i2c_address) Pick any number but 0x29 and whatever you set the first sensor to
 */
-
 void setID() {
+
   // all reset
   digitalWrite(SHT_LOX1, LOW);
   digitalWrite(SHT_LOX2, LOW);
   delay(10);
+
   // all unreset
   digitalWrite(SHT_LOX1, HIGH);
   digitalWrite(SHT_LOX2, HIGH);
@@ -65,8 +65,8 @@ void setID() {
   // activating LOX1 and reseting LOX2
   digitalWrite(SHT_LOX1, HIGH);
   digitalWrite(SHT_LOX2, LOW);
-
   // initing LOX1
+
   if (!lox1.begin(LOX1_ADDRESS)) {
     Serial.println(F("Failed to boot first VL53L0X"));
     while (1);
@@ -85,8 +85,11 @@ void setID() {
 }
 
 void setup() {
+  intakeCounter["lowRange"].clear();
+  intakeCounter["highRange"].clear();
+  intakeCounter["needsReset"].clear();
   serialState.init();
-  
+
   initRingBuffer(ringBuffer1);
   initRingBuffer(ringBuffer2);
 
@@ -95,22 +98,29 @@ void setup() {
     delay(1);
   }
 
+  //set default range
+  intakeCounter["lowRange"] = 130;
+  intakeCounter["highRange"] = 225;
+
+  intakeCounter["needsReset"] = false;
+
   pinMode(SHT_LOX1, OUTPUT);
   pinMode(SHT_LOX2, OUTPUT);
-
   Serial.println("Shutdown pins inited...");
-
   digitalWrite(SHT_LOX1, LOW);
   digitalWrite(SHT_LOX2, LOW);
-
   Serial.println("Both in reset mode...(pins are low)");
-
   Serial.println("Starting...");
   setID();
 }
 
 void loop() {
   serialState.handleSerial();
+
+  if (intakeCounter["needsReset"]) {
+    intakeCounter["needsReset"] = false;
+    setup();
+  }
 
   readDistance(lox1, ringBuffer1, ringBufferIndex1);
   currentDistance1 = getAverage(ringBuffer1);
@@ -127,26 +137,23 @@ void loop() {
   }
 
   currentNumOfCells = countCells();
+
   if (currentNumOfCells != lastNumOfCells) {
     lastNumOfCells = currentNumOfCells;
-    serialState.updateField(intakeCells, "Cells", currentNumOfCells);
+    serialState.updateField(intakeCounter, "cells", currentNumOfCells);
     serialState.sendState();
   }
-  
-  countCells();
 }
 
 int getAverage(int ringBuffer[RINGBUFFER_LENGTH]) {
   int validValueCount = 0;
   int sum = 0;
-
   for (int i = 0; i < RINGBUFFER_LENGTH; i++) {
     if (ringBuffer[i] > -1) {
       validValueCount++;
       sum += ringBuffer[i];
     }
   }
-
   if (validValueCount == 0) {
     return -1;
   }
@@ -162,8 +169,8 @@ void initRingBuffer(int ringBuffer[RINGBUFFER_LENGTH]) {
 int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ringBufferIndex) {
   VL53L0X_RangingMeasurementData_t measure;
   lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
-
   int distance = measure.RangeMilliMeter;
+
   if (measure.RangeStatus == 4 || // phase failures make incorrect data
       distance > VL53L0X_MAX_DISTANCE) {  // filter out 8191 incorrect distances
     distance = -1;
@@ -171,16 +178,31 @@ int readDistance(Adafruit_VL53L0X lox, int ringBuffer[RINGBUFFER_LENGTH], int ri
 
   ringBuffer[ringBufferIndex] = distance;
   ringBufferIndex = ringBufferIndex < (RINGBUFFER_LENGTH - 1) ? ringBufferIndex + 1 : 0;
-
   return distance;
 }
 
-String findSensorStatus(int currentDistance) {
+boolean isDistanceGreaterThanLowRange(int currentDistance) {
+  if (currentDistance >= intakeCounter["lowRange"]) {
+    return true;
+  }
+  return false;
+}
 
-  if (currentDistance >= midRange[0] && currentDistance <= midRange[1]) {
+boolean isDistanceLessThanHighRange(int currentDistance) {
+  if (currentDistance <= intakeCounter["highRange"]) {
+    return true;
+  }
+  return false;
+}
+
+String findSensorStatus(int currentDistance) {
+  boolean DistanceGreaterThanLowRange = isDistanceGreaterThanLowRange(currentDistance);
+  boolean DistanceLessThanHighRange =  isDistanceLessThanHighRange(currentDistance);
+
+  if (DistanceGreaterThanLowRange && DistanceLessThanHighRange) {
     return "mid";
   }
-  if (currentDistance >= midRange[0]) {
+  if (DistanceGreaterThanLowRange) {
     return "far";
   } else {
     return "close";
