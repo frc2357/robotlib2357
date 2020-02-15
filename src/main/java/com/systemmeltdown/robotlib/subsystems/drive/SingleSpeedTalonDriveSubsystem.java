@@ -4,6 +4,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
+/**
+ * A drive subsystem for a drive subsystem that uses talons.
+ */
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     // Left out of the abstract to use Talon Specific methods
     protected WPI_TalonSRX m_leftTalonMaster;

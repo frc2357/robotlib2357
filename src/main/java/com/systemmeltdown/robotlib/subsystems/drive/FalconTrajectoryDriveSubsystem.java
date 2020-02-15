@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
+/**
+ * The Template for a drive subsystem that has falcon motors and needs the trajectory commands from WpiLib.
+ * Extends off of single speed falcon drive subsystem.
+ */
 public class FalconTrajectoryDriveSubsystem extends SingleSpeedFalconDriveSubsystem {
     private double m_leftLastValue;
     private double m_rightLastValue;
