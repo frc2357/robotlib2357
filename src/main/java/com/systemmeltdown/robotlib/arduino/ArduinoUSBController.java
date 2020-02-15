@@ -197,19 +197,13 @@ public class ArduinoUSBController implements Runnable {
 			if(Integer.class.isInstance(fields.get(fieldName))) {
 				int value = (int) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			}
-
-			if(Double.class.isInstance(fields.get(fieldName))) {
+			} else if(Double.class.isInstance(fields.get(fieldName))) {
 				double value = (double) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			}
-
-			if(Boolean.class.isInstance(fields.get(fieldName))) {
+			} else if(Boolean.class.isInstance(fields.get(fieldName))) {
 				boolean value = (boolean) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
-			}
-
-			if(String.class.isInstance(fields.get(fieldName))) {
+			} else if(String.class.isInstance(fields.get(fieldName))) {
 				String value = (String) fields.get(fieldName);
 				root.with("devices").with(deviceName).put(fieldName, value);
 			}
