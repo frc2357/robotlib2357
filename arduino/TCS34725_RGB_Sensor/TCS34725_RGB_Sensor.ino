@@ -20,6 +20,10 @@ DynamicJsonDocument state(1024);
 SerialState serialState(&state, initialState);
 JsonObject devices = state["devices"];
 JsonObject colorFinder = devices["colorFinder"];
+JsonObject redRanges = colorFinder["redRanges"];
+JsonObject greenRanges = colorFinder["greenRanges"];
+JsonObject blueRanges = colorFinder["blueRanges"];
+JsonObject yellowRanges = colorFinder["yellowRanges"];
 
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
@@ -34,6 +38,35 @@ void setup() {
   serialState.init();
   //Serial.println("Color View Test!");
 
+  //Range defaults
+  redRanges["redHigh"] = 160;
+  redRanges["redlow"] = 150;
+  redRanges["greenHigh"] = 55;
+  redRanges["greenLow"] = 45;
+  redRanges["blueHigh"] = 55;
+  redRanges["blueLow"] = 45;
+
+  greenRanges["redHigh"] = 85;
+  greenRanges["redlow"] = 75;
+  greenRanges["greenHigh"] = 100;
+  greenRanges["greenLow"] = 90;
+  greenRanges["blueHigh"] = 75;
+  greenRanges["blueLow"] = 65;
+
+  blueRanges["redHigh"] = 60;
+  blueRanges["redlow"] = 50;
+  blueRanges["greenHigh"] = 90;
+  blueRanges["greenLow"] = 80;
+  blueRanges["blueHigh"] = 110;
+  blueRanges["blueLow"] = 100;
+
+  yellowRanges["redHigh"] = 120;
+  yellowRanges["redlow"] = 110;
+  yellowRanges["greenHigh"] = 90;
+  yellowRanges["greenLow"] = 80;
+  yellowRanges["blueHigh"] = 50;
+  yellowRanges["blueLow"] = 40;
+  
   if (tcs.begin()) {
     //Serial.println("Found sensor");
   } else {
@@ -105,18 +138,19 @@ void findColor(float red, float green, float blue) {
   int  B = (int)blue;
   resultColor = "No Color";
 
-  if (R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65) {
+  if (R <= greenRanges["redHigh"] && R >= greenRanges["redLow"] && G <= greenRanges["greenHigh"] && G >= greenRanges["greenLow"] && B <= greenRanges["blueHigh"] && B >= greenRanges["blueLow"]) {
     resultColor = "GREEN";
-  } else if (R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40) {
+  } else if (R <= yellowRanges["redHigh"] && R >= yellowRanges["redLow"] && G <= yellowRanges["greenHigh"] && G >= yellowRanges["greenLow"] && B <= yellowRanges["blueHigh"] && B >= yellowRanges["blueLow"]) {
     resultColor = "YELLOW";
-  } else if (R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45) {
+  } else if (R <= redRanges["redHigh"] && R >= redRanges["redLow"] && G <= redRanges["greenHigh"] && G >= redRanges["greenLow"] && B <= redRanges["blueHigh"] && B >= redRanges["blueLow"]) {
     resultColor = "RED";
-  } else if (R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100) {
+  } else if (R <= blueRanges["redHigh"] && R >= blueRanges["redLow"] && G <= blueRanges["greenHigh"] && G >= blueRanges["greenLow"] && B <= blueRanges["blueHigh"] && B >= blueRanges["blueLow"]) {
     resultColor = "BLUE";
   }
 
   if (resultColor != lastResultColor) {
     lastResultColor = resultColor;
+    Serial.println(resultColor);
     serialState.updateField(colorFinder, "color", resultColor);
     serialState.sendState();
     //Serial.println(resultColor);
