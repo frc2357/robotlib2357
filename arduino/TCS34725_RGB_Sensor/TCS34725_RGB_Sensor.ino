@@ -1,5 +1,7 @@
 #include <Wire.h>
+#include <ArduinoJson.h>
 #include "Adafruit_TCS34725.h"
+#include "serialstate.h"
 
 // Pick analog outputs, for the UNO these three work well
 // use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
@@ -12,16 +14,24 @@
 // set to false if using a common cathode LED
 #define commonAnode true
 
+String name = "Control Panel Color";
+String initialState = "{name: '" + name + "', devices: {colorFinder: {}}}";
+DynamicJsonDocument state(1024);
+SerialState serialState(&state, initialState);
+JsonObject devices = state["devices"];
+JsonObject colorFinder = devices["colorFinder"];
+
 // our RGB -> eye-recognized gamma color
 byte gammatable[256];
 
 int lastRed = 0, lastGreen = 0, lastBlue = 0;
 String lastResultColor = "";
+String resultColor = " ";
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 void setup() {
-  Serial.begin(9600);
+  serialState.init();
   //Serial.println("Color View Test!");
 
   if (tcs.begin()) {
@@ -62,6 +72,7 @@ void setup() {
 }
 
 void loop() {
+  serialState.handleSerial();
 
   float currentRed, currentGreen, currentBlue;
 
@@ -92,26 +103,22 @@ void findColor(float red, float green, float blue) {
   int  R = (int)red;
   int  G = (int)green;
   int  B = (int)blue;
-  String resultColor = "No Color";
+  resultColor = "No Color";
 
   if (R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65) {
     resultColor = "GREEN";
-  }
-
-  if (R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40) {
+  } else if (R <= 120 && R >= 110 && G <= 90 && G >= 80 && B <= 50 && B >= 40) {
     resultColor = "YELLOW";
-  }
-
-  if (R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45) {
+  } else if (R <= 160 && R >= 150 && G <= 55 && G >= 45 && B <= 55 && B >= 45) {
     resultColor = "RED";
-  }
-
-  if (R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100) {
+  } else if (R <= 60 && R >= 50 && G <= 90 && G >= 80 && B <= 110 && B >= 100) {
     resultColor = "BLUE";
   }
 
   if (resultColor != lastResultColor) {
     lastResultColor = resultColor;
-    Serial.println(resultColor);
+    serialState.updateField(colorFinder, "color", resultColor);
+    serialState.sendState();
+    //Serial.println(resultColor);
   }
 }
