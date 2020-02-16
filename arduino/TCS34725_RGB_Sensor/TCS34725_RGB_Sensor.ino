@@ -26,6 +26,7 @@ byte gammatable[256];
 
 int lastRed = 0, lastGreen = 0, lastBlue = 0;
 String lastResultColor = "";
+String resultColor = " ";
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
@@ -102,7 +103,7 @@ void findColor(float red, float green, float blue) {
   int  R = (int)red;
   int  G = (int)green;
   int  B = (int)blue;
-  String resultColor = "No Color";
+  resultColor = "No Color";
 
   if (R <= 85 && R >= 75 && G <= 100 && G >= 90 && B <= 75 && B >= 65) {
     resultColor = "GREEN";
