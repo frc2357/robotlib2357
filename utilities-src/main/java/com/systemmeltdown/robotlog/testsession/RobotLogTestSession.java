@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.systemmeltdown.robotlog.LogSession;
 import com.systemmeltdown.robotlog.outputs.LogOutput;
-import com.systemmeltdown.robotlog.outputs.PrintStreamOutput;
+import com.systemmeltdown.robotlog.outputs.ZipFileOutput;
 
 /**
  * RobotLog: Test Session
@@ -24,13 +24,21 @@ public class RobotLogTestSession {
     displayWelcome();
     installShutdownHook();
 
-    new SineWave("Sine Wave", 0.01D, 1.0D, 5.0D, 0.25D);
+    Map<String, Object> header = new HashMap<String, Object>();
+    header.put("eventName", "The Main Event");
+    header.put("matchNumber", 22);
+    header.put("replayNumber", 1);
+    header.put("alliance", "blue");
+    header.put("driverStationLocation", 3);
+    header.put("gameSpecificMessage", "RLR");
+
+    new SineWave("Sine Wave", 0.25D, 5.0D, 5.0D, 0.25D);
 
     Map<String, LogOutput> outputs = new HashMap<String, LogOutput>();
-    outputs.put("stdout", new PrintStreamOutput("RobotLog", System.out));
+    outputs.put("file", new ZipFileOutput("./logs", "testlog", header, 0.01D));
 
     m_session = new LogSession(outputs);
-    m_session.subscribeTopic("Sine Wave", "stdout");
+    m_session.subscribeTopic("Sine Wave", "file");
   }
 
   private void displayWelcome() {
@@ -47,16 +55,14 @@ public class RobotLogTestSession {
   }
 
   private void installShutdownHook() {
-    Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-  }
-
-  private class ShutdownHook extends Thread {
-    @Override
-    public void run() {
-      if (m_session != null) {
-        m_session.stop();
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        if (m_session != null) {
+          m_session.stop();
+        }
       }
-    }
+    });
   }
 
   public static void main(String[] args) {

@@ -14,6 +14,7 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 	private static final int THREAD_PRIORITY = Thread.NORM_PRIORITY;
 	private static final int EVENT_QUEUE_CAPACITY = 20;
 	private static final long QUEUE_POLL_TIMEOUT_MILLISECONDS = 100;
+	private static final long SHUTDOWN_TIMEOUT_MILLISECONDS = 100;
 
 	private static ThreadGroup m_logThreadGroup = initThreadGroup();
 	
@@ -26,23 +27,33 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 	private class Entry {
 		private final String m_topicName;
 		private final Object m_value;
+		private final Class<?> m_valueType;
 		private final long m_relativeNanos;
 
-		private Entry(final String topicName, final Object value, final long relativeNanos) {
+		private Entry(final String topicName, final Object value, final Class<?> valueType, final long relativeNanos) {
 			m_topicName = topicName;
 			m_value = value;
+			m_valueType = valueType;
 			m_relativeNanos = relativeNanos;
 		}
 	}
 
 	final Thread m_thread;
-	private final LogWriter m_logWriter;
+	private LogWriter m_logWriter;
 	private final BlockingQueue<Entry> m_entryQueue = new ArrayBlockingQueue<Entry>(EVENT_QUEUE_CAPACITY);
 	private RelativeTimeSource m_session;
 
+	protected ThreadLogOutput() {
+		this(null);
+	}
+
 	protected ThreadLogOutput(LogWriter logWriter) {
-		m_logWriter = logWriter;
+		setLogWriter(logWriter);
 		m_thread = new Thread(m_logThreadGroup, this, getClass().getName());
+	}
+
+	protected void setLogWriter(LogWriter logWriter) {
+		m_logWriter = logWriter;
 	}
 
 	private long convertToRelativeNanos(long nanos) {
@@ -54,6 +65,11 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 
 	@Override
 	public void run() {
+		if (m_logWriter == null) {
+			System.err.println(getClass().getName() + ": setLogWriter() must be called before thread start");
+			return;
+		}
+
 		try {
 			while (m_session != null || !m_entryQueue.isEmpty()) {
 				writeNextEntry();
@@ -63,12 +79,12 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 		}
 	}
 
-	private void queueEntry(final String topicName, final Object value, final long relativeNanos) {
+	private void queueEntry(final String topicName, final Object value, final Class<?> valueType, final long relativeNanos) {
 		if (m_entryQueue.remainingCapacity() == 0) {
 			System.err.println(getClass().getName() + ": queue capacity is full! Discarding entry.");
 			return;
 		}
-		m_entryQueue.add(new Entry(topicName, value, relativeNanos));
+		m_entryQueue.add(new Entry(topicName, value, valueType, relativeNanos));
 	}
 
 	private boolean writeNextEntry() throws InterruptedException {
@@ -90,7 +106,7 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 					m_logWriter.onStop(entry.m_relativeNanos);
 					break;
 				case SUBSCRIBE:
-					m_logWriter.onSubscribe(entry.m_topicName, entry.m_relativeNanos);
+					m_logWriter.onSubscribe(entry.m_topicName, entry.m_valueType, entry.m_relativeNanos);
 					break;
 				case UNSUBSCRIBE:
 					m_logWriter.onUnsubscribe(entry.m_topicName, entry.m_relativeNanos);
@@ -112,7 +128,7 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 		}
 		m_session = session;
 		m_thread.start();
-		queueEntry(null, EventValue.START, convertToRelativeNanos(nanos));
+		queueEntry(null, EventValue.START, null, convertToRelativeNanos(nanos));
 		return true;
 	}
 
@@ -122,23 +138,30 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 			System.err.println("ThreadLogOutput.stop: Cannot stop. Not yet started");
 			return false;
 		}
-		queueEntry(null, EventValue.STOP, convertToRelativeNanos(nanos));
+		queueEntry(null, EventValue.STOP, null, convertToRelativeNanos(nanos));
+
+		try {
+			m_thread.join(SHUTDOWN_TIMEOUT_MILLISECONDS);
+		} catch (InterruptedException ie) {
+			System.err.println("ThreadLogOutput.stop: Shutdown timeout");
+		}
+
 		m_session = null;
 		return true;
 	}
 
 	@Override
-	public final void notifySubscribe(final String topicName, final long nanos) {
-		queueEntry(topicName, EventValue.SUBSCRIBE, convertToRelativeNanos(nanos));
+	public final void notifySubscribe(final String topicName, final Class<?> valueType, final long nanos) {
+		queueEntry(topicName, EventValue.SUBSCRIBE, valueType, convertToRelativeNanos(nanos));
 	}
 
 	@Override
 	public final void notifyUnsubscribe(final String topicName, final long nanos) {
-		queueEntry(topicName, EventValue.UNSUBSCRIBE, convertToRelativeNanos(nanos));
+		queueEntry(topicName, EventValue.UNSUBSCRIBE, null, convertToRelativeNanos(nanos));
 	}
 
 	@Override
 	public final void writeEntry(final String topicName, final Object value, final long nanos) {
-		queueEntry(topicName, value, convertToRelativeNanos(nanos));
+		queueEntry(topicName, value, null, convertToRelativeNanos(nanos));
 	}
 }

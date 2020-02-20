@@ -61,7 +61,7 @@ public class PrintStreamLogWriterTest {
 		var writer = new PrintStreamLogWriter("prefix", stream);
 
 		writer.onStart(120);
-		writer.onSubscribe("test-topic", 120 + (1 * MINUTE) + (5 * SECOND));
+		writer.onSubscribe("test-topic", String.class, 120 + (1 * MINUTE) + (5 * SECOND));
 
 		verify(stream).println("prefix: 01:05.000 [test-topic]( Subscribed )");
 	}

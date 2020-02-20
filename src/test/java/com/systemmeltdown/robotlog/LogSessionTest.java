@@ -50,7 +50,7 @@ public class LogSessionTest {
 		final LogSession session = new LogSession(Map.of("test-output", testOutput), topicRegistry, 1000000000L);
 
 		session.subscribeTopic("test-topic", "test-output", 1000000000L);
-		verify(testOutput).notifySubscribe("test-topic", 1000000000L);
+		verify(testOutput).notifySubscribe("test-topic", String.class, 1000000000L);
 
 		session.unsubscribeTopic("test-topic", "test-output", 2000000000L);
 		verify(testOutput).notifyUnsubscribe("test-topic", 2000000000L);

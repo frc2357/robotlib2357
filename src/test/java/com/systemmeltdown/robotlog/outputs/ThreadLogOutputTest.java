@@ -37,12 +37,12 @@ public class ThreadLogOutputTest {
 		long stopNanos = m_initNanos + 3000000000L;
 
 		output.start(this::convertToRelativeNanos, startNanos);
-		output.notifySubscribe("test-topic", subscribeNanos);
+		output.notifySubscribe("test-topic", String.class, subscribeNanos);
 		output.notifyUnsubscribe("test-topic", unsubscribeNanos);
 		output.stop(stopNanos);
 		output.m_thread.join(500);
 
-		verify(writer).onSubscribe("test-topic", subscribeNanos - startNanos);
+		verify(writer).onSubscribe("test-topic", String.class, subscribeNanos - startNanos);
 		verify(writer).onUnsubscribe("test-topic", unsubscribeNanos - startNanos);
 	}
 
@@ -55,12 +55,12 @@ public class ThreadLogOutputTest {
 		long startNanos = m_initNanos;
 		long stopNanos = m_initNanos + 3000000000L;
 
-		output.notifySubscribe("test-topic", subscribeNanos);
+		output.notifySubscribe("test-topic", String.class, subscribeNanos);
 		output.start(this::convertToRelativeNanos, startNanos);
 		output.stop(stopNanos);
 		output.m_thread.join(500);
 
-		verify(writer).onSubscribe("test-topic", -1);
+		verify(writer).onSubscribe("test-topic", String.class, -1);
 	}
 
 	@Test

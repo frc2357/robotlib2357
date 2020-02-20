@@ -45,8 +45,8 @@ public class SimpleLogOutput implements LogOutput {
 	}
 
 	@Override
-	public final void notifySubscribe(String topicName, long nanos) {
-		m_logWriter.onSubscribe(topicName, convertToRelativeNanos(nanos));
+	public final void notifySubscribe(String topicName, Class<?> valueType, long nanos) {
+		m_logWriter.onSubscribe(topicName, valueType, convertToRelativeNanos(nanos));
 	}
 
 	@Override

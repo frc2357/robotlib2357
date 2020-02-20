@@ -23,9 +23,10 @@ public interface LogOutput {
 	/**
 	 * Notifies a writer that it has been subscribed to a topic.
 	 * @param topicName The name of the topic which has been subscribed
+	 * @param valueType The type of values this topic produces
 	 * @param nanos The System.nanoTime() value for when the subscription occurred
 	 */
-	public void notifySubscribe(String topicName, long nanos);
+	public void notifySubscribe(String topicName, Class<?> valueType, long nanos);
 
 	/**
 	 * Notifies a writer that it has been unsubscribed from a topic.
