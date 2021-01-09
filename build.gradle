@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2021.1.2"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -47,7 +47,6 @@ dependencies {
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 
-
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
@@ -56,13 +55,24 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     
     compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
-    
-    testCompile 'junit:junit:4.12'
+
+    testImplementation 'junit:junit:4.12'
 	testCompile 'org.mockito:mockito-core:2.+'
 
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, false)
+
+    // Websocket extensions require additional configuration.
+    // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
+    // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
+}
+
+// Simulation configuration (e.g. environment variables).
+sim {
+    // Sets the websocket client remote host.
+    // envVar "HALSIMWS_HOST", "10.0.0.2"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
