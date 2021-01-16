@@ -134,13 +134,13 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 	 * @param rightProportion Speed of right drive (-1.0 to 1.0, negative =
 	 *                        backwards)
 	 */
-	protected void setProportional(double leftProportion, double rightProportion) {
+	public void setProportional(double leftProportion, double rightProportion) {
 		m_leftControllers.set(leftProportion);
 		m_rightControllers.set(rightProportion);
 	};
 
 	/**
-	 * Set the valocity speed of the drive base.
+	 * Set the velocity speed of the drive base.
 	 * 
 	 * @param leftClicksPerSecond  Speed of left drive in clicks per second
 	 *                             (negative = backwards)
