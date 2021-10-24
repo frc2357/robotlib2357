@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 public class FalconTrajectoryDriveSubsystem extends SingleSpeedFalconDriveSubsystem {
     private double m_leftLastValue;
     private double m_rightLastValue;
-    private double m_distancePerPulse;
+    public double m_distancePerPulse;
 
     // The gyro sensor
     private PigeonIMU m_gyro;

@@ -31,4 +31,12 @@ public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
     protected void setVelocity(int leftClicksPerSecond, double rightClicksPerSecond) {
         // TODO implement PID Loop
     }
+
+    public WPI_TalonFX getLeftFalconMaster() {
+        return m_leftFalconMaster;
+    }
+
+    public WPI_TalonFX getRightFalconMaster() {
+        return m_rightFalconMaster;
+    }
 }
