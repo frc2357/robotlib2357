@@ -3,7 +3,8 @@ package com.systemmeltdown.robotlib.subsystems.pdp;
 import com.systemmeltdown.robotlog.topics.DoubleTopic;
 import com.systemmeltdown.robotlog.topics.StringTopic;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -19,12 +20,12 @@ public class PDPSubsystem implements Subsystem {
   private final DoubleTopic batteryVoltsTopic = new DoubleTopic("Battery Volts", 0.25);
   private final DoubleTopic totalAmpsTopic = new DoubleTopic("Total Amps", 0.25);
   private final DoubleTopic temperatureTopic = new DoubleTopic("PDP Temp", 5.0);
-  private final PowerDistributionPanel m_pdp;
+  private final PowerDistribution m_pdp;
 
   public PDPSubsystem(int canId) {
     infoTopic.log("PDPSubsystem: canId=" + canId);
 
-    m_pdp = new PowerDistributionPanel(canId);
+    m_pdp = new PowerDistribution(canId,ModuleType.kCTRE);
     debugTopic.log("pdp object created for canId of " + canId);
   }
 
@@ -32,7 +33,7 @@ public class PDPSubsystem implements Subsystem {
    * Testing constructor
    * @param pdp PDP mock
    */
-  PDPSubsystem(PowerDistributionPanel pdp) {
+  PDPSubsystem(PowerDistribution pdp) {
     m_pdp = pdp;
   }
 

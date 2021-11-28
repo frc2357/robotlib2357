@@ -2,19 +2,19 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
     // Left out of the abstract to use Talon Specific methods
     protected WPI_TalonSRX m_leftTalonMaster;
     protected WPI_TalonSRX m_rightTalonMaster;
 
-    public SingleSpeedTalonDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
-            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves) {
-        super(new SpeedControllerGroup(leftTalonMaster, leftTalonSlaves),
-                new SpeedControllerGroup(rightTalonMaster, rightTalonSlaves));
-        m_leftTalonMaster = leftTalonMaster;
-        m_rightTalonMaster = rightTalonMaster;
+    public SingleSpeedTalonDriveSubsystem(WPI_TalonSRX[] leftTalons,
+        WPI_TalonSRX[] rightTalons) {
+        super(new MotorControllerGroup(leftTalons),
+                new MotorControllerGroup(rightTalons));
+        m_leftTalonMaster = leftTalons[0];
+        m_rightTalonMaster = rightTalons[0];
     }
 
     @Override
