@@ -1,45 +1,39 @@
 package com.systemmeltdown.robotlib.triggers;
 
+import com.systemmeltdown.robotlib.util.ControllerAxis;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class AxisThresholdTrigger extends Trigger {
-  private XboxController controller;
-  private Axis axis;
   private double triggerThreshold;
+  private ControllerAxis controllerAxis;
 
   public AxisThresholdTrigger(XboxController controller, Axis axis, double triggerThreshold) {
-    this.controller = controller;
-    this.axis = axis;
     this.triggerThreshold = triggerThreshold;
+    this.controllerAxis = ()-> {
+      switch (axis) {
+      case kLeftX:
+        return controller.getLeftX();
+      case kLeftY:
+        return controller.getLeftY();
+      case kLeftTrigger:
+        return controller.getLeftTriggerAxis();
+      case kRightTrigger:
+        return controller.getRightTriggerAxis();
+      case kRightX:
+        return controller.getRightX();
+      case kRightY:
+        return controller.getRightY();
+    } 
+    return 0;
+  };
+   
   }
 
   @Override
   public boolean get() {
-    double axisValue = 0;
-
-    switch (axis) {
-      case kLeftX:
-        axisValue = controller.getLeftX();
-        break;
-      case kLeftY:
-        axisValue = controller.getLeftY();
-        break;
-      case kLeftTrigger:
-        axisValue = controller.getLeftTriggerAxis();
-        break;
-      case kRightTrigger:
-        axisValue = controller.getRightTriggerAxis();
-        break;
-      case kRightX:
-        axisValue = controller.getRightX();
-        break;
-      case kRightY:
-        axisValue = controller.getRightY();
-        break;
-    }
-
-    return (axisValue > triggerThreshold);
+    return (controllerAxis.getAxisValue() > triggerThreshold);
   }
 }
