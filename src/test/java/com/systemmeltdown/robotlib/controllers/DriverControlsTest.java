@@ -21,7 +21,7 @@ public class DriverControlsTest{
     DriverControls controls = new DriverControls(controller, 0.1);
 
     when(controller.getY(Hand.kLeft)).thenReturn(1.0);
-    assertEquals(controls.getSpeed(), -1.0, 0.0);
+    assertEquals(controls.getSpeed(), 1.0, 0.0);
 
     when(controller.getY(Hand.kLeft)).thenReturn(0.11);
     assertEquals(controls.getSpeed(), 0.11, 0.0);
