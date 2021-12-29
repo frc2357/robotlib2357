@@ -1,4 +1,4 @@
-package com.team2357.log.testsession;
+package com.team2357.log.util;
 
 import com.team2357.log.topics.DoubleTopic;
 
