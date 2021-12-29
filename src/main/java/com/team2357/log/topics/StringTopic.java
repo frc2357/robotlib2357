@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.topics;
+package com.team2357.log.topics;
 
 /**
  * Simply logs messages at the given timestamp.

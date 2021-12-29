@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.outputs;
+package com.team2357.log.outputs;
 
 public interface LogWriter {
 	public abstract void onStart(long relativeNanos);

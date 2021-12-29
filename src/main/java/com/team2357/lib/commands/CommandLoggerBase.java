@@ -1,7 +1,7 @@
-package com.systemmeltdown.robotlib.commands;
+package com.team2357.lib.commands;
 
-import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
-import com.systemmeltdown.robotlog.topics.StringTopic;
+import com.team2357.log.topics.LogTopicRegistry;
+import com.team2357.log.topics.StringTopic;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

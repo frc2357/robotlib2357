@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlib.triggers;
+package com.team2357.lib.triggers;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.button.Trigger;

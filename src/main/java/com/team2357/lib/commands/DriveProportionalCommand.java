@@ -1,8 +1,8 @@
-package com.systemmeltdown.robotlib.commands;
+package com.team2357.lib.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.systemmeltdown.robotlib.controllers.DriverControls;
-import com.systemmeltdown.robotlib.subsystems.drive.SkidSteerDriveSubsystem;
+import com.team2357.lib.controllers.DriverControls;
+import com.team2357.lib.subsystems.drive.SkidSteerDriveSubsystem;
 
 public class DriveProportionalCommand extends CommandBase {
     private SkidSteerDriveSubsystem m_driveSub;

@@ -1,7 +1,7 @@
-package com.systemmeltdown.robotlib.subsystems.pdp;
+package com.team2357.lib.subsystems.pdp;
 
-import com.systemmeltdown.robotlog.topics.DoubleTopic;
-import com.systemmeltdown.robotlog.topics.StringTopic;
+import com.team2357.log.topics.DoubleTopic;
+import com.team2357.log.topics.StringTopic;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;

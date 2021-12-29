@@ -1,11 +1,11 @@
-package com.systemmeltdown.robotlog.testsession;
+package com.team2357.log.testsession;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.systemmeltdown.robotlog.LogSession;
-import com.systemmeltdown.robotlog.outputs.LogOutput;
-import com.systemmeltdown.robotlog.outputs.ZipFileOutput;
+import com.team2357.log.LogSession;
+import com.team2357.log.outputs.LogOutput;
+import com.team2357.log.outputs.ZipFileOutput;
 
 /**
  * RobotLog: Test Session

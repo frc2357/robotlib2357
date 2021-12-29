@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlib.triggers;
+package com.team2357.lib.triggers;
 
-import com.systemmeltdown.robotlib.util.ControllerAxis;
+import com.team2357.lib.util.ControllerAxis;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;

@@ -1,9 +1,9 @@
-package com.systemmeltdown.robotlog.outputs;
+package com.team2357.log.outputs;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ArrayBlockingQueue;
-import com.systemmeltdown.robotlog.lib.RelativeTimeSource;
+import com.team2357.log.lib.RelativeTimeSource;
 
 /**
  * Used as base class for non-async logging outputs.

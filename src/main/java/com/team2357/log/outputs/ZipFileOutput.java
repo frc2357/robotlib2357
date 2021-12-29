@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.outputs;
+package com.team2357.log.outputs;
 
 import java.util.Map;
 

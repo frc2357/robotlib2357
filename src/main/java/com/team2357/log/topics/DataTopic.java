@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlog.topics;
+package com.team2357.log.topics;
 
-import com.systemmeltdown.robotlog.outputs.LogOutput;
+import com.team2357.log.outputs.LogOutput;
 
 /**
  * Sends data updates, omitting redundant values.

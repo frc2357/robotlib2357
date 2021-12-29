@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.testsession;
+package com.team2357.log.testsession;
 
 public class SineWave extends DoubleValueThread {
   private final double m_frequencyHz;

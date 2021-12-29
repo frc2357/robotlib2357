@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.outputs;
+package com.team2357.log.outputs;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.systemmeltdown.robotlog.lib.Utils;
+import com.team2357.log.lib.Utils;
 
 public class ZipFileUtils {
   public static final String ZIP_EXTENSION = ".zip";

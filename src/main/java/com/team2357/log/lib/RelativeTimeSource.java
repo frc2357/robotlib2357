@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.lib;
+package com.team2357.log.lib;
 
 @FunctionalInterface
 public interface RelativeTimeSource {

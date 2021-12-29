@@ -1,9 +1,9 @@
-package com.systemmeltdown.robotlog.topics;
+package com.team2357.log.topics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.systemmeltdown.robotlog.outputs.LogOutput;
+import com.team2357.log.outputs.LogOutput;
 
 /**
  * Represents a single logging topic.

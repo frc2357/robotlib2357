@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlog.topics;
+package com.team2357.log.topics;
 
 public class BooleanTopic extends DataTopic {
 	public BooleanTopic(String name) {

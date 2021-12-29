@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlib.subsystems;
+package com.team2357.lib.subsystems;
 
-import com.systemmeltdown.robotlib.util.ClosedLoopSystem;
+import com.team2357.lib.util.ClosedLoopSystem;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 

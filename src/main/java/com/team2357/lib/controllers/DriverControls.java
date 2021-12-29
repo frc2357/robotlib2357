@@ -1,7 +1,7 @@
-package com.systemmeltdown.robotlib.controllers;
+package com.team2357.lib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
-import com.systemmeltdown.robotlib.util.Utility;
+import com.team2357.lib.util.Utility;
 
 /**
  * Set of control inputs for the Driver position.

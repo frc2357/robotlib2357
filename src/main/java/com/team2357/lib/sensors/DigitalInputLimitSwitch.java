@@ -1,4 +1,4 @@
-package com.systemmeltdown.robotlib.sensors;
+package com.team2357.lib.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 

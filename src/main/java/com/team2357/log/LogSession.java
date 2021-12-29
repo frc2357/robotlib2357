@@ -1,10 +1,10 @@
-package com.systemmeltdown.robotlog;
+package com.team2357.log;
 
 import java.util.Map;
 
-import com.systemmeltdown.robotlog.outputs.LogOutput;
-import com.systemmeltdown.robotlog.topics.LogTopic;
-import com.systemmeltdown.robotlog.topics.LogTopicRegistry;
+import com.team2357.log.outputs.LogOutput;
+import com.team2357.log.topics.LogTopic;
+import com.team2357.log.topics.LogTopicRegistry;
 
 /**
  * Represents a time-based session of logging. Each session is pre-configured

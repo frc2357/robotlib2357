@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlog.testsession;
+package com.team2357.log.testsession;
 
-import com.systemmeltdown.robotlog.topics.DoubleTopic;
+import com.team2357.log.topics.DoubleTopic;
 
 public abstract class DoubleValueThread implements Runnable {
   public static final double DEFAULT_SAMPLE_RATE_SECONDS = 0.01D;

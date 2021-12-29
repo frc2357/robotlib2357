@@ -1,6 +1,6 @@
-package com.systemmeltdown.robotlog.outputs;
+package com.team2357.log.outputs;
 
-import com.systemmeltdown.robotlog.lib.RelativeTimeSource;
+import com.team2357.log.lib.RelativeTimeSource;
 
 /**
  * Simple synchronous logging output

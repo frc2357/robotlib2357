@@ -1,7 +1,7 @@
-package com.systemmeltdown.robotlib.commands;
+package com.team2357.lib.commands;
 
-import com.systemmeltdown.robotlib.subsystems.TogglableLimelightSubsystem;
-import com.systemmeltdown.robotlib.subsystems.TogglableLimelightSubsystem.PipelineIndex;
+import com.team2357.lib.subsystems.TogglableLimelightSubsystem;
+import com.team2357.lib.subsystems.TogglableLimelightSubsystem.PipelineIndex;
 
 /**
  * Changes the camera pipeline (Which camera stream is being shown).
