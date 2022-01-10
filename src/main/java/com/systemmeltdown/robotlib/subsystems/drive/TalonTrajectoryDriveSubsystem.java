@@ -3,10 +3,10 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsystem {
     private double m_leftLastValue;
@@ -29,17 +29,15 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
 
     /**
      * 
-     * @param leftTalonMaster
      * @param leftTalonSlaves
-     * @param rightTalonMaster
      * @param rightTalonSlaves
      * @param gyro
      * @param encoderDistancePerPulse
      */
-    public TalonTrajectoryDriveSubsystem(WPI_TalonSRX leftTalonMaster, WPI_TalonSRX[] leftTalonSlaves,
-            WPI_TalonSRX rightTalonMaster, WPI_TalonSRX[] rightTalonSlaves, PigeonIMU gyro,
+    public TalonTrajectoryDriveSubsystem(WPI_TalonSRX[] leftTalons,
+            WPI_TalonSRX[] rightTalons, PigeonIMU gyro,
             double encoderDistancePerPulse) {
-        super(leftTalonMaster, leftTalonSlaves, rightTalonMaster, rightTalonSlaves);
+        super(leftTalons, rightTalons);
         m_distancePerPulse = encoderDistancePerPulse;
 
         resetEncoders();

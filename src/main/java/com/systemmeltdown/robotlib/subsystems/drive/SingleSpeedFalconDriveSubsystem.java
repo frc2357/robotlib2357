@@ -2,7 +2,7 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
     // Left out of the abstract to use Falcon Specific
@@ -11,8 +11,8 @@ public class SingleSpeedFalconDriveSubsystem extends SkidSteerDriveSubsystem {
 
     public SingleSpeedFalconDriveSubsystem(WPI_TalonFX leftFalconMaster, WPI_TalonFX[] leftFalconSlaves,
             WPI_TalonFX rightFalconMaster, WPI_TalonFX[] rightFalconSlaves) {
-        super(new SpeedControllerGroup(leftFalconMaster, leftFalconSlaves),
-                new SpeedControllerGroup(rightFalconMaster, rightFalconSlaves));
+        super(new MotorControllerGroup(leftFalconMaster, leftFalconSlaves),
+                new MotorControllerGroup(rightFalconMaster, rightFalconSlaves));
         m_leftFalconMaster = leftFalconMaster;
         m_rightFalconMaster = rightFalconMaster;
     }

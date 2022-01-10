@@ -1,6 +1,6 @@
 package com.systemmeltdown.robotlib.sensors;
 
-import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.util.sendable.Sendable;
 
 /**
  * Base Sensor Class

@@ -3,7 +3,7 @@ package com.systemmeltdown.robotlib.subsystems.drive;
 import com.systemmeltdown.robotlib.util.RobotMath;
 import com.systemmeltdown.robotlib.subsystems.ClosedLoopSubsystem;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 /**
  * Base class for any kind of "Skid Steer" drive base. This makes assumptions
@@ -49,10 +49,10 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 		public boolean m_isRightInverted = false;
 	}
 
-	protected SpeedControllerGroup m_leftControllers;
-	protected SpeedControllerGroup m_rightControllers;
+	protected MotorControllerGroup m_leftControllers;
+	protected MotorControllerGroup m_rightControllers;
 
-	public SkidSteerDriveSubsystem(SpeedControllerGroup leftControllers, SpeedControllerGroup rightcontrollers) {
+	public SkidSteerDriveSubsystem(MotorControllerGroup leftControllers, MotorControllerGroup rightcontrollers) {
 		m_leftControllers = leftControllers;
 		m_rightControllers = rightcontrollers;
 	}

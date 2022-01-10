@@ -1,7 +1,6 @@
 package com.systemmeltdown.robotlib.controllers;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.systemmeltdown.robotlib.util.Utility;
 
 /**
@@ -23,13 +22,14 @@ public class DriverControls implements ArcadeAxisInput {
 
   @Override
   public double getSpeed() {
-    double value = m_controller.getY(Hand.kLeft);
+    double value = m_controller.getLeftY();
+
     return Utility.deadband(value, m_deadband);
   }
 
   @Override
   public double getTurn() {
-    double value = m_controller.getX(Hand.kRight);
+    double value = m_controller.getRightX();
     return Utility.deadband(value, m_deadband);
   }
 }

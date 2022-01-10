@@ -1,6 +1,6 @@
 package com.systemmeltdown.robotlib.sensors;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 /**
  * Base class for a Limit Sensor
