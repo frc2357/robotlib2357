@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * A base for commands that has the ability to log commands.
  */
-abstract class CommandLoggerBase extends CommandBase {
+public abstract class CommandLoggerBase extends CommandBase {
     private StringTopic m_commandTopic;
     private static final String COMMAND_TOPIC_NAME = "Command Topic";
 

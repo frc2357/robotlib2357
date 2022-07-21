@@ -40,9 +40,14 @@ public class ArduinoUSBController implements Runnable {
 	 * @param ttyDevice The serial device to be used (e.g. "/dev/ttyACM0")
 	 */
 	public ArduinoUSBController(String ttyDevice) {
-		m_serialPort = SerialPort.getCommPort(ttyDevice);
-		m_serialPort.setComPortParameters(115200, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
-		m_serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, READ_TIMEOUT, 0);
+		try {
+			m_serialPort = SerialPort.getCommPort(ttyDevice);
+			m_serialPort.setComPortParameters(115200, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
+			m_serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, READ_TIMEOUT, 0);
+		} catch (Exception e) {
+			m_serialPort = null;
+			System.err.println(e.getMessage());
+		}
 	}
 
 	/**
@@ -252,6 +257,7 @@ public class ArduinoUSBController implements Runnable {
 		// TODO: Use logging for this.
 		System.out.println("Opening serial port '" + m_serialPort.getSystemPortName() + "'");
 		boolean success = m_serialPort.openPort();
+
 		if (!success) {
 			// TODO: Use logging for this.
 			System.err.println("Error opening serial port '" + m_serialPort.getSystemPortName() + "'");

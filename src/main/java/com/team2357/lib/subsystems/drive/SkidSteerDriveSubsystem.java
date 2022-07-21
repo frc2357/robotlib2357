@@ -24,7 +24,7 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 		 * wheels to the center of the right. Value: double (positive)
 		 */
 		public double m_wheelbaseWidthInches = 6;
-		
+
 		/**
 		 * The number of encoder clicks per inch of drive base travel. Calculated with
 		 * gear ratios and wheel diameter. Verify with measurement of working robot
@@ -61,7 +61,7 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 		m_wheelbaseWidthInches = config.m_wheelbaseWidthInches;
 
 		m_clicksPerInch = config.m_clicksPerInch;
-		
+
 		m_maxSpeedClicksPerSecond = config.m_maxSpeedClicksPerSecond;
 		m_isLeftInverted = config.m_isLeftInverted;
 		m_leftControllers.setInverted(config.m_isLeftInverted);
@@ -96,7 +96,7 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 		setProportional(leftProportion, rightProportion);
 	}
 
-	public final void driveVelocity(double speedInchesPerSecond, double turnDegreesPerSecond) {
+	public void driveVelocity(double speedInchesPerSecond, double turnDegreesPerSecond) {
 		if (this.isClosedLoopEnabled()) {
 			System.err.println("Drive: Cannot driveVelocity while failsafe is active!");
 			return;
@@ -137,7 +137,7 @@ public abstract class SkidSteerDriveSubsystem extends ClosedLoopSubsystem {
 	public void setProportional(double leftProportion, double rightProportion) {
 		m_leftControllers.set(leftProportion);
 		m_rightControllers.set(rightProportion);
-	};
+	}
 
 	/**
 	 * Set the velocity speed of the drive base.

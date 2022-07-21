@@ -7,7 +7,7 @@ import com.team2357.lib.util.Utility;
  * Set of control inputs for the Driver position.
  */
 public class DriverControls implements ArcadeAxisInput {
-  private XboxController m_controller;
+  protected XboxController m_controller;
   private double m_deadband;
 
   /**
