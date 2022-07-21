@@ -4,18 +4,16 @@ import com.team2357.lib.controllers.DriverControls;
 import com.team2357.lib.subsystems.drive.FalconDriveSubsystem;
 
 public class DriveVelocityCommand extends CommandLoggerBase {
-    private FalconDriveSubsystem m_driveSub;
     private DriverControls m_driverController;
 
-    public DriveVelocityCommand(FalconDriveSubsystem driveSub, DriverControls driverController) {
-        m_driveSub = driveSub;
+    public DriveVelocityCommand(DriverControls driverController) {
         m_driverController = driverController;
-        addRequirements(driveSub);
+        addRequirements(FalconDriveSubsystem.getInstance());
     }
 
     @Override
     public void execute() {
-        m_driveSub.driveVelocity(m_driverController.getSpeed(), m_driverController.getTurn());
+        FalconDriveSubsystem.getInstance().driveVelocity(m_driverController.getSpeed(), m_driverController.getTurn());
     }
 
     @Override

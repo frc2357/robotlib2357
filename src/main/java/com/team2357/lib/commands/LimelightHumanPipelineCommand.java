@@ -11,6 +11,8 @@ public class LimelightHumanPipelineCommand extends CommandLoggerBase {
     private boolean m_wait;
 
     /**
+     * Create human pipeline command
+     * @param wait True if the command should wait until the pipeline is active to finish, false if no wait required.
      */
     public LimelightHumanPipelineCommand(boolean wait) {
         m_wait = wait;

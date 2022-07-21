@@ -14,7 +14,7 @@ public class RobotMath {
 	 * Using 'w' for where the wheels are now, and 'W' for where we want them to be,
 	 * we can draw two supplementary angles towards the arc of the wheels.
 	 * 
-	*                 /W\
+	 *                 /W\
 	 *                /   |
 	 *         w----------w
 	 *         |   /

@@ -11,6 +11,8 @@ public class LimelightTargetingPipelineCommand extends CommandLoggerBase {
     private boolean m_wait;
 
     /**
+     * Create targeting pipeline command
+     * @param wait True if the command should wait until the pipeline is active to finish, false if no wait required.
      */
     public LimelightTargetingPipelineCommand(boolean wait) {
         m_wait = wait;

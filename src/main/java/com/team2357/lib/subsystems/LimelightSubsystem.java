@@ -76,7 +76,7 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     m_Configuration = configuration;
 
   //  setHumanPipelineActive();
-  setTargetingPipelineActive();
+    setTargetingPipelineActive();
     setStream(configuration.m_isLimelightPrimaryStream);
   }
 
