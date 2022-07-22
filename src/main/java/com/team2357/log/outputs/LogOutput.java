@@ -4,7 +4,6 @@ import com.team2357.log.lib.RelativeTimeSource;
 
 public interface LogOutput {
 
-
 	/**
 	 * Starts this log output.
 	 * @param timeSource The time source to use as a start reference (the LogSession)

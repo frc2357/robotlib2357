@@ -9,6 +9,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 
 public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsystem {
+    private static TalonTrajectoryDriveSubsystem instance = null;
+
+    public static TalonTrajectoryDriveSubsystem getInstance() {
+        return instance;
+    }
+
     private double m_leftLastValue;
     private double m_rightLastValue;
     private double m_distancePerPulse;
@@ -38,6 +44,8 @@ public class TalonTrajectoryDriveSubsystem extends SingleSpeedTalonDriveSubsyste
             WPI_TalonSRX[] rightTalons, PigeonIMU gyro,
             double encoderDistancePerPulse) {
         super(leftTalons, rightTalons);
+        instance = this;
+
         m_distancePerPulse = encoderDistancePerPulse;
 
         resetEncoders();
