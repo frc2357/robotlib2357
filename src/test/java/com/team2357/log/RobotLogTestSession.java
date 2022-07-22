@@ -1,24 +1,24 @@
 package com.team2357.log;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.team2357.log.LogSession;
 import com.team2357.log.outputs.LogOutput;
 import com.team2357.log.outputs.ZipFileOutput;
 import com.team2357.log.util.SineWave;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * RobotLog: Test Session
- * 
+ *
  * This is a command-line test session utility for RobotLog
- * 
+ *
  * To use: `./gradlew robotlogtestsession --args='<arguments>'`
- * 
+ *
  * Valid arguments:
- * 
+ *
  */
 public class RobotLogTestSession {
+
   LogSession m_session;
 
   public RobotLogTestSession() {
@@ -56,14 +56,18 @@ public class RobotLogTestSession {
   }
 
   private void installShutdownHook() {
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        if (m_session != null) {
-          m_session.stop();
+    Runtime
+      .getRuntime()
+      .addShutdownHook(
+        new Thread() {
+          @Override
+          public void run() {
+            if (m_session != null) {
+              m_session.stop();
+            }
+          }
         }
-      }
-    });
+      );
   }
 
   public static void main(String[] args) {

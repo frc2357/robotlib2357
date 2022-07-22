@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * events that should trigger on an edge.
  */
 public class ToggleTrigger extends Trigger {
+
   private NetworkTableEntry entry;
 
   public ToggleTrigger(NetworkTableEntry entry) {

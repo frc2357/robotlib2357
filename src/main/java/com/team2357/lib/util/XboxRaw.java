@@ -1,8 +1,7 @@
 package com.team2357.lib.util;
 
 // Constants for the raw button and axis values of the XBox controller
-public enum XboxRaw
-{
+public enum XboxRaw {
   A(1),
   B(2),
   X(3),
@@ -28,8 +27,7 @@ public enum XboxRaw
 
   public final int value;
 
-  XboxRaw(int aValue)
-  {
+  XboxRaw(int aValue) {
     value = aValue;
   }
 }

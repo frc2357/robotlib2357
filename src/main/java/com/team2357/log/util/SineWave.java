@@ -1,6 +1,7 @@
 package com.team2357.log.util;
 
 public class SineWave extends DoubleValueThread {
+
   private final double m_frequencyHz;
   private final double m_amplitude;
 
@@ -12,7 +13,6 @@ public class SineWave extends DoubleValueThread {
     final double roundingFactor
   ) {
     super(valueTopicName, sampleRateSeconds, roundingFactor);
-
     m_amplitude = amplitude;
     m_frequencyHz = frequencyHz;
   }

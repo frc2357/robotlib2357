@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Controls the limelight camera options.
  */
 public class LimelightSubsystem extends ClosedLoopSubsystem {
+
   public static class Configuration {
+
     public int m_humanPipelineIndex = 0;
 
     public int m_targetingPipelineIndex = 0;
@@ -50,7 +52,9 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     return instance;
   }
 
-  protected NetworkTable m_Table = NetworkTableInstance.getDefault().getTable("limelight");
+  protected NetworkTable m_Table = NetworkTableInstance
+    .getDefault()
+    .getTable("limelight");
   private NetworkTableEntry m_stream = m_Table.getEntry("stream");
   private NetworkTableEntry m_pipeline = m_Table.getEntry("pipeline");
   private NetworkTableEntry m_Tv = m_Table.getEntry("tv");
@@ -65,7 +69,7 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
 
   /**
    * Sets the camera stream.
-   * 
+   *
    * @param isLimelightPrimary True if the limelight is primary, false if not.
    */
   public LimelightSubsystem() {
@@ -75,7 +79,7 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
   public void setConfiguration(Configuration configuration) {
     m_Configuration = configuration;
 
-  //  setHumanPipelineActive();
+    //  setHumanPipelineActive();
     setTargetingPipelineActive();
     setStream(configuration.m_isLimelightPrimaryStream);
   }
@@ -89,7 +93,7 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
   }
 
   public void setHumanPipelineActive() {
-      m_pipeline.setDouble(m_Configuration.m_humanPipelineIndex);
+    m_pipeline.setDouble(m_Configuration.m_humanPipelineIndex);
   }
 
   public boolean isTargetingPipelineActive() {
@@ -97,16 +101,16 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
   }
 
   public void setTargetingPipelineActive() {
-      m_pipeline.setDouble(m_Configuration.m_targetingPipelineIndex);
+    m_pipeline.setDouble(m_Configuration.m_targetingPipelineIndex);
   }
 
   private int getPipeline() {
     double value = m_pipeline.getDouble(Double.NaN);
-    return (int)Math.round(value);
+    return (int) Math.round(value);
   }
 
   public void setStream(boolean isLimelightPrimary) {
-      m_stream.setValue(isLimelightPrimary ? 1 : 2);
+    m_stream.setValue(isLimelightPrimary ? 1 : 2);
   }
 
   /**
@@ -154,11 +158,9 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     }
 
     double ts = getTS();
-    if(ts < -45) {
+    if (ts < -45) {
       return ts + 90;
-    }
-    else
-    {
+    } else {
       return ts;
     }
   }
@@ -169,7 +171,10 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     }
 
     double skew = getSkew();
-    return -m_Configuration.m_HeadOnTolerance <= skew && skew <= m_Configuration.m_HeadOnTolerance;
+    return (
+      -m_Configuration.m_HeadOnTolerance <= skew &&
+      skew <= m_Configuration.m_HeadOnTolerance
+    );
   }
 
   public boolean isToLeft() {
@@ -208,7 +213,10 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     }
 
     double proportion = getTHOR() / getTVERT();
-    double factor = proportion * m_Configuration.m_TargetHeight / m_Configuration.m_TargetWidth;
+    double factor =
+      proportion *
+      m_Configuration.m_TargetHeight /
+      m_Configuration.m_TargetWidth;
     return 90.0 * (1 - factor);
   }
 
@@ -217,14 +225,16 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
       return Double.NaN;
     }
 
-    double angleDegrees = Math.abs(getTY()) + m_Configuration.m_LimelightMountingAngle;
+    double angleDegrees =
+      Math.abs(getTY()) + m_Configuration.m_LimelightMountingAngle;
 
-    double heightDifference = m_Configuration.m_LimelightMountingHeightInches - m_Configuration.m_targetHeightFromFloor;
+    double heightDifference =
+      m_Configuration.m_LimelightMountingHeightInches -
+      m_Configuration.m_targetHeightFromFloor;
     double distance = heightDifference / Math.tan(Math.toRadians(angleDegrees));
 
     return distance;
   }
-
   /*
   @Override
   public void periodic() {

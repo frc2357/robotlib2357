@@ -1,12 +1,13 @@
 package com.team2357.lib.controllers;
 
-import edu.wpi.first.wpilibj.XboxController;
 import com.team2357.lib.util.Utility;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Set of control inputs for the Driver position.
  */
 public class DriverControls implements ArcadeAxisInput {
+
   protected XboxController m_controller;
   private double m_deadband;
 

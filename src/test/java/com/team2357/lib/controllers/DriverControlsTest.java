@@ -1,12 +1,14 @@
 package com.team2357.lib.controllers;
 
-import edu.wpi.first.wpilibj.XboxController;
-import org.junit.Before;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class DriverControlsTest{
+import edu.wpi.first.wpilibj.XboxController;
+import org.junit.Before;
+import org.junit.Test;
+
+public class DriverControlsTest {
+
   private XboxController controller;
 
   @Before

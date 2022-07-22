@@ -3,6 +3,7 @@ package com.team2357.lib.util;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Utility {
+
   public static double clamp(double input, double min, double max) {
     double value = input;
     value = Math.max(value, min);
@@ -30,7 +31,11 @@ public class Utility {
    * @param slotIdx Index of the profile slot to configure
    * @param pid     PID values to set
    */
-  public static void configTalonPID(WPI_TalonSRX talon, int slotIdx, PIDValues pid) {
+  public static void configTalonPID(
+    WPI_TalonSRX talon,
+    int slotIdx,
+    PIDValues pid
+  ) {
     talon.config_kP(slotIdx, pid.kp);
     talon.config_kI(slotIdx, pid.ki);
     talon.config_kD(slotIdx, pid.kd);
