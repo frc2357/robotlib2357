@@ -3,6 +3,7 @@ package com.team2357.log.util;
 import com.team2357.log.topics.DoubleTopic;
 
 public abstract class DoubleValueThread implements Runnable {
+
   public static final double DEFAULT_SAMPLE_RATE_SECONDS = 0.01D;
   private static final int THREAD_PRIORITY = Thread.NORM_PRIORITY;
 
@@ -47,7 +48,7 @@ public abstract class DoubleValueThread implements Runnable {
     try {
       while (m_thread != null) {
         valueTopic.log(getValue());
-        Thread.sleep((long)(m_sampleRateSeconds * 1000));
+        Thread.sleep((long) (m_sampleRateSeconds * 1000));
       }
     } catch (InterruptedException ie) {
       stop();

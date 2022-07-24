@@ -22,7 +22,6 @@ public class CanIdMap {
   public static final int DRIVE_MOTOR_RIGHT_3 = 16;
   public static final int DRIVE_MOTOR_LEFT_4 = 17;
   public static final int DRIVE_MOTOR_RIGHT_4 = 18;
-
   /**
    * CAN IDS 21-60
    * Mechanisms and other devices (robot specific)

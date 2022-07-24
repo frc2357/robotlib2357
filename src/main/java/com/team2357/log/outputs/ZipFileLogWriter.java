@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 public class ZipFileLogWriter implements LogWriter {
+
   public static final int COMPRESSION_LEVEL = 5;
   public static final String INTERNAL_FILE_NAME = "robotlog-session.json";
 
@@ -17,9 +18,20 @@ public class ZipFileLogWriter implements LogWriter {
   private Map<String, Class<?>> m_subscribedTopics;
   private boolean m_needsComma = false;
 
-  public ZipFileLogWriter(String dirPath, String fileName, Map<String, Object> header, double timeSecondsRoundingFactor) {
+  public ZipFileLogWriter(
+    String dirPath,
+    String fileName,
+    Map<String, Object> header,
+    double timeSecondsRoundingFactor
+  ) {
     try {
-      m_zipOut = ZipFileUtils.initZipFile(dirPath, fileName, COMPRESSION_LEVEL, INTERNAL_FILE_NAME);
+      m_zipOut =
+        ZipFileUtils.initZipFile(
+          dirPath,
+          fileName,
+          COMPRESSION_LEVEL,
+          INTERNAL_FILE_NAME
+        );
       m_zipWriter = new OutputStreamWriter(m_zipOut);
       m_header = header;
       m_subscribedTopics = new HashMap<String, Class<?>>();
@@ -50,7 +62,11 @@ public class ZipFileLogWriter implements LogWriter {
   }
 
   @Override
-  public void onSubscribe(String topicName, Class<?> valueType, long relativeNanos) {
+  public void onSubscribe(
+    String topicName,
+    Class<?> valueType,
+    long relativeNanos
+  ) {
     m_subscribedTopics.put(topicName, valueType);
   }
 
@@ -62,7 +78,13 @@ public class ZipFileLogWriter implements LogWriter {
   @Override
   public void onEntry(String topicName, Object value, long relativeNanos) {
     Class<?> valueType = m_subscribedTopics.get(topicName);
-    String entryStr = ZipFileUtils.printEntry(topicName, value, valueType, relativeNanos, m_timeSecondsRoundingFactor);
+    String entryStr = ZipFileUtils.printEntry(
+      topicName,
+      value,
+      valueType,
+      relativeNanos,
+      m_timeSecondsRoundingFactor
+    );
 
     if (m_needsComma) {
       println(",");
@@ -84,11 +106,11 @@ public class ZipFileLogWriter implements LogWriter {
   }
 
   private void printTopic(String name, Class<?> valueType) {
-      if (m_needsComma) {
-        println(",");
-      }
-      print("    " + ZipFileUtils.printTopic(name, valueType));
-      m_needsComma = true;
+    if (m_needsComma) {
+      println(",");
+    }
+    print("    " + ZipFileUtils.printTopic(name, valueType));
+    m_needsComma = true;
   }
 
   private void println(String text) {
