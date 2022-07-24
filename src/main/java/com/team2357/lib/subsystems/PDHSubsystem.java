@@ -6,12 +6,17 @@ public class PDHSubsystem extends PowerDistribution {
 
   public static PDHSubsystem instance = null;
 
-  public static PDHSubsystem getInstance() {
-    return instance;
+  public         static        PDHSubsystem getInstance() {
+        return instance;
   }
 
-  public PDHSubsystem(int canId) {
+  public PDHSubsystem(int canId)
+{
     super(canId, ModuleType.kRev);
+
+
+
+
     instance = this;
   }
 }
