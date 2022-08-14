@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "sketch": "src/Test.ino",
+    "programmer": "arduino:avrisp"
+}
