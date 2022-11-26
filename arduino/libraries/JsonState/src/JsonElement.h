@@ -1,5 +1,5 @@
-#ifndef JSONEL_H
-#define JSONEL_H
+#ifndef JSONELEMENT_H
+#define JSONELEMENT_H
 
 #include <Arduino.h>
 
@@ -200,4 +200,4 @@ class JsonUtils {
     static JsonElement &findElementByJsonKey(JsonElement &jsonObject, const char* str, size_t length);
 };
 
-#endif /* JSONEL_H */
+#endif /* JSONELEMENT_H */
