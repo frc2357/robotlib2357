@@ -25,7 +25,7 @@ class JsonElement {
 
     JsonElement &operator[](const size_t index) const;
     JsonElement &operator[](const char *key) const;
-    void operator=(JsonElement &element);
+    void operator=(const JsonElement &element);
     void operator=(bool value);
     void operator=(int value);
     void operator=(long value);
