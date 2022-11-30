@@ -1,0 +1,6 @@
+{
+    "configuration": "flash=2097152_0,freq=133,opt=Small,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipstack=ipv4only",
+    "board": "rp2040:rp2040:seeed_xiao_rp2040",
+    "sketch": "src/MultiSensorDevice.ino",
+    "port": "/dev/tty.usbmodem141301"
+}
