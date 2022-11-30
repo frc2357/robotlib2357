@@ -126,7 +126,7 @@ JsonElement& JsonElement::operator[](const char* key) const {
   return findByKey(key, strlen(key));
 }
 
-void JsonElement::operator=(JsonElement& element) {
+void JsonElement::operator=(const JsonElement& element) {
   m_key = element.m_key;
   m_type = element.m_type;
   m_value = element.m_value;

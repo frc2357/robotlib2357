@@ -1,5 +1,5 @@
-#ifndef JSONEL_H
-#define JSONEL_H
+#ifndef JSONELEMENT_H
+#define JSONELEMENT_H
 
 #include <Arduino.h>
 
@@ -25,7 +25,7 @@ class JsonElement {
 
     JsonElement &operator[](const size_t index) const;
     JsonElement &operator[](const char *key) const;
-    void operator=(JsonElement &element);
+    void operator=(const JsonElement &element);
     void operator=(bool value);
     void operator=(int value);
     void operator=(long value);
@@ -200,4 +200,4 @@ class JsonUtils {
     static JsonElement &findElementByJsonKey(JsonElement &jsonObject, const char* str, size_t length);
 };
 
-#endif /* JSONEL_H */
+#endif /* JSONELEMENT_H */
