@@ -98,17 +98,6 @@ protected:
     }
   }
 
-  virtual void logError(const char *format, ...) {
-    va_list args;
-    char message[XIAO_RP2040_LOG_ERROR_MAX_LEN];
-    va_start(args, format);
-    vsprintf(message, format, args);
-    va_end(args);
-
-    Serial.print("ERROR: ");
-    Serial.println(message);
-  }
-
 private:
   Adafruit_NeoPixel m_pixel;
   uint32_t m_pixelLastColor;

@@ -6,38 +6,66 @@
 
 #define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS       1000
 #define SENSOR_DEVICE_SERIAL_PREAMBLE             "|||||"
+#define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      3
+#define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
 
-typedef void (*logErrorFunc_T)(const char *format, ...);
+#define SENSOR_DEVICE_FIELD_NAME                  0
+#define SENSOR_DEVICE_FIELD_ERROR                 1
+#define SENSOR_DEVICE_FIELD_MAX_UPDATE_MS         2
+#define SENSOR_DEVICE_FIELD_SENSORS               3
+#define SENSOR_DEVICE_FIELD_COUNT                 4
 
-typedef long (*longSensorFunc_T)(logErrorFunc_T logError);
-typedef double (*doubleSensorFunc_T)(logErrorFunc_T logError);
-typedef bool (*boolSensorFunc_T)(logErrorFunc_T logError);
-typedef const char *(*stringSensorFunc_T)(logErrorFunc_T logError);
-typedef long (*longArraySensorFunc_T)(size_t index, logErrorFunc_T logError);
-typedef double (*doubleArraySensorFunc_T)(size_t index, logErrorFunc_T logError);
+typedef int (*intSensorFunc_T)();
+typedef long (*longSensorFunc_T)();
+typedef float (*floatSensorFunc_T)();
+typedef double (*doubleSensorFunc_T)();
+typedef bool (*boolSensorFunc_T)();
+typedef const char *(*stringSensorFunc_T)();
+typedef long (*longArraySensorFunc_T)(size_t index);
+typedef double (*doubleArraySensorFunc_T)(size_t index);
 
 template <size_t S>
 class SensorDevice {
 public:
-  void initSensor(size_t index, const char *name, longSensorFunc_T sensorFunc, long minValue, long maxValue) {
+  virtual void initSensor(const char *name, intSensorFunc_T sensorFunc, long minValue, long maxValue) {
   }
 
-  void initSensor(size_t index, const char *name, doubleSensorFunc_T sensorFunc, double minValue, double maxValue) {
+  virtual void initSensor(const char *name, longSensorFunc_T sensorFunc, long minValue, long maxValue) {
   }
 
-  void initSensor(size_t index, const char *name, boolSensorFunc_T sensorFunc) {
+  virtual void initSensor(const char *name, floatSensorFunc_T sensorFunc, double minValue, double maxValue) {
+    size_t index = m_sensorInitCount;
+    m_sensorInitCount++;
+    if (m_sensorInitCount > S) {
+      setError("Can't init %d sensors, only %d allocated", m_sensorInitCount, S);
+      return;
+    }
+
+    long initialValue = sensorFunc();
+    m_sensorFieldsJson[index][0] = Json::Int("value", initialValue);
+    m_sensorFieldsJson[index][1] = Json::Int("min", minValue);
+    m_sensorFieldsJson[index][2] = Json::Int("max", maxValue);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
   }
 
-  void initSensor(size_t index, const char *name, stringSensorFunc_T sensorFunc) {
+  virtual void initSensor(const char *name, doubleSensorFunc_T sensorFunc, double minValue, double maxValue) {
   }
 
-  void initSensor(size_t index, const char *name, longArraySensorFunc_T sensorFunc, size_t length) {
+  virtual void initSensor(const char *name, boolSensorFunc_T sensorFunc) {
   }
 
-  void initSensor(size_t index, const char *name, doubleArraySensorFunc_T sensorFunc, size_t length) {
+  virtual void initSensor(const char *name, stringSensorFunc_T sensorFunc) {
+  }
+
+  virtual void initSensor(const char *name, longArraySensorFunc_T sensorFunc, size_t length) { }
+
+  virtual void initSensor(const char *name, doubleArraySensorFunc_T sensorFunc, size_t length) {
   }
 
   virtual void begin() {
+    if (m_sensorInitCount < S) {
+      setError("WARN: %d sensors allocated, only %d initialized.", S, m_sensorInitCount);
+    }
   }
 
   virtual void update() {
@@ -53,26 +81,39 @@ public:
     }
   }
 
-  int getMaxUpdateMs() {
-    return m_maxUpdateMsJson.asInt();
+  virtual int getMaxUpdateMs() {
+    return m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS].asInt();
   }
 
-  void setMaxUpdateMs(int ms) {
-    m_maxUpdateMsJson = ms;
+  virtual void setMaxUpdateMs(int ms) {
+    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS] = ms;
+  }
+
+  virtual void setError(const char *format, ...) {
+    va_list args;
+    char message[SENSOR_DEVICE_ERROR_MAX_LENGTH];
+    va_start(args, format);
+    vsprintf(message, format, args);
+    va_end(args);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_ERROR] = message;
+  }
+
+  virtual void clearError() {
+    m_fieldsJson[SENSOR_DEVICE_FIELD_ERROR] = "";
   }
 
 protected:
   SensorDevice(const char *deviceName, Print &out)
     : m_out(out),
-      m_maxUpdateMsJson(m_fieldsJson[1]),
       m_jsonState(m_sensorDeviceJson)
   {
     m_lastUpdateMs = 0;
+    m_sensorInitCount = 0;
     
-    // Create sensor device JSON object
-    m_fieldsJson[0] = Json::String("name", deviceName);
-    m_fieldsJson[1] = Json::Int("maxUpdateMs", SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS);
-    m_fieldsJson[2] = Json::Object("sensors", m_sensorsJson);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_NAME] = Json::String("name", deviceName);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_ERROR] = Json::String("error", "", SENSOR_DEVICE_ERROR_MAX_LENGTH);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS] = Json::Int("maxUpdateMs", SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_SENSORS] = Json::Object("sensors", m_sensorsJson);
     m_sensorDeviceJson = Json::Object(m_fieldsJson);
   }
 
@@ -84,17 +125,17 @@ protected:
   virtual void statusIdle() = 0;
   virtual void statusActive() = 0;
   virtual void statusError() = 0;
-  virtual void logError(const char *format, ...) = 0;
 
 private:
   Print &m_out;
-  JsonElement &m_maxUpdateMsJson;
-  JsonElement m_fieldsJson[3];
+  JsonElement m_fieldsJson[SENSOR_DEVICE_FIELD_COUNT];
+  JsonElement m_sensorFieldsJson[S][SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT];
   JsonElement m_sensorsJson[S];
   void *m_sensorFuncs[S];
   JsonElement m_sensorDeviceJson;
   JsonState m_jsonState;
   unsigned long m_lastUpdateMs;
+  size_t m_sensorInitCount;
 };
 
 #endif /* SENSOR_DEVICE_H */
