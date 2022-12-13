@@ -384,6 +384,9 @@ void JsonElement::printJsonObject(int indent, Print& out, bool onlyChanged) cons
     if (onlyChanged && !element.hasChanged()) {
       continue;
     }
+    if (strlen(element.key()) == 0) {
+      continue;
+    }
 
     if (elementsWritten > 0) {
       out.print(',');
