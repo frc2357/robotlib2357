@@ -7,7 +7,7 @@
 
 float distance = 6.0F;
 
-float readDistance() {
+float readDistance(float min, float maxValue) {
   distance += 2.25F;
   if (distance > 30.0F) {
     distance = 5.0F;

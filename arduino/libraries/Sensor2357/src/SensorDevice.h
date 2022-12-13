@@ -6,7 +6,7 @@
 #include "Sensor.h"
 
 #define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS       1000
-#define SENSOR_DEVICE_SERIAL_PREAMBLE             "|||||"
+#define SENSOR_DEVICE_SERIAL_PREAMBLE             "||v1||"
 #define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      3
 #define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
 
@@ -19,43 +19,44 @@
 template <size_t S>
 class SensorDevice {
 public:
-  virtual void initSensor(const char *name, intSensorFunc_T sensorFunc, int minValue, int maxValue) {
+  virtual void initSensor(const char *name, intSensorFunc_T sensorFunc, int min, int max) {
+    initIntMinMax(name, sensorFunc, updateIntSensor, min, max);
   }
 
-  virtual void initSensor(const char *name, longSensorFunc_T sensorFunc, long minValue, long maxValue) {
+  virtual void initSensor(const char *name, longSensorFunc_T sensorFunc, long min, long max) {
+    initIntMinMax(name, sensorFunc, updateLongSensor, min, max);
   }
 
-  virtual void initSensor(const char *name, floatSensorFunc_T sensorFunc, float minValue, float maxValue) {
-    size_t index = m_sensorInitCount;
-    m_sensorInitCount++;
-    if (m_sensorInitCount > S) {
-      setError("Can't init %d sensors, only %d allocated", m_sensorInitCount, S);
-      return;
-    }
-
-    long initialValue = sensorFunc();
-    m_sensorFieldsJson[index][0] = Json::Float("value", initialValue);
-    m_sensorFieldsJson[index][1] = Json::Float("min", minValue);
-    m_sensorFieldsJson[index][2] = Json::Float("max", maxValue);
-    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
-
-    SensorFunc sf;
-    sf.floatSensorFunc = sensorFunc;
-    m_sensors[index].init(&m_sensorsJson[index], sf, updateFloatSensor);
+  virtual void initSensor(const char *name, floatSensorFunc_T sensorFunc, float min, float max) {
+    initFloatMinMax(name, sensorFunc, updateFloatSensor, min, max);
   }
 
-  virtual void initSensor(const char *name, doubleSensorFunc_T sensorFunc, double minValue, double maxValue) {
+  virtual void initSensor(const char *name, doubleSensorFunc_T sensorFunc, double min, double max) {
+    initFloatMinMax(name, sensorFunc, updateDoubleSensor, min, max);
   }
 
   virtual void initSensor(const char *name, boolSensorFunc_T sensorFunc) {
+    initBool(name, sensorFunc);
   }
 
-  virtual void initSensor(const char *name, stringSensorFunc_T sensorFunc) {
+  virtual void initSensor(const char *name, stringSensorFunc_T sensorFunc, size_t length) {
+    initString(name, sensorFunc, length);
   }
 
-  virtual void initSensor(const char *name, longArraySensorFunc_T sensorFunc, size_t length) { }
+  virtual void initSensor(const char *name, intArraySensorFunc_T sensorFunc, size_t length) {
+    initIntArray(name, sensorFunc, updateIntArraySensor, length);
+  }
+
+  virtual void initSensor(const char *name, longArraySensorFunc_T sensorFunc, size_t length) {
+    initIntArray(name, sensorFunc, updateLongArraySensor, length);
+  }
+
+  virtual void initSensor(const char *name, floatArraySensorFunc_T sensorFunc, size_t length) {
+    initFloatArray(name, sensorFunc, updateFloatArraySensor, length);
+  }
 
   virtual void initSensor(const char *name, doubleArraySensorFunc_T sensorFunc, size_t length) {
+    initFloatArray(name, sensorFunc, updateDoubleArraySensor, length);
   }
 
   virtual void begin() {
@@ -137,6 +138,98 @@ private:
   JsonState m_jsonState;
   unsigned long m_lastUpdateMs;
   size_t m_sensorInitCount;
+
+  size_t allocateIndex() {
+    size_t index = m_sensorInitCount;
+    m_sensorInitCount++;
+    if (m_sensorInitCount > S) {
+      setError("Can't init %d sensors, only %d allocated", m_sensorInitCount, S);
+      return -1;
+    }
+    return index;
+  }
+
+  void initIntMinMax(const char *name, SensorFunc sensorFunc, updateSensor_T updateFunc, long min, long max) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    m_sensorFieldsJson[index][0] = Json::Int("value", 0);
+    m_sensorFieldsJson[index][1] = Json::Int("min", min);
+    m_sensorFieldsJson[index][2] = Json::Int("max", max);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
+  }
+
+  void initFloatMinMax(const char *name, SensorFunc sensorFunc, updateSensor_T updateFunc, double min, double max) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    m_sensorFieldsJson[index][0] = Json::Float("value", 0.0);
+    m_sensorFieldsJson[index][1] = Json::Float("min", min);
+    m_sensorFieldsJson[index][2] = Json::Float("max", max);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
+  }
+
+  void initBool(const char *name, SensorFunc sensorFunc) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    m_sensorFieldsJson[index][0] = Json::Boolean("value", false);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateBoolSensor);
+  }
+
+  void initString(const char *name, SensorFunc sensorFunc, int length) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    m_sensorFieldsJson[index][0] = Json::String("value", "", length);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateStringSensor);
+  }
+
+  void initIntArray(const char *name, SensorFunc sensorFunc, updateSensor_T updateFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    JsonElement *arrayElements = new JsonElement[length];
+    for (int i = 0; i < length; i++) {
+      arrayElements[i] = Json::Int(0);
+    }
+
+    m_sensorFieldsJson[index][0] = Json::Array("array", arrayElements, length);
+    m_sensorFieldsJson[index][1] = Json::Float("length", length);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
+  }
+
+  void initFloatArray(const char *name, SensorFunc sensorFunc, updateSensor_T updateFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index == -1) {
+      return;
+    }
+
+    JsonElement *arrayElements = new JsonElement[length];
+    for (int i = 0; i < length; i++) {
+      arrayElements[i] = Json::Float(0.0);
+    }
+
+    m_sensorFieldsJson[index][0] = Json::Array("array", arrayElements, length);
+    m_sensorFieldsJson[index][1] = Json::Float("length", length);
+    m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
+    m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
+  }
 };
 
 #endif /* SENSOR_DEVICE_H */
