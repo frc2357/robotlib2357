@@ -5,8 +5,14 @@
 
 #define LOOP_DELAY_MS            10
 
+float distance = 6.0F;
+
 float readDistance() {
-  return 10.0F;
+  distance += 2.25F;
+  if (distance > 30.0F) {
+    distance = 5.0F;
+  }
+  return distance;
 }
 
 SensorDevice_Seeed_XIAO_RP2040<1> device("MultiSensorDevice");
