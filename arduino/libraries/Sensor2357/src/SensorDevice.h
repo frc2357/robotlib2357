@@ -66,15 +66,6 @@ public:
     sendState(true);
   }
 
-  void sendState(bool fullState) {
-    m_out.print(SENSOR_DEVICE_SERIAL_PREAMBLE);
-    m_jsonState.printJson(m_out, !fullState);
-    m_jsonState.clearChanged();
-    m_out.println();
-    m_out.flush();
-    m_lastUpdateMs = millis();
-  }
-
   virtual void update() {
     bool maxUpdateReached = millis() > m_lastUpdateMs + getMaxUpdateMs();
     bool sendFullState = false;
@@ -146,17 +137,14 @@ protected:
   virtual void statusActive() = 0;
   virtual void statusError() = 0;
 
-private:
-  Print &m_out;
-  Stream &m_in;
-  JsonElement m_fieldsJson[SENSOR_DEVICE_FIELD_COUNT];
-  JsonElement m_sensorFieldsJson[S][SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT];
-  JsonElement m_sensorsJson[S];
-  Sensor m_sensors[S];
-  JsonElement m_sensorDeviceJson;
-  JsonState m_jsonState;
-  unsigned long m_lastUpdateMs;
-  size_t m_sensorInitCount;
+  void sendState(bool fullState) {
+    m_out.print(SENSOR_DEVICE_SERIAL_PREAMBLE);
+    m_jsonState.printJson(m_out, !fullState);
+    m_jsonState.clearChanged();
+    m_out.println();
+    m_out.flush();
+    m_lastUpdateMs = millis();
+  }
 
   size_t allocateIndex() {
     size_t index = m_sensorInitCount;
@@ -249,6 +237,18 @@ private:
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
   }
+
+private:
+  Print &m_out;
+  Stream &m_in;
+  JsonElement m_fieldsJson[SENSOR_DEVICE_FIELD_COUNT];
+  JsonElement m_sensorFieldsJson[S][SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT];
+  JsonElement m_sensorsJson[S];
+  Sensor m_sensors[S];
+  JsonElement m_sensorDeviceJson;
+  JsonState m_jsonState;
+  unsigned long m_lastUpdateMs;
+  size_t m_sensorInitCount;
 };
 
 #endif /* SENSOR_DEVICE_H */
