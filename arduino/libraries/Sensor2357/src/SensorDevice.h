@@ -5,14 +5,14 @@
 #include <JsonState.h>
 #include "Sensor.h"
 
-#define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS       1000
+#define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_HZ       10
 #define SENSOR_DEVICE_SERIAL_PREAMBLE             "||v1||"
 #define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      3
 #define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
 
 #define SENSOR_DEVICE_FIELD_NAME                  0
 #define SENSOR_DEVICE_FIELD_ERROR                 1
-#define SENSOR_DEVICE_FIELD_MAX_UPDATE_MS         2
+#define SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ         2
 #define SENSOR_DEVICE_FIELD_SENSORS               3
 #define SENSOR_DEVICE_FIELD_COUNT                 4
 
@@ -67,7 +67,7 @@ public:
   }
 
   virtual void update() {
-    bool maxUpdateReached = millis() > m_lastUpdateMs + getMaxUpdateMs();
+    bool maxUpdateReached = millis() > m_lastUpdateMs + (1000 / getMaxUpdateHz());
     bool sendFullState = false;
 
     // Update all the sensor values
@@ -91,12 +91,12 @@ public:
     }
   }
 
-  virtual int getMaxUpdateMs() {
-    return m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS].asInt();
+  virtual int getMaxUpdateHz() {
+    return m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ].asInt();
   }
 
-  virtual void setMaxUpdateMs(int ms) {
-    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS] = ms;
+  virtual void setMaxUpdateHz(int ms) {
+    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ] = ms;
   }
 
   virtual void setError(const char *format, ...) {
@@ -123,7 +123,7 @@ protected:
     
     m_fieldsJson[SENSOR_DEVICE_FIELD_NAME] = Json::String("name", deviceName);
     m_fieldsJson[SENSOR_DEVICE_FIELD_ERROR] = Json::String("error", "", SENSOR_DEVICE_ERROR_MAX_LENGTH);
-    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_MS] = Json::Int("maxUpdateMs", SENSOR_DEVICE_DEFAULT_MAX_UPDATE_MS);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ] = Json::Int("maxUpdateHz", SENSOR_DEVICE_DEFAULT_MAX_UPDATE_HZ);
     m_fieldsJson[SENSOR_DEVICE_FIELD_SENSORS] = Json::Object("sensors", m_sensorsJson);
     m_sensorDeviceJson = Json::Object(m_fieldsJson);
   }
