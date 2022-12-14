@@ -6,11 +6,21 @@
 #define LOOP_DELAY_MS            10
 
 float distance = 6.0F;
+unsigned long lastIncrement = millis();
+unsigned long nextIncrement = lastIncrement + 1000;
 
-float readDistance(float min, float maxValue) {
+void increment() {
   distance += 2.25F;
   if (distance > 30.0F) {
     distance = 5.0F;
+  }
+}
+
+float readDistance(float min, float max) {
+  if (millis() > nextIncrement) {
+    increment();
+    lastIncrement = millis();
+    nextIncrement = lastIncrement + random(250, 5000);
   }
   return distance;
 }

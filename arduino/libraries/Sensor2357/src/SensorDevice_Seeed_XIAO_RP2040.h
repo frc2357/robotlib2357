@@ -16,7 +16,7 @@ template<size_t S>
 class SensorDevice_Seeed_XIAO_RP2040 : public SensorDevice<S> {
 public:
   SensorDevice_Seeed_XIAO_RP2040(const char *deviceName)
-    : SensorDevice<S>(deviceName, Serial),
+    : SensorDevice<S>(deviceName, Serial, Serial),
       m_pixel(1, XIAO_RP2040_RGB_PIN, NEO_GRB + NEO_KHZ800),
       m_pixelLastColor(m_pixel.Color(0, 0, 0))
   {}

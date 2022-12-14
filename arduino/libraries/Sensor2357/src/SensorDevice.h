@@ -63,23 +63,40 @@ public:
     if (m_sensorInitCount < S) {
       setError("WARN: %d sensors allocated, only %d initialized.", S, m_sensorInitCount);
     }
+    sendState(true);
+  }
+
+  void sendState(bool fullState) {
+    m_out.print(SENSOR_DEVICE_SERIAL_PREAMBLE);
+    m_jsonState.printJson(m_out, !fullState);
+    m_jsonState.clearChanged();
+    m_out.println();
+    m_out.flush();
+    m_lastUpdateMs = millis();
   }
 
   virtual void update() {
-    unsigned long now = millis();
-    if (now > m_lastUpdateMs + getMaxUpdateMs()) {
-      // Update all the sensor values
-      for (int i = 0; i < S; i++) {
-        m_sensors[i].update();
-      }
+    bool maxUpdateReached = millis() > m_lastUpdateMs + getMaxUpdateMs();
+    bool sendFullState = false;
 
-      m_out.print(SENSOR_DEVICE_SERIAL_PREAMBLE);
-      m_jsonState.printJson(m_out);
-      // TODO: Only send what changed
-      //m_jsonState.clearChanged();
-      m_out.println();
-      m_out.flush();
-      m_lastUpdateMs = now;
+    // Update all the sensor values
+    for (int i = 0; i < S; i++) {
+      m_sensors[i].update();
+    }
+
+    if (m_in.available()) {
+      String line = m_in.readString();
+
+      if (line[0] == '{' && line[1] == '}') {
+        sendFullState = true;
+      } else {
+        m_jsonState.updateFromJson(line.c_str());
+        sendFullState = true;
+      }
+    }
+
+    if (sendFullState || (maxUpdateReached && m_jsonState.hasChanged())) {
+      sendState(sendFullState);
     }
   }
 
@@ -105,8 +122,9 @@ public:
   }
 
 protected:
-  SensorDevice(const char *deviceName, Print &out)
+  SensorDevice(const char *deviceName, Print &out, Stream &in)
     : m_out(out),
+      m_in(in),
       m_jsonState(m_sensorDeviceJson)
   {
     m_lastUpdateMs = 0;
@@ -130,6 +148,7 @@ protected:
 
 private:
   Print &m_out;
+  Stream &m_in;
   JsonElement m_fieldsJson[SENSOR_DEVICE_FIELD_COUNT];
   JsonElement m_sensorFieldsJson[S][SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT];
   JsonElement m_sensorsJson[S];
