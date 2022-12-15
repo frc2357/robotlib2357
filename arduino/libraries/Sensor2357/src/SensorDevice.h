@@ -7,7 +7,7 @@
 
 #define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_HZ       10
 #define SENSOR_DEVICE_SERIAL_PREAMBLE             "||v1||"
-#define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      3
+#define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      4
 #define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
 #define SENSOR_DEVICE_IN_BUFFER_LENGTH            256
 
@@ -194,8 +194,9 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::Int("value", 0);
-    m_sensorFieldsJson[index][1] = Json::Int("min", min);
-    m_sensorFieldsJson[index][2] = Json::Int("max", max);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
+    m_sensorFieldsJson[index][2] = Json::Int("min", min);
+    m_sensorFieldsJson[index][3] = Json::Int("max", max);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
   }
@@ -207,8 +208,9 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::Float("value", 0.0);
-    m_sensorFieldsJson[index][1] = Json::Float("min", min);
-    m_sensorFieldsJson[index][2] = Json::Float("max", max);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
+    m_sensorFieldsJson[index][2] = Json::Float("min", min);
+    m_sensorFieldsJson[index][3] = Json::Float("max", max);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
   }
@@ -220,6 +222,7 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::Boolean("value", false);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateBoolSensor);
   }
@@ -231,6 +234,7 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::String("value", "", length);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateStringSensor);
   }
@@ -247,7 +251,8 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::Array("array", arrayElements, length);
-    m_sensorFieldsJson[index][1] = Json::Float("length", length);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
+    m_sensorFieldsJson[index][2] = Json::Float("length", length);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
   }
@@ -264,7 +269,8 @@ protected:
     }
 
     m_sensorFieldsJson[index][0] = Json::Array("array", arrayElements, length);
-    m_sensorFieldsJson[index][1] = Json::Float("length", length);
+    m_sensorFieldsJson[index][1] = Json::Boolean("active", true);
+    m_sensorFieldsJson[index][2] = Json::Float("length", length);
     m_sensorsJson[index] = Json::Object(name, m_sensorFieldsJson[index]);
     m_sensors[index].init(&m_sensorsJson[index], sensorFunc, updateFunc);
   }

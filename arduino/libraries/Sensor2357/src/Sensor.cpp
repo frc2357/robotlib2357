@@ -1,19 +1,55 @@
 #include "Sensor.h"
 
 void updateIntSensor(JsonElement &jsonElement, SensorFunc sensorFunc) {
-  jsonElement["value"] = sensorFunc.intSensorFunc(jsonElement["min"].asInt(), jsonElement["max"].asInt());
+  int min = jsonElement["min"].asInt();
+  int max = jsonElement["max"].asInt();
+  int value = sensorFunc.intSensorFunc(min, max);
+  bool active = (value >= min && value <= max);
+
+  jsonElement["active"] = active;
+  jsonElement["value"] = value;
+  if (!active) {
+    jsonElement["value"].clearChanged();
+  }
 }
 
 void updateLongSensor(JsonElement &jsonElement, SensorFunc sensorFunc) {
-  jsonElement["value"] = sensorFunc.longSensorFunc(jsonElement["min"].asLong(), jsonElement["max"].asLong());
+  long min = jsonElement["min"].asLong();
+  long max = jsonElement["max"].asLong();
+  long value = sensorFunc.longSensorFunc(min, max);
+  bool active = (value >= min && value <= max);
+
+  jsonElement["active"] = active;
+  jsonElement["value"] = value;
+  if (!active) {
+    jsonElement["value"].clearChanged();
+  }
 }
 
 void updateFloatSensor(JsonElement &jsonElement, SensorFunc sensorFunc) {
-  jsonElement["value"] = sensorFunc.floatSensorFunc(jsonElement["min"].asFloat(), jsonElement["max"].asFloat());
+  float min = jsonElement["min"].asFloat();
+  float max = jsonElement["max"].asFloat();
+  float value = sensorFunc.floatSensorFunc(min, max);
+  bool active = (value >= min && value <= max);
+
+  jsonElement["active"] = active;
+  jsonElement["value"] = value;
+  if (!active) {
+    jsonElement["value"].clearChanged();
+  }
 }
 
 void updateDoubleSensor(JsonElement &jsonElement, SensorFunc sensorFunc) {
-  jsonElement["value"] = sensorFunc.doubleSensorFunc(jsonElement["min"].asDouble(), jsonElement["max"].asDouble());
+  double min = jsonElement["min"].asDouble();
+  double max = jsonElement["max"].asDouble();
+  double value = sensorFunc.doubleSensorFunc(min, max);
+  bool active = (value >= min && value <= max);
+
+  jsonElement["active"] = active;
+  jsonElement["value"] = value;
+  if (!active) {
+    jsonElement["value"].clearChanged();
+  }
 }
 
 void updateBoolSensor(JsonElement &jsonElement, SensorFunc sensorFunc) {
