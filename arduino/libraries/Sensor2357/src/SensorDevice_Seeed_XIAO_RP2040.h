@@ -40,11 +40,6 @@ public:
     SensorDevice<S>::begin();
   }
 
-  virtual void update() {
-    SensorDevice<S>::update();
-    statusIdle();
-  }
-
 protected:
   virtual void statusDisconnected() {
     unsigned long cycleMillis = millis() % 2500;

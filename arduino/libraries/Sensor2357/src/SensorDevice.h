@@ -6,6 +6,7 @@
 #include "Sensor.h"
 
 #define SENSOR_DEVICE_DEFAULT_MAX_UPDATE_HZ       10
+#define SENSOR_DEVICE_DEFAULT_TIMEOUT_MS          1000 // Use with RoboRIO
 #define SENSOR_DEVICE_SERIAL_PREAMBLE             "||v1||"
 #define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      4
 #define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
@@ -14,8 +15,9 @@
 #define SENSOR_DEVICE_FIELD_NAME                  0
 #define SENSOR_DEVICE_FIELD_ERROR                 1
 #define SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ         2
-#define SENSOR_DEVICE_FIELD_SENSORS               3
-#define SENSOR_DEVICE_FIELD_COUNT                 4
+#define SENSOR_DEVICE_FIELD_TIMEOUT_MS            3
+#define SENSOR_DEVICE_FIELD_SENSORS               4
+#define SENSOR_DEVICE_FIELD_COUNT                 5
 
 template <size_t S>
 class SensorDevice {
@@ -68,7 +70,7 @@ public:
   }
 
   virtual void update() {
-    bool maxUpdateReached = millis() > m_lastUpdateMs + (1000 / getMaxUpdateHz());
+    bool updateReached = millis() > m_lastUpdateMs + (1000 / getMaxUpdateHz());
     bool sendFullState = false;
 
     // Update all the sensor values
@@ -80,8 +82,17 @@ public:
       sendFullState = receiveState();
     }
 
-    if (sendFullState || (maxUpdateReached && m_jsonState.hasChanged())) {
+    if (isTimedOut()) {
+      statusDisconnected();
+      return;
+    }
+
+    bool hasChanged = m_jsonState.hasChanged();
+    if (sendFullState || (updateReached && hasChanged)) {
       sendState(sendFullState);
+      statusActive();
+    } else {
+      statusIdle();
     }
   }
 
@@ -89,8 +100,20 @@ public:
     return m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ].asInt();
   }
 
-  virtual void setMaxUpdateHz(int ms) {
-    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ] = ms;
+  virtual void setMaxUpdateHz(int hz) {
+    m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ] = hz;
+  }
+
+  bool isTimedOut() {
+    return (millis() > m_lastRemoteMessageMs + getTimeoutMs());
+  }
+
+  virtual int getTimeoutMs() {
+    return m_fieldsJson[SENSOR_DEVICE_FIELD_TIMEOUT_MS].asInt();
+  }
+
+  virtual void setTimeoutMs(int ms) {
+    m_fieldsJson[SENSOR_DEVICE_FIELD_TIMEOUT_MS] = ms;
   }
 
   virtual void setError(const char *format, ...) {
@@ -118,6 +141,7 @@ protected:
     m_fieldsJson[SENSOR_DEVICE_FIELD_NAME] = Json::String("name", deviceName);
     m_fieldsJson[SENSOR_DEVICE_FIELD_ERROR] = Json::String("error", "", SENSOR_DEVICE_ERROR_MAX_LENGTH);
     m_fieldsJson[SENSOR_DEVICE_FIELD_MAX_UPDATE_HZ] = Json::Int("maxUpdateHz", SENSOR_DEVICE_DEFAULT_MAX_UPDATE_HZ);
+    m_fieldsJson[SENSOR_DEVICE_FIELD_TIMEOUT_MS] = Json::Int("timeoutMs", SENSOR_DEVICE_DEFAULT_TIMEOUT_MS);
     m_fieldsJson[SENSOR_DEVICE_FIELD_SENSORS] = Json::Object("sensors", m_sensorsJson);
     m_sensorDeviceJson = Json::Object(m_fieldsJson);
   }
@@ -160,6 +184,9 @@ protected:
       setError("Received state must be < %d chars", SENSOR_DEVICE_IN_BUFFER_LENGTH);
       return false;
     }
+
+    // If we've reached this far, we've successfully received a message.
+    m_lastRemoteMessageMs = millis();
 
     // If empty line was sent, it's a keep-alive
     if (length == 0) {
@@ -286,6 +313,7 @@ private:
   JsonElement m_sensorDeviceJson;
   JsonState m_jsonState;
   unsigned long m_lastUpdateMs;
+  unsigned long m_lastRemoteMessageMs;
   size_t m_sensorInitCount;
 };
 
