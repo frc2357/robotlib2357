@@ -9,6 +9,7 @@
 #define SENSOR_DEVICE_SERIAL_PREAMBLE             "||v1||"
 #define SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT      3
 #define SENSOR_DEVICE_ERROR_MAX_LENGTH            64
+#define SENSOR_DEVICE_IN_BUFFER_LENGTH            256
 
 #define SENSOR_DEVICE_FIELD_NAME                  0
 #define SENSOR_DEVICE_FIELD_ERROR                 1
@@ -76,14 +77,7 @@ public:
     }
 
     if (m_in.available()) {
-      String line = m_in.readString();
-
-      if (line[0] == '{' && line[1] == '}') {
-        sendFullState = true;
-      } else {
-        m_jsonState.updateFromJson(line.c_str());
-        sendFullState = true;
-      }
+      sendFullState = receiveState();
     }
 
     if (sendFullState || (maxUpdateReached && m_jsonState.hasChanged())) {
@@ -144,6 +138,43 @@ protected:
     m_out.println();
     m_out.flush();
     m_lastUpdateMs = millis();
+  }
+
+  bool receiveState() {
+    // Advance past whatever exists until the first preamble character.
+    m_in.readBytesUntil(SENSOR_DEVICE_SERIAL_PREAMBLE[0], m_inBuffer, SENSOR_DEVICE_IN_BUFFER_LENGTH);
+
+    // Read in the remainder of the preamble and terminate the string
+    size_t length = m_in.readBytes(m_inBuffer, strlen(SENSOR_DEVICE_SERIAL_PREAMBLE) - 1);
+    m_inBuffer[length] = '\0';
+
+    // Verify the preamble
+    if (strncmp(m_inBuffer, SENSOR_DEVICE_SERIAL_PREAMBLE + 1, strlen(SENSOR_DEVICE_SERIAL_PREAMBLE) - 1) != 0) {
+      setError("Invalid preamble, expected '%s'", SENSOR_DEVICE_SERIAL_PREAMBLE);
+      return false;
+    }
+
+    // Read JSON until newline
+    length = m_in.readBytesUntil('\n', m_inBuffer, SENSOR_DEVICE_IN_BUFFER_LENGTH - 1);
+    if (length == SENSOR_DEVICE_IN_BUFFER_LENGTH - 1) {
+      setError("Received state must be < %d chars", SENSOR_DEVICE_IN_BUFFER_LENGTH);
+      return false;
+    }
+
+    // If empty line was sent, it's a keep-alive
+    if (length == 0) {
+      return false;
+    }
+
+    // If it's empty braces "{}" it's asking to send the full state
+    if (length == 2 && m_inBuffer[0] == '{' && m_inBuffer[1] == '}') {
+      return true;
+    }
+
+    // Set string terminator, so we can use it
+    m_inBuffer[length] = '\0';
+    m_jsonState.updateFromJson(m_inBuffer);
+    return true;
   }
 
   size_t allocateIndex() {
@@ -241,6 +272,7 @@ protected:
 private:
   Print &m_out;
   Stream &m_in;
+  char m_inBuffer[SENSOR_DEVICE_IN_BUFFER_LENGTH];
   JsonElement m_fieldsJson[SENSOR_DEVICE_FIELD_COUNT];
   JsonElement m_sensorFieldsJson[S][SENSOR_DEVICE_SENSOR_MAX_FIELD_COUNT];
   JsonElement m_sensorsJson[S];
