@@ -136,8 +136,10 @@ void JsonElement::operator=(const JsonElement& element) {
 
 void JsonElement::operator=(bool value) {
   if (m_type == JSON_TYPE_BOOLEAN) {
-    m_value.booleanValue = value;
-    m_hasChanged = true;
+    if (m_value.booleanValue != value) {
+      m_value.booleanValue = value;
+      m_hasChanged = true;
+    }
   } else {
     JSON_LOG_ERROR("Cannot assign boolean value to type %s", type());
   }
@@ -149,11 +151,15 @@ void JsonElement::operator=(int value) {
 
 void JsonElement::operator=(long value) {
   if (m_type == JSON_TYPE_INT) {
-    m_value.longValue = value;
-    m_hasChanged = true;
+    if (m_value.longValue != value) {
+      m_value.longValue = value;
+      m_hasChanged = true;
+    }
   } else if (m_type == JSON_TYPE_FLOAT) {
-    m_value.doubleValue = value;
-    m_hasChanged = true;
+    if (m_value.doubleValue != value) {
+      m_value.doubleValue = value;
+      m_hasChanged = true;
+    }
   } else {
     JSON_LOG_ERROR("Cannot assign int value to type %s", type());
   }
@@ -165,8 +171,10 @@ void JsonElement::operator=(float value) {
 
 void JsonElement::operator=(double value) {
   if (m_type == JSON_TYPE_FLOAT) {
-    m_value.doubleValue = value;
-    m_hasChanged = true;
+    if (m_value.doubleValue != value) {
+      m_value.doubleValue = value;
+      m_hasChanged = true;
+    }
   } else {
     JSON_LOG_ERROR("Cannot assign double value to type %s", type());
   }
@@ -174,11 +182,13 @@ void JsonElement::operator=(double value) {
 
 void JsonElement::operator=(const char *value) {
   if (m_type == JSON_TYPE_STRING) {
-    if (m_length < strlen(value) + 1) {
-      JSON_LOG_ERROR("Concatenating incoming string: %s to %d chars", value, m_length - 1);
+    if (strcmp(m_value.stringValue, value) != 0) {
+      if (m_length < strlen(value) + 1) {
+        JSON_LOG_ERROR("Concatenating incoming string: %s to %d chars", value, m_length - 1);
+      }
+      strlcpy(m_value.stringValue, value, m_length);
+      m_hasChanged = true;
     }
-    strlcpy(m_value.stringValue, value, m_length);
-    m_hasChanged = true;
   } else {
     JSON_LOG_ERROR("Cannot assign string value to type %s", type());
   }
@@ -382,6 +392,9 @@ void JsonElement::printJsonObject(int indent, Print& out, bool onlyChanged) cons
     JsonElement& element = m_value.arrayValue[i];
 
     if (onlyChanged && !element.hasChanged()) {
+      continue;
+    }
+    if (strlen(element.key()) == 0) {
       continue;
     }
 

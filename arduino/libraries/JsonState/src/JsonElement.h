@@ -156,6 +156,12 @@ class Json {
       return JsonElement(key, JSON_TYPE_ARRAY, elementValue, S);
     }
 
+    static JsonElement Array(const char *key, JsonElement *array, size_t length) {
+      JsonElement::JsonElementValue elementValue;
+      elementValue.arrayValue = array;
+      return JsonElement(key, JSON_TYPE_ARRAY, elementValue, length);
+    }
+
     template<size_t S>
     static JsonElement Object(JsonElement (&fields)[S]) {
       return Object("", fields);
@@ -166,6 +172,12 @@ class Json {
       JsonElement::JsonElementValue elementValue;
       elementValue.arrayValue = fields;
       return JsonElement(key, JSON_TYPE_OBJECT, elementValue, S);
+    }
+
+    static JsonElement Object(const char *key, JsonElement *fields, size_t length) {
+      JsonElement::JsonElementValue elementValue;
+      elementValue.arrayValue = fields;
+      return JsonElement(key, JSON_TYPE_OBJECT, elementValue, length);
     }
 };
 
