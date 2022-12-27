@@ -1,4 +1,5 @@
 #include "JsonElement.h"
+#include <cstdarg>
 
 // ---------
 // JsonState
