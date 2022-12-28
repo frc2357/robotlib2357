@@ -23,114 +23,198 @@ class SensorDevice {
 public:
   virtual void initSensor(const char *name, intSensorFunc_T sensorFunc) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+  }
+
+  virtual void initSensor(const char *name, intSettingsSensorFunc_T sensorFunc) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+    }
   }
 
   virtual void initSensor(const char *name, intMinMaxSensorFunc_T sensorFunc, int min, int max) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+  }
+
+  virtual void initSensor(const char *name, intMinMaxSettingsSensorFunc_T sensorFunc, int min, int max) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+    }
   }
 
   virtual void initSensor(const char *name, longSensorFunc_T sensorFunc) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+  }
+
+  virtual void initSensor(const char *name, longSettingsSensorFunc_T sensorFunc) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+    }
   }
 
   virtual void initSensor(const char *name, longMinMaxSensorFunc_T sensorFunc, long min, long max) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+  }
+
+  virtual void initSensor(const char *name, longMinMaxSettingsSensorFunc_T sensorFunc, long min, long max) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+    }
   }
 
   virtual void initSensor(const char *name, floatSensorFunc_T sensorFunc) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+  }
+
+  virtual void initSensor(const char *name, floatSettingsSensorFunc_T sensorFunc) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+    }
   }
 
   virtual void initSensor(const char *name, floatMinMaxSensorFunc_T sensorFunc, float min, float max) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+  }
+
+  virtual void initSensor(const char *name, floatMinMaxSettingsSensorFunc_T sensorFunc, float min, float max) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+    }
   }
 
   virtual void initSensor(const char *name, doubleSensorFunc_T sensorFunc) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+  }
+
+  virtual void initSensor(const char *name, doubleSettingsSensorFunc_T sensorFunc) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+    }
   }
 
   virtual void initSensor(const char *name, doubleMinMaxSensorFunc_T sensorFunc, double min, double max) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+  }
+
+  virtual void initSensor(const char *name, doubleMinMaxSettingsSensorFunc_T sensorFunc, double min, double max) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, min, max);
+    }
   }
 
   virtual void initSensor(const char *name, boolSensorFunc_T sensorFunc) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+  }
+
+  virtual void initSensor(const char *name, boolSettingsSensorFunc_T sensorFunc) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc);
+    }
   }
 
   virtual void initSensor(const char *name, stringSensorFunc_T sensorFunc, size_t length) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+  }
+
+  virtual void initSensor(const char *name, stringSettingsSensorFunc_T sensorFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+    }
   }
 
   virtual void initSensor(const char *name, intArraySensorFunc_T sensorFunc, size_t length) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+  }
+
+  virtual void initSensor(const char *name, intArraySettingsSensorFunc_T sensorFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+    }
   }
 
   virtual void initSensor(const char *name, longArraySensorFunc_T sensorFunc, size_t length) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+  }
+
+  virtual void initSensor(const char *name, longArraySettingsSensorFunc_T sensorFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+    }
   }
 
   virtual void initSensor(const char *name, floatArraySensorFunc_T sensorFunc, size_t length) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+  }
+
+  virtual void initSensor(const char *name, floatArraySettingsSensorFunc_T sensorFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+    }
   }
 
   virtual void initSensor(const char *name, doubleArraySensorFunc_T sensorFunc, size_t length) {
     size_t index = allocateIndex();
-    if (index == -1) {
-      return;
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
     }
-    m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+  }
+
+  virtual void initSensor(const char *name, doubleArraySettingsSensorFunc_T sensorFunc, size_t length) {
+    size_t index = allocateIndex();
+    if (index >= 0) {
+      m_sensors[index].init(m_sensorsJson[index], name, sensorFunc, length);
+    }
   }
 
   virtual void begin() {
