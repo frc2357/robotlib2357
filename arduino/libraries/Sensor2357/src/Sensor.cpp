@@ -12,6 +12,8 @@ Sensor::Sensor() : m_settings(*this) {
   m_updateFunc = NULL;
 }
 
+Sensor::~Sensor() {}
+
 void Sensor::init(JsonElement &jsonElement, const char *name, intSensorFunc_T sensorFunc) {
   initInt(jsonElement, name, sensorFunc, SENSOR_MIN_MAX_NONE, SENSOR_MIN_MAX_NONE, false);
 }

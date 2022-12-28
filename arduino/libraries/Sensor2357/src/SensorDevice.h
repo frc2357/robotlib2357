@@ -2,6 +2,7 @@
 #define SENSOR_DEVICE_H
 
 #include <Arduino.h>
+#include <cstdarg>
 #include <JsonState.h>
 #include "Sensor.h"
 
