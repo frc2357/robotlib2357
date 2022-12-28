@@ -16,7 +16,7 @@ void increment() {
   }
 }
 
-float readDistance(float min, float max) {
+float readDistance(float min, float max, const SensorSettings &settings) {
   if (millis() > nextIncrement) {
     increment();
     lastIncrement = millis();
