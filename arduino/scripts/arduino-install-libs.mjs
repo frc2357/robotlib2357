@@ -56,7 +56,7 @@ const loadLocalFilePathArduinoLib = (libString, operatingDir) => {
   const folderPath = join(operatingDir, libString);
   const zipFileName = zipFolderIntoFile(folderPath);
 
-  /*executeWithOutput(
+  executeWithOutput(
     `ARDUINO_LIBRARY_ENABLE_UNSAFE_INSTALL=true arduino-cli lib install -v --zip-path "${zipFileName}"`,
     () => {
       unlink(zipFileName, (err) => {
@@ -65,7 +65,7 @@ const loadLocalFilePathArduinoLib = (libString, operatingDir) => {
         }
       });
     }
-  );*/
+  );
 };
 
 const loadArduinoLib = (operatingDir) => (libString) => {

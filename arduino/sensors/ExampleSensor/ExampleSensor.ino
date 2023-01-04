@@ -10,26 +10,34 @@
  * 2. Open the USB serial port in a serial terminal program (115200 bps)
  * 3. Send {}
  */
-#include<Wire.h>
 #include <Sensor2357.h>
-#include "SparkFun_VCNL4040_Arduino_Library.h"
-VCNL4040 proximitySensor;
 
 #define LOOP_DELAY_MS            10
 
-int readFloatValue(int min, int max) {
-  if (proximitySensor.begin() == false)
-  {
-    return 0;
-  }else{
-    return proximitySensor.getProximity();
+float floatValue = 6.0F;
+unsigned long lastIncrement = millis();
+unsigned long nextIncrement = lastIncrement + 1000;
+
+void increment() {
+  floatValue += 2.25F;
+  if (floatValue > 40.0F) {
+    floatValue = 0.0F;
   }
+}
+
+float readFloatValue(float min, float max) {
+  if (millis() > nextIncrement) {
+    increment();
+    lastIncrement = millis();
+    nextIncrement = lastIncrement + random(250, 5000);
+  }
+  return floatValue;
 }
 
 SensorDevice_Seeed_XIAO_RP2040<1> device("ExampleSensor");
 
 void setup() {
-  device.initSensor("intValue", readFloatValue, 0, 65535);
+  device.initSensor("floatValue", readFloatValue, 5.0F, 30.0F);
   device.begin();
 }
 
