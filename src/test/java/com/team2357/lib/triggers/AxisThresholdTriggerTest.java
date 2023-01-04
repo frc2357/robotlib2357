@@ -21,7 +21,7 @@ public class AxisThresholdTriggerTest {
       .25
     );
 
-    assertEquals(trigger.get(), true);
+    assertEquals(trigger.getAsBoolean(), true);
   }
 
   @Test
@@ -36,7 +36,7 @@ public class AxisThresholdTriggerTest {
       .25
     );
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 
   @Test
@@ -51,7 +51,7 @@ public class AxisThresholdTriggerTest {
       .25
     );
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class AxisThresholdTriggerTest {
       .25
     );
 
-    assertEquals(trigger.get(), true);
+    assertEquals(trigger.getAsBoolean(), true);
   }
 
   @Test
@@ -81,6 +81,6 @@ public class AxisThresholdTriggerTest {
       .25
     );
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 }

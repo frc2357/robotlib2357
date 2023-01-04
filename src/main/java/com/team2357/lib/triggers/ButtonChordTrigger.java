@@ -12,9 +12,9 @@ public class ButtonChordTrigger extends Trigger {
   }
 
   @Override
-  public boolean get() {
+  public boolean getAsBoolean() {
     for (JoystickButton b : buttons) {
-      if (!b.get()) {
+      if (!b.getAsBoolean()) {
         return false;
       }
     }

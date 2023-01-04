@@ -14,15 +14,15 @@ public class ButtonChordTriggerTest {
     JoystickButton button2 = mock(JoystickButton.class);
     JoystickButton button3 = mock(JoystickButton.class);
 
-    when(button1.get()).thenReturn(true);
-    when(button2.get()).thenReturn(true);
-    when(button3.get()).thenReturn(true);
+    when(button1.getAsBoolean()).thenReturn(true);
+    when(button2.getAsBoolean()).thenReturn(true);
+    when(button3.getAsBoolean()).thenReturn(true);
 
     JoystickButton[] buttons = { button1, button2, button3 };
 
     ButtonChordTrigger trigger = new ButtonChordTrigger(buttons);
 
-    assertEquals(trigger.get(), true);
+    assertEquals(trigger.getAsBoolean(), true);
   }
 
   @Test
@@ -31,15 +31,15 @@ public class ButtonChordTriggerTest {
     JoystickButton button2 = mock(JoystickButton.class);
     JoystickButton button3 = mock(JoystickButton.class);
 
-    when(button1.get()).thenReturn(false);
-    when(button2.get()).thenReturn(true);
-    when(button3.get()).thenReturn(true);
+    when(button1.getAsBoolean()).thenReturn(false);
+    when(button2.getAsBoolean()).thenReturn(true);
+    when(button3.getAsBoolean()).thenReturn(true);
 
     JoystickButton[] buttons = { button1, button2, button3 };
 
     ButtonChordTrigger trigger = new ButtonChordTrigger(buttons);
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 
   @Test
@@ -48,14 +48,14 @@ public class ButtonChordTriggerTest {
     JoystickButton button2 = mock(JoystickButton.class);
     JoystickButton button3 = mock(JoystickButton.class);
 
-    when(button1.get()).thenReturn(false);
-    when(button2.get()).thenReturn(false);
-    when(button3.get()).thenReturn(false);
+    when(button1.getAsBoolean()).thenReturn(false);
+    when(button2.getAsBoolean()).thenReturn(false);
+    when(button3.getAsBoolean()).thenReturn(false);
 
     JoystickButton[] buttons = { button1, button2, button3 };
 
     ButtonChordTrigger trigger = new ButtonChordTrigger(buttons);
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 }

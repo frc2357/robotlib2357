@@ -18,7 +18,7 @@ public class ToggleTrigger extends Trigger {
   }
 
   @Override
-  public boolean get() {
+  public boolean getAsBoolean() {
     return this.entry.getBoolean(false);
   }
 }

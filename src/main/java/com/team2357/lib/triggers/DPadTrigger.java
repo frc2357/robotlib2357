@@ -16,7 +16,7 @@ public class DPadTrigger extends Trigger {
   }
 
   @Override
-  public boolean get() {
+  public boolean getAsBoolean() {
     DPadValue dPadValue = DPadValue.fromPOV(controller.getPOV(0));
 
     if (dPadValue != lastValue) {

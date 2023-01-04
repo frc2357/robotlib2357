@@ -11,33 +11,31 @@ public class AxisThresholdTrigger extends Trigger {
   private ControllerAxis controllerAxis;
 
   public AxisThresholdTrigger(
-    XboxController controller,
-    Axis axis,
-    double triggerThreshold
-  ) {
+      XboxController controller,
+      Axis axis,
+      double triggerThreshold) {
     this.triggerThreshold = triggerThreshold;
-    this.controllerAxis =
-      () -> {
-        switch (axis) {
-          case kLeftX:
-            return controller.getLeftX();
-          case kLeftY:
-            return controller.getLeftY();
-          case kLeftTrigger:
-            return controller.getLeftTriggerAxis();
-          case kRightTrigger:
-            return controller.getRightTriggerAxis();
-          case kRightX:
-            return controller.getRightX();
-          case kRightY:
-            return controller.getRightY();
-        }
-        return 0;
-      };
+    this.controllerAxis = () -> {
+      switch (axis) {
+        case kLeftX:
+          return controller.getLeftX();
+        case kLeftY:
+          return controller.getLeftY();
+        case kLeftTrigger:
+          return controller.getLeftTriggerAxis();
+        case kRightTrigger:
+          return controller.getRightTriggerAxis();
+        case kRightX:
+          return controller.getRightX();
+        case kRightY:
+          return controller.getRightY();
+      }
+      return 0;
+    };
   }
 
   @Override
-  public boolean get() {
+  public boolean getAsBoolean() {
     return (controllerAxis.getAxisValue() > triggerThreshold);
   }
 }

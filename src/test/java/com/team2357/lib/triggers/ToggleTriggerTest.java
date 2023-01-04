@@ -6,6 +6,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+
 import org.junit.Test;
 
 public class ToggleTriggerTest {
@@ -20,7 +22,7 @@ public class ToggleTriggerTest {
 
     ToggleTrigger trigger = new ToggleTrigger(entry);
 
-    assertEquals(trigger.get(), true);
+    assertEquals(trigger.getAsBoolean(), true);
   }
 
   @Test
@@ -35,6 +37,6 @@ public class ToggleTriggerTest {
 
     entry.setBoolean(false);
 
-    assertEquals(trigger.get(), false);
+    assertEquals(trigger.getAsBoolean(), false);
   }
 }
