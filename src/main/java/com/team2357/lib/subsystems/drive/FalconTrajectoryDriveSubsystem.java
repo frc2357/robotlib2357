@@ -61,7 +61,7 @@ public class FalconTrajectoryDriveSubsystem
     m_gyro = gyro;
     m_gyro.configFactoryDefault();
     m_odometry =
-      new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+      new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
   }
 
   @Override
@@ -103,7 +103,7 @@ public class FalconTrajectoryDriveSubsystem
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    m_odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance(), pose);
   }
 
   /**
