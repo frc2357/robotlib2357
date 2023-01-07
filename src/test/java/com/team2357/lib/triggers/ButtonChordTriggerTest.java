@@ -1,10 +1,11 @@
 package com.team2357.lib.triggers;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.junit.Test;
 
 public class ButtonChordTriggerTest {
 
