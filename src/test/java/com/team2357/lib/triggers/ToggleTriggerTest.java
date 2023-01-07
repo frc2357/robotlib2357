@@ -2,6 +2,7 @@ package com.team2357.lib.triggers;
 
 import static org.junit.Assert.*;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -28,7 +29,7 @@ public class ToggleTriggerTest {
   @Test
   public void testGetReturnsFalseAfterClick() {
     ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    NetworkTableEntry entry = tab
+    GenericEntry entry = tab
       .add("Get Returns False After Click", true)
       .withWidget(BuiltInWidgets.kToggleButton)
       .getEntry();
