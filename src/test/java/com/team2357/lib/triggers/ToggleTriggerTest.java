@@ -15,7 +15,7 @@ public class ToggleTriggerTest {
   @Test
   public void testGetReturnsTrue() {
     ShuffleboardTab tab = Shuffleboard.getTab("Test");
-    NetworkTableEntry entry = tab
+    GenericEntry entry = tab
       .add("Get Returns True", true)
       .withWidget(BuiltInWidgets.kToggleButton)
       .getEntry();

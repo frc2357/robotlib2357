@@ -1,0 +1,24 @@
+{
+  "name": "sensor-2357",
+  "version": "0.1.0",
+  "description": "FRC 2357 Arduino Sensor Library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frc2357/arduino-2357.git"
+  },
+  "keywords": [
+    "arduino"
+  ],
+  "author": "Ray-Pec Robotics \"System Meltdown\" FRC 2357",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frc2357/robotlib2357/issues"
+  },
+  "homepage": "https://github.com/frc2357/robotlib2357#readme",
+  "arduinoLibs": [
+    "../JsonState"
+  ]
+}
