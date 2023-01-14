@@ -22,6 +22,6 @@ void setup() {
 }
 
 void loop() {
-  device.update();
+  device.update(); 
   delay(LOOP_DELAY_MS);
 }
