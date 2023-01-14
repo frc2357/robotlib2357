@@ -1,18 +1,18 @@
-const int ALERT_PIN = A3;
 #include<Wire.h>
 #include <Sensor2357.h>
 #include <SparkFunTMP102.h>
-TMP102 sensor0;
+#define ALERT_PIN A3
+TMP102 tempSensor;
 
 #define LOOP_DELAY_MS 10
 
 float readFloatValue() {
-  sensor0.wakeup();
-  if (sensor0.begin() == false)
-  {
+  tempSensor.wakeup();
+  if (tempSensor.begin() == false)
+  { 
     return 0.0F;
   }else{
-    return sensor0.readTempF();
+    return tempSensor.readTempF();
   }
 }
 
@@ -22,7 +22,7 @@ void setup() {
   Wire.begin(); //Join I2C Bus
   
   pinMode(ALERT_PIN,INPUT);
-  if(!sensor0.begin())
+  if(!tempSensor.begin())
   {
     Serial.println("Cannot connect to TMP102.");
     Serial.println("Is the board connected? Is the device ID correct?");
@@ -30,13 +30,13 @@ void setup() {
   }
   Serial.println("Connected to TMP102!");
   delay(100);
-  sensor0.setFault(0);
-  sensor0.setAlertPolarity(1);
-  sensor0.setAlertMode(0);
-  sensor0.setConversionRate(2);
-  sensor0.setExtendedMode(0);
-  sensor0.setHighTempF(85.0);
-  sensor0.setLowTempF(84.0);
+  tempSensor.setFault(0);
+  tempSensor.setAlertPolarity(1);
+  tempSensor.setAlertMode(0);
+  tempSensor.setConversionRate(2);
+  tempSensor.setExtendedMode(0);
+  tempSensor.setHighTempF(85.0);
+  tempSensor.setLowTempF(84.0);
   device.initSensor("floatValue", readFloatValue);
   device.begin();
 }
