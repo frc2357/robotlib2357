@@ -6,7 +6,7 @@
  * the result is not sent up to the RoboRIO. It can be queried, but it is not automatically sent.
  * 
  * To try it out:
- * 1. Install this code on a supported device (Seeed XIAO RP2040 from Seeed Studios)
+ * 1. Install this code on a supported device (Adafruit Feather RP2040 Scorpio)
  * 2. Open the USB serial port in a serial terminal program (115200 bps)
  * 3. Send {}
  */
