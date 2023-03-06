@@ -7,10 +7,10 @@
 
 #define SENSOR_MAX_FIELD_COUNT      4
 #define SENSOR_FIELD_PREFIX         "_"
-#define SENSOR_FIELD_VALUE          "_value"
-#define SENSOR_FIELD_ARRAY          "_array"
+#define SENSOR_FIELD_VALUE          "value"
+#define SENSOR_FIELD_ARRAY          "array"
 #define SENSOR_FIELD_LENGTH         "_length"
-#define SENSOR_FIELD_ACTIVE         "_active"
+#define SENSOR_FIELD_ACTIVE         "active"
 #define SENSOR_SETTING_MIN          "min"
 #define SENSOR_SETTING_MAX          "max"
 #define SENSOR_MIN_MAX_NONE         -32767
