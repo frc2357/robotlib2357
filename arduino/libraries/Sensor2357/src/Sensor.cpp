@@ -163,7 +163,7 @@ double Sensor::getMaxFloat() {
 }
 
 void Sensor::initInt(JsonElement &jsonElement, const char *name, SensorFunc sensorFunc, int min, int max, bool settings) {
-  m_sensorFieldsJson[0] = Json::Int(SENSOR_FIELD_VALUE, 0);
+  m_sensorFieldsJson[0] = Json::Int(SENSOR_FIELD_VALUE, -1);
   m_sensorFieldsJson[1] = Json::Boolean(SENSOR_FIELD_ACTIVE, true);
   if (max == SENSOR_MIN_MAX_NONE) {
     m_updateFunc = (settings ? &Sensor::updateIntSettings : &Sensor::updateInt);
@@ -178,7 +178,7 @@ void Sensor::initInt(JsonElement &jsonElement, const char *name, SensorFunc sens
 }
 
 void Sensor::initLong(JsonElement &jsonElement, const char *name, SensorFunc sensorFunc, long min, long max, bool settings) {
-  m_sensorFieldsJson[0] = Json::Int(SENSOR_FIELD_VALUE, 0);
+  m_sensorFieldsJson[0] = Json::Int(SENSOR_FIELD_VALUE, -1);
   m_sensorFieldsJson[1] = Json::Boolean(SENSOR_FIELD_ACTIVE, true);
   if (max == SENSOR_MIN_MAX_NONE) {
     m_updateFunc = (settings ? &Sensor::updateLongSettings : &Sensor::updateLong);
@@ -243,7 +243,7 @@ void Sensor::initString(JsonElement &jsonElement, const char *name, SensorFunc s
 void Sensor::initIntArray(JsonElement &jsonElement, const char *name, SensorFunc sensorFunc, int length, bool settings) {
   JsonElement *arrayElements = new JsonElement[length];
   for (int i = 0; i < length; i++) {
-    arrayElements[i] = Json::Int(0);
+    arrayElements[i] = Json::Int(-1);
   }
 
   m_sensorFieldsJson[0] = Json::Array(SENSOR_FIELD_ARRAY, arrayElements, length);
@@ -258,7 +258,7 @@ void Sensor::initIntArray(JsonElement &jsonElement, const char *name, SensorFunc
 void Sensor::initLongArray(JsonElement &jsonElement, const char *name, SensorFunc sensorFunc, int length, bool settings) {
   JsonElement *arrayElements = new JsonElement[length];
   for (int i = 0; i < length; i++) {
-    arrayElements[i] = Json::Int(0);
+    arrayElements[i] = Json::Int(-1);
   }
 
   m_sensorFieldsJson[0] = Json::Array(SENSOR_FIELD_ARRAY, arrayElements, length);
