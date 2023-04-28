@@ -2,7 +2,6 @@ package com.team2357.lib.controllers;
 
 import com.team2357.lib.commands.InvertDriveCommand;
 import com.team2357.lib.util.Utility;
-import com.team2357.lib.util.XboxRaw;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -20,7 +19,7 @@ public class InvertDriveControls extends DriverControls {
 
   public InvertDriveControls(XboxController controller, double deadband) {
     super(controller, deadband);
-    m_invertButton = new JoystickButton(controller, XboxRaw.A.value);
+    m_invertButton = new JoystickButton(controller, XboxController.Button.kA.value);
   }
 
   /**
