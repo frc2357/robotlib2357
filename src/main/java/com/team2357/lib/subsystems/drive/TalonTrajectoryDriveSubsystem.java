@@ -58,7 +58,11 @@ public class TalonTrajectoryDriveSubsystem
     m_gyro = gyro;
     m_gyro.configFactoryDefault();
     m_odometry =
-      new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
+      new DifferentialDriveOdometry(
+        Rotation2d.fromDegrees(getHeading()),
+        getLeftDistance(),
+        getRightDistance()
+      );
   }
 
   @Override
@@ -100,7 +104,12 @@ public class TalonTrajectoryDriveSubsystem
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance(), pose);
+    m_odometry.resetPosition(
+      Rotation2d.fromDegrees(getHeading()),
+      getLeftDistance(),
+      getRightDistance(),
+      pose
+    );
   }
 
   /**
@@ -156,7 +165,8 @@ public class TalonTrajectoryDriveSubsystem
   }
 
   public double getRightDistance() {
-    double encoderPositon = super.m_rightTalonMaster.getSelectedSensorPosition();
+    double encoderPositon =
+      super.m_rightTalonMaster.getSelectedSensorPosition();
     double difOfPostion = encoderPositon - m_rightLastValue;
     m_rightLastValue = encoderPositon;
     return difOfPostion * m_distancePerPulse;

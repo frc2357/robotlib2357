@@ -19,7 +19,8 @@ public class InvertDriveControls extends DriverControls {
 
   public InvertDriveControls(XboxController controller, double deadband) {
     super(controller, deadband);
-    m_invertButton = new JoystickButton(controller, XboxController.Button.kA.value);
+    m_invertButton =
+      new JoystickButton(controller, XboxController.Button.kA.value);
   }
 
   /**

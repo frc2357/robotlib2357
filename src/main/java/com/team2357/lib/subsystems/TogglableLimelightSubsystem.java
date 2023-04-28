@@ -1,7 +1,6 @@
 package com.team2357.lib.subsystems;
 
 import com.team2357.lib.commands.InvertDriveCommand; //Imported for javadoc
-
 import edu.wpi.first.networktables.DoubleSubscriber;
 
 /**
@@ -41,7 +40,9 @@ public class TogglableLimelightSubsystem extends LimelightSubsystem {
     }
   }
 
-  private DoubleSubscriber m_stream = super.m_table.getDoubleTopic("stream").subscribe(1.0);
+  private DoubleSubscriber m_stream = super.m_table
+    .getDoubleTopic("stream")
+    .subscribe(1.0);
 
   /**
    * Sets the camera stream.

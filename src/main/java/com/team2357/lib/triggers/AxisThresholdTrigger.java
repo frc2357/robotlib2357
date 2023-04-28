@@ -7,9 +7,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class AxisThresholdTrigger extends Trigger {
 
   public AxisThresholdTrigger(
-      XboxController controller,
-      Axis axis,
-      double triggerThreshold) {
+    XboxController controller,
+    Axis axis,
+    double triggerThreshold
+  ) {
     super(() -> controller.getRawAxis(axis.value) > triggerThreshold);
   }
 }

@@ -1,10 +1,9 @@
 package com.team2357.log.topics;
 
+import com.team2357.log.outputs.LogOutput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import com.team2357.log.outputs.LogOutput;
 
 public class LogTopicRegistryTest {
 
