@@ -3,7 +3,6 @@ package com.team2357.log.outputs;
 import static org.mockito.Mockito.verify;
 
 import java.io.PrintStream;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

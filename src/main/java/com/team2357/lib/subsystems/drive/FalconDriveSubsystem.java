@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2357.lib.subsystems.ClosedLoopSubsystem;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -94,12 +93,8 @@ public class FalconDriveSubsystem extends ClosedLoopSubsystem {
      * Current config to handle drive motors
      * Current values a good baseline to use for a six-falcon drivebase
      */
-    public SupplyCurrentLimitConfiguration m_currentConfig = new SupplyCurrentLimitConfiguration(
-      true,
-      0,
-      0,
-      0
-    );
+    public SupplyCurrentLimitConfiguration m_currentConfig =
+      new SupplyCurrentLimitConfiguration(true, 0, 0, 0);
 
     public double m_openLoopRampRateSeconds = 0;
     public double m_closedLoopRampRateSeconds = 0;
@@ -134,7 +129,11 @@ public class FalconDriveSubsystem extends ClosedLoopSubsystem {
     m_gyro = gyro;
     m_gyro.configFactoryDefault();
     m_odometry =
-      new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance());
+      new DifferentialDriveOdometry(
+        Rotation2d.fromDegrees(getHeading()),
+        getLeftDistance(),
+        getRightDistance()
+      );
     zeroHeading();
     resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
   }
@@ -354,7 +353,12 @@ public class FalconDriveSubsystem extends ClosedLoopSubsystem {
    */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    m_odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), getLeftDistance(), getRightDistance(), pose);
+    m_odometry.resetPosition(
+      Rotation2d.fromDegrees(getHeading()),
+      getLeftDistance(),
+      getRightDistance(),
+      pose
+    );
   }
 
   /**
