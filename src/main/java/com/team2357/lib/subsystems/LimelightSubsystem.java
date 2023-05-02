@@ -126,7 +126,6 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     m_Configuration = configuration;
 
     setHumanPipelineActive();
-    // setTargetingPipelineActive();
     setStream(configuration.m_isLimelightPrimaryStream);
   }
 
@@ -358,11 +357,11 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
   }
 
   public double getBlueBotposeTimestamp() {
-    return calculateTimestamp(m_botposeWpiBlue.get());
+    return calculateBotposeCaptureTimestamp(m_botposeWpiBlue.get());
   }
 
   public double getRedBotposeTimestamp() {
-    return calculateTimestamp(m_botposeWpiRed.get());
+    return calculateBotposeCaptureTimestamp(m_botposeWpiRed.get());
   }
 
   public double getCurrentAllianceBotposeTimestamp() {
@@ -375,12 +374,13 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
     }
   }
 
-  public double calculateTimestamp(double[] botpose) {
+  public double calculateBotposeCaptureTimestamp(double[] botpose) {
     if (botpose == null) {
       return 0;
     }
 
-    return Timer.getFPGATimestamp() - (botpose[6] / 1000);
+    double totalLatency = botpose[6];
+    return Timer.getFPGATimestamp() - (totalLatency / 1000);
   }
 
   public static Pose2d botposeToPose2d(double[] botpose) {
@@ -388,8 +388,12 @@ public class LimelightSubsystem extends ClosedLoopSubsystem {
       return null;
     }
 
-    Translation2d t2d = new Translation2d(botpose[0], botpose[1]);
-    Rotation2d r2d = Rotation2d.fromDegrees(botpose[5]);
+    double xMeters = botpose[0];
+    double yMeters = botpose[1];
+    double yawDegrees = botpose[5];
+
+    Translation2d t2d = new Translation2d(xMeters, yMeters);
+    Rotation2d r2d = Rotation2d.fromDegrees(yawDegrees);
     return new Pose2d(t2d, r2d);
   }
 

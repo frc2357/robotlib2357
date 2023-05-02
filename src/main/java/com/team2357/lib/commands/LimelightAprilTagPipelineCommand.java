@@ -12,7 +12,7 @@ public class LimelightAprilTagPipelineCommand extends CommandLoggerBase {
   private boolean m_wait;
 
   /**
-   * Create human pipeline command
+   * Create Apriltag pipeline command
    * 
    * @param wait True if the command should wait until the pipeline is active to
    *             finish, false if no wait required.
