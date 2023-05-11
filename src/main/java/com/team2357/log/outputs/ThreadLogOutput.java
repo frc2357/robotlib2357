@@ -52,9 +52,8 @@ public abstract class ThreadLogOutput implements LogOutput, Runnable {
 
   final Thread m_thread;
   private LogWriter m_logWriter;
-  private final BlockingQueue<Entry> m_entryQueue = new ArrayBlockingQueue<Entry>(
-    EVENT_QUEUE_CAPACITY
-  );
+  private final BlockingQueue<Entry> m_entryQueue =
+    new ArrayBlockingQueue<Entry>(EVENT_QUEUE_CAPACITY);
   private RelativeTimeSource m_session;
 
   protected ThreadLogOutput() {

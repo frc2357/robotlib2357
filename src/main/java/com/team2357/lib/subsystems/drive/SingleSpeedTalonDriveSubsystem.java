@@ -30,7 +30,8 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 
   @Override
   protected double getCurrentSpeedLeftClicksPerSecond() {
-    double rawSensorUnitsPer100ms = m_leftTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in
+    double rawSensorUnitsPer100ms =
+      m_leftTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in
     // raw sensor units) per 100ms
     double rawSensorUnitsPerSec = rawSensorUnitsPer100ms / 10;
     // TODO: further changes?
@@ -39,7 +40,8 @@ public class SingleSpeedTalonDriveSubsystem extends SkidSteerDriveSubsystem {
 
   @Override
   protected double getCurrentSpeedRightClicksPerSecond() {
-    double rawSensorUnitsPer100ms = m_rightTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in
+    double rawSensorUnitsPer100ms =
+      m_rightTalonMaster.getSelectedSensorVelocity(); // returns selected sensor (in
     // raw sensor units) per 100ms
     double rawSensorUnitsPerSec = rawSensorUnitsPer100ms / 10;
     // TODO: further changes?
