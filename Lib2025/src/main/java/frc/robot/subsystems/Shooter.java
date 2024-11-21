@@ -30,6 +30,9 @@ public class Shooter {
         m_bottomShooterMotor = new SparkMax(CAN_ID.BOTTOM_SHOOTER_MOTOR_ID,
                 MotorType.kBrushless);
 
+        m_topPIDController = m_topShooterMotor.getClosedLoopController();
+        m_bottomPIDController = m_bottomShooterMotor.getClosedLoopController();
+
         configure();
     }
 
@@ -53,8 +56,6 @@ public class Shooter {
                 .idleMode(SHOOTER.IDLE_MODE)
                 .smartCurrentLimit(SHOOTER.BOTTOM_MOTOR_STALL_LIMIT_AMPS, SHOOTER.BOTTOM_MOTOR_FREE_LIMIT_AMPS)
                 .apply(bottomPIDConfig);
-        m_topPIDController = m_topShooterMotor.getClosedLoopController();
-        m_bottomPIDController = m_bottomShooterMotor.getClosedLoopController();
 
         m_topShooterMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         m_bottomShooterMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters,
