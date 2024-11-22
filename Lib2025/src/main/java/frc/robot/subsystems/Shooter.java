@@ -63,13 +63,13 @@ public class Shooter extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void setRPM(double topRPM) {
-        if (Double.isNaN(topRPM)) {
-            System.err.println("Shooter: Cannot set topRPM to NaN!");
+    public void setRPM(double RPM) {
+        if (Double.isNaN(RPM)) {
+            System.err.println("Shooter: Cannot set shooter RPMs to NaN");
             return;
         }
 
-        m_targetRPM = topRPM;
+        m_targetRPM = RPM;
         m_topPIDController.setReference(m_targetRPM, ControlType.kVelocity);
         m_bottomPIDController.setReference(m_targetRPM, ControlType.kVelocity);
     }

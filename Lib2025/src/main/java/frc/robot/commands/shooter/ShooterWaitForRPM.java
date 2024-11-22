@@ -6,7 +6,6 @@ import frc.robot.Robot;
 public class ShooterWaitForRPM extends Command {
   @Override
   public boolean isFinished() {
-    var isAtTargetSpeed = Robot.shooter.isAtTargetSpeed();
-    return isAtTargetSpeed;
+    return Robot.shooter.isAtTargetSpeed();
   }
 }
