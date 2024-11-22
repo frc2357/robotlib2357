@@ -19,22 +19,12 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-
   public static final class CAN_ID {
     public static final int TOP_SHOOTER_MOTOR_ID = 25;
     public static final int BOTTOM_SHOOTER_MOTOR_ID = 26;
   }
 
   public static final class SHOOTER {
-    public static final double SOURCE_INTAKE_RPM = -1500;
-    public static final double FEED_END_AFFECTOR_RPM = 1000;
-    public static final double DEFAULT_STOWED_RPMS = 2000;
-
-    public static final double SHOOTER_AXIS_STEP_INTERVAL = 0.1;
-
     public static final double SHOOTER_AXIS_MAX_SPEED = 0.8;
 
     public static final IdleMode IDLE_MODE = IdleMode.kCoast;
