@@ -10,12 +10,13 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 import frc.robot.util.Utility;
 
-public class Shooter {
+public class Shooter extends SubsystemBase {
     private double m_targetRPM;
 
     private SparkMax m_topShooterMotor;
@@ -98,4 +99,8 @@ public class Shooter {
         return Utility.isWithinTolerance(getTopVelocity(), RPM, SHOOTER.RPM_TOLERANCE)
                 && Utility.isWithinTolerance(getBottomVelocity(), RPM, SHOOTER.RPM_TOLERANCE);
     }
+
+    public boolean isAtTargetSpeed() {
+        return isAtRPM(m_targetRPM);
+      }
 }
