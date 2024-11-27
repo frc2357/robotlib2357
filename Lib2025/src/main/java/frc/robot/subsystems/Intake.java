@@ -86,7 +86,7 @@ public class Intake extends SubsystemBase {
 
     public void setRPM(double RPM) {
         if (Double.isNaN(RPM)) {
-            System.err.println("Shooter: Cannot set intake RPMs to NaN");
+            System.err.println("Intake: Cannot set intake RPMs to NaN");
             return;
         }
 

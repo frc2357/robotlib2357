@@ -61,14 +61,6 @@ public final class Constants {
 
     public static final double DEBOUNCE_TIME_SECONDS = 0.02;
 
-    public static final double FEED_TO_SHOOTER_TIMEOUT = 0;
-    public static final double FLOOR_INTAKE_REVERSE_TIMEOUT = 0.1;
-
-    public static final double PICKUP_SPEED_PERCENT_OUTPUT = .75;
-    public static final double SLOW_PICKUP_SPEED_PERCENT_OUTPUT = .1;
-    public static final double REVERSE_FEED_SPEED_PERCENT_OUTPUT = -0.2;
-    public static final double FEED_SPEED_PERCENT_OUTPUT = 0.75;
-
     public static final IdleMode IDLE_MODE = IdleMode.kBrake;
 
     public static final boolean TOP_MOTOR_INVERTED = false;
@@ -97,7 +89,5 @@ public final class Constants {
 
   public static final class DIGITAL_INPUT {
     public static final int INTAKE_BEAM_BREAK_ID = 5;
-    public static final int END_AFFECTOR_PROXIMITY_SENSOR_ID = 6;
-    public static final int END_AFFECTOR_PROXIMITY_SENSOR_POWER_ID = 8;
   }
 }
