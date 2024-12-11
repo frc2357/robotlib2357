@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.controls.util.AxisInterface;
 
-class ShooterAxis extends Command {
+public class ShooterAxis extends Command {
     private AxisInterface m_axis;
 
     public ShooterAxis(AxisInterface axis) {

@@ -7,8 +7,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -23,12 +22,12 @@ public class ExtensionArm extends SubsystemBase {
 
     private SparkMax m_motor;
     private SparkClosedLoopController m_PIDController;
-    private RelativeEncoder m_encoder;
+    private RelativeEncoder m_alternateEncoder;
 
     public ExtensionArm() {
-        m_motor = new SparkMax(Constants.CAN_ID.TRAP_AMP_ARM_MOTOR_ID, MotorType.kBrushless);
+        m_motor = new SparkMax(Constants.CAN_ID.EXTENSION_ARM_MOTOR_ID, MotorType.kBrushless);
         m_PIDController = m_motor.getClosedLoopController();
-        m_encoder = m_motor.getEncoder();
+        m_alternateEncoder = m_motor.getAlternateEncoder();
 
         configure();
     }
@@ -39,24 +38,21 @@ public class ExtensionArm extends SubsystemBase {
                 .maxAcceleration(EXTENSION_ARM.SMART_MOTION_MAX_ACC_RPM)
                 .allowedClosedLoopError(EXTENSION_ARM.SMART_MOTION_ALLOWED_ERROR);
 
-        ClosedLoopConfig PIDConfig = new ClosedLoopConfig()
+        SparkBaseConfig motorConfig = new SparkMaxConfig()
+                .inverted(EXTENSION_ARM.MOTOR_INVERTED)
+                .voltageCompensation(12)
+                .idleMode(EXTENSION_ARM.MOTOR_IDLE_MODE)
+                .smartCurrentLimit(EXTENSION_ARM.MOTOR_STALL_LIMIT_AMPS, EXTENSION_ARM.MOTOR_FREE_LIMIT_AMPS);
+
+        motorConfig.encoder
+                .inverted(EXTENSION_ARM.ENCODER_INVERTED);
+
+        motorConfig.closedLoop
                 .pidf(EXTENSION_ARM.MOTOR_PID_P, EXTENSION_ARM.MOTOR_PID_I, EXTENSION_ARM.MOTOR_PID_D,
                         EXTENSION_ARM.MOTOR_PID_FF)
                 .outputRange(-1, 1)
+                .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
                 .apply(maxMotionConfig);
-
-        EncoderConfig encoderConfig = new EncoderConfig()
-                .inverted(EXTENSION_ARM.ENCODER_INVERTED);
-
-        SparkBaseConfig motorConfig = new SparkMaxConfig()
-                .inverted(EXTENSION_ARM.MOTOR_IS_INVERTED)
-                .openLoopRampRate(EXTENSION_ARM.READY_TO_ZERO_ROTATIONS)
-                .voltageCompensation(12)
-                .idleMode(EXTENSION_ARM.MOTOR_IDLE_MODE)
-                .smartCurrentLimit(EXTENSION_ARM.MOTOR_STALL_LIMIT_AMPS, EXTENSION_ARM.MOTOR_FREE_LIMIT_AMPS)
-                .apply(PIDConfig);
-
-        motorConfig.apply(encoderConfig);
 
         m_motor.configure(motorConfig,
                 ResetMode.kNoResetSafeParameters,
@@ -80,7 +76,7 @@ public class ExtensionArm extends SubsystemBase {
     }
 
     public double getRotations() {
-        return m_encoder.getPosition();
+        return m_alternateEncoder.getPosition();
     }
 
     public boolean isAtTargetRotations() {
@@ -88,6 +84,6 @@ public class ExtensionArm extends SubsystemBase {
     }
 
     public void setZero() {
-        m_encoder.setPosition(0);
+        m_alternateEncoder.setPosition(0);
     }
 }

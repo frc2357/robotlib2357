@@ -26,7 +26,7 @@ public final class Constants {
     public static final int TOP_INTAKE_MOTOR_ID = 23;
     public static final int BOTTOM_INTAKE_MOTOR_ID = 24;
 
-    public static final int TRAP_AMP_ARM_MOTOR_ID = 31;
+    public static final int EXTENSION_ARM_MOTOR_ID = 31;
   }
 
   public static final class SHOOTER {
@@ -94,12 +94,10 @@ public final class Constants {
   }
 
   public static final class EXTENSION_ARM {
-    public static final boolean MOTOR_IS_INVERTED = false;
+    public static final boolean MOTOR_INVERTED = false;
     public static final boolean ENCODER_INVERTED = true;
 
     public static final IdleMode MOTOR_IDLE_MODE = IdleMode.kBrake;
-
-    // TODO: Tune arm amp limits + PID + smart motion + Zeroing constants
 
     public static final int MOTOR_STALL_LIMIT_AMPS = 40;
     public static final int MOTOR_FREE_LIMIT_AMPS = 40;
@@ -114,7 +112,5 @@ public final class Constants {
     public static final double SMART_MOTION_ALLOWED_ERROR = 0.1;
 
     public static final double AXIS_MAX_SPEED = 0.75;
-
-    public static final double READY_TO_ZERO_ROTATIONS = 0.2;
   }
 }
