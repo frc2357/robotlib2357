@@ -72,7 +72,7 @@ public class ExtensionArm extends SubsystemBase {
 
     public void setTargetRotations(double targetRotations) {
         m_targetRotations = targetRotations;
-        m_PIDController.setReference(m_targetRotations, ControlType.kPosition);
+        m_PIDController.setReference(m_targetRotations, ControlType.kMAXMotionPositionControl);
     }
 
     public double getRotations() {
