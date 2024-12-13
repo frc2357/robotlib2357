@@ -102,5 +102,5 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtTargetSpeed() {
         return isAtRPM(m_targetRPM);
-      }
+    }
 }

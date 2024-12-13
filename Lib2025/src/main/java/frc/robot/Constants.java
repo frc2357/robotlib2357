@@ -25,6 +25,8 @@ public final class Constants {
 
     public static final int TOP_INTAKE_MOTOR_ID = 23;
     public static final int BOTTOM_INTAKE_MOTOR_ID = 24;
+
+    public static final int EXTENSION_ARM_MOTOR_ID = 31;
   }
 
   public static final class SHOOTER {
@@ -89,5 +91,26 @@ public final class Constants {
 
   public static final class DIGITAL_INPUT {
     public static final int INTAKE_BEAM_BREAK_ID = 5;
+  }
+
+  public static final class EXTENSION_ARM {
+    public static final boolean MOTOR_INVERTED = false;
+    public static final boolean ENCODER_INVERTED = true;
+
+    public static final IdleMode MOTOR_IDLE_MODE = IdleMode.kBrake;
+
+    public static final int MOTOR_STALL_LIMIT_AMPS = 40;
+    public static final int MOTOR_FREE_LIMIT_AMPS = 40;
+
+    public static final double MOTOR_PID_P = 0.003;
+    public static final double MOTOR_PID_I = 0;
+    public static final double MOTOR_PID_D = 0;
+    public static final double MOTOR_PID_FF = 0.000005;
+
+    public static final int SMART_MOTION_MAX_VEL_RPM = 5600;
+    public static final int SMART_MOTION_MAX_ACC_RPM = 50000;
+    public static final double SMART_MOTION_ALLOWED_ERROR = 0.1;
+
+    public static final double AXIS_MAX_SPEED = 0.75;
   }
 }
