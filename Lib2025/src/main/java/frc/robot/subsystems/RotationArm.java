@@ -34,6 +34,9 @@ public class RotationArm extends SubsystemBase {
         m_PIDController = m_motor.getClosedLoopController();
         m_alternateEncoder = m_motor.getAlternateEncoder();
 
+        m_armFeedForward = new ArmFeedforward(ROTATION_ARM.ARM_FEED_FORWARD_KS, ROTATION_ARM.ARM_FEED_FORWARD_KG, 
+                ROTATION_ARM.ARM_FEED_FORWARD_KV, ROTATION_ARM.ARM_FEED_FORWARD_KA);
+
         configure();
     }
 
@@ -62,9 +65,6 @@ public class RotationArm extends SubsystemBase {
         m_motor.configure(motorConfig,
                 ResetMode.kNoResetSafeParameters,
                 PersistMode.kNoPersistParameters);
-
-        m_armFeedForward = new ArmFeedforward(ROTATION_ARM.ARM_FEED_FORWARD_KS, ROTATION_ARM.ARM_FEED_FORWARD_KG, 
-                ROTATION_ARM.ARM_FEED_FORWARD_KV, ROTATION_ARM.ARM_FEED_FORWARD_KA);
     }
 
     public void setAxisSpeed(double speed) {
