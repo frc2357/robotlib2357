@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -19,6 +22,14 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final class CUSTOM_UNITS {
+    public static final Distance NEO_SHAFT_CIRCUMFERENCE = Units.Inches.of(0.989478);
+
+    // Usage - Constants.CUSTOM_UNITS.NEO_DISTANCE_PER_TICK.times(m_encoderTicks)
+    // m_encoderTicks = 42 -> 0.989478 in
+    public static final Distance NEO_DISTANCE_PER_TICK = NEO_SHAFT_CIRCUMFERENCE.div(42);
+  }
+
   public static final class CAN_ID {
     public static final int TOP_SHOOTER_MOTOR_ID = 25;
     public static final int BOTTOM_SHOOTER_MOTOR_ID = 26;
