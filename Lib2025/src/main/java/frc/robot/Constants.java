@@ -25,9 +25,12 @@ public final class Constants {
   public static final class CUSTOM_UNITS {
     public static final Distance NEO_SHAFT_CIRCUMFERENCE = Units.Inches.of(0.989478);
 
-    // Usage - Constants.CUSTOM_UNITS.NEO_DISTANCE_PER_TICK.times(m_encoderTicks)
-    // m_encoderTicks = 42 -> 0.989478 in
     public static final Distance NEO_DISTANCE_PER_TICK = NEO_SHAFT_CIRCUMFERENCE.div(42);
+    // CUSTOM_UNITS.NEO_DISTANCE_PER_TICK.times(42) -> 0.989478
+
+    public static final double EXAMPLE_GEAR_RATIO = 60;
+    public static final Distance EXAMPLE_GEARED_DISTANCE_PER_TICK = NEO_DISTANCE_PER_TICK.div(EXAMPLE_GEAR_RATIO);
+    // CUSTOM_UNITS.EXAMPLE_GEARED_DISTANCE_PER_TICK.times(2520) -> 0.989478
   }
 
   public static final class CAN_ID {
