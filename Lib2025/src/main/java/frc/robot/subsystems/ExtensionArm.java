@@ -12,13 +12,17 @@ import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.CUSTOM_UNITS;
 import frc.robot.Constants.EXTENSION_ARM;
 import frc.robot.util.Utility;
 
 public class ExtensionArm extends SubsystemBase {
-    private double m_targetRotations;
+    private Angle m_targetRotations;
 
     private SparkMax m_motor;
     private SparkClosedLoopController m_PIDController;
@@ -45,6 +49,7 @@ public class ExtensionArm extends SubsystemBase {
                 .smartCurrentLimit(EXTENSION_ARM.MOTOR_STALL_LIMIT_AMPS, EXTENSION_ARM.MOTOR_FREE_LIMIT_AMPS);
 
         motorConfig.encoder
+                .countsPerRevolution((int) Units.Revolution.one().in(CUSTOM_UNITS.NEO_ENCODER_TICK))
                 .inverted(EXTENSION_ARM.ENCODER_INVERTED);
 
         motorConfig.closedLoop
@@ -59,31 +64,49 @@ public class ExtensionArm extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
+    private void setTargetRotations(double targetRotations) {
+        m_targetRotations = CUSTOM_UNITS.NEO_ENCODER_TICK.of(targetRotations);
+        m_PIDController.setReference(targetRotations, ControlType.kMAXMotionPositionControl);
+    }
+
     public void setAxisSpeed(double speed) {
-        m_targetRotations = Double.NaN;
+        m_targetRotations = null;
         speed *= EXTENSION_ARM.AXIS_MAX_SPEED;
         m_motor.set(speed);
     }
 
     public void stop() {
-        m_targetRotations = Double.NaN;
+        m_targetRotations = null;
         m_motor.stopMotor();
-    }
-
-    public void setTargetRotations(double targetRotations) {
-        m_targetRotations = targetRotations;
-        m_PIDController.setReference(m_targetRotations, ControlType.kMAXMotionPositionControl);
-    }
-
-    public double getRotations() {
-        return m_alternateEncoder.getPosition();
-    }
-
-    public boolean isAtTargetRotations() {
-        return Utility.isWithinTolerance(getRotations(), m_targetRotations, EXTENSION_ARM.SMART_MOTION_ALLOWED_ERROR);
     }
 
     public void setZero() {
         m_alternateEncoder.setPosition(0);
+    }
+
+    public boolean isAtTargetRotations() {
+        return Utility.isWithinTolerance(
+                getRotations().in(CUSTOM_UNITS.NEO_ENCODER_TICK),
+                m_targetRotations.in(CUSTOM_UNITS.NEO_ENCODER_TICK),
+                EXTENSION_ARM.SMART_MOTION_ALLOWED_ERROR);
+    }
+
+    public Angle getRotations() {
+        return CUSTOM_UNITS.NEO_ENCODER_TICK.of(m_alternateEncoder.getPosition());
+    }
+
+    public Distance getExtensionDistance() {
+        return CUSTOM_UNITS.NEO_SHAFT_CIRCUMFERENCE.times(getRotations().in(Units.Revolutions));
+    }
+
+    public void setExtensionDistance(Distance distance) {
+        Angle rotations = Units.Revolutions.of(distance.div(CUSTOM_UNITS.NEO_SHAFT_CIRCUMFERENCE).magnitude());
+        setExtensionRotations(rotations);
+        System.out.println(m_targetRotations);
+    }
+
+    public void setExtensionRotations(Angle rotations) {
+        setTargetRotations(rotations.in(CUSTOM_UNITS.NEO_ENCODER_TICK));
+        System.out.println(m_targetRotations);
     }
 }

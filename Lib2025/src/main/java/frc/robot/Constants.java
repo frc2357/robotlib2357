@@ -6,7 +6,9 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 
 /**
@@ -23,14 +25,9 @@ import edu.wpi.first.units.measure.Distance;
  */
 public final class Constants {
   public static final class CUSTOM_UNITS {
-    public static final Distance NEO_SHAFT_CIRCUMFERENCE = Units.Inches.of(0.989478);
-
-    public static final Distance NEO_DISTANCE_PER_TICK = NEO_SHAFT_CIRCUMFERENCE.div(42);
-    // CUSTOM_UNITS.NEO_DISTANCE_PER_TICK.times(42) -> 0.989478
-
-    public static final double EXAMPLE_GEAR_RATIO = 60;
-    public static final Distance EXAMPLE_GEARED_DISTANCE_PER_TICK = NEO_DISTANCE_PER_TICK.div(EXAMPLE_GEAR_RATIO);
-    // CUSTOM_UNITS.EXAMPLE_GEARED_DISTANCE_PER_TICK.times(2520) -> 0.989478
+    public static final Distance NEO_SHAFT_CIRCUMFERENCE = Units.Millimeters.of(8 * Math.PI);
+    public static final AngleUnit NEO_ENCODER_TICK = Units.derive(Units.Revolutions).splitInto(42)
+        .named("Neo Encoder Tick").symbol("NET").make();
   }
 
   public static final class CAN_ID {
@@ -46,7 +43,7 @@ public final class Constants {
   }
 
   public static final class SHOOTER {
-    public static final double SHOOTER_AXIS_MAX_SPEED = 0.8;
+    public static final double SHOOTER_AXIS_MAX_SPEED = 0.0;
 
     public static final IdleMode IDLE_MODE = IdleMode.kCoast;
 
@@ -75,7 +72,7 @@ public final class Constants {
   }
 
   public static final class INTAKE {
-    public static final double INTAKE_AXIS_MAX_SPEED = 0.8;
+    public static final double INTAKE_AXIS_MAX_SPEED = 0.0;
 
     public static final double DEBOUNCE_TIME_SECONDS = 0.02;
 
@@ -127,7 +124,7 @@ public final class Constants {
     public static final int SMART_MOTION_MAX_ACC_RPM = 50000;
     public static final double SMART_MOTION_ALLOWED_ERROR = 0.1;
 
-    public static final double AXIS_MAX_SPEED = 0.75;
+    public static final double AXIS_MAX_SPEED = 0.0;
   }
 
   public static final class ROTATION_ARM {
@@ -148,7 +145,7 @@ public final class Constants {
     public static final int SMART_MOTION_MAX_ACC_RPM = 50000;
     public static final double SMART_MOTION_ALLOWED_ERROR = 0.1;
 
-    public static final double AXIS_MAX_SPEED = 0.75;
+    public static final double AXIS_MAX_SPEED = 0.0;
 
     public static final double ARM_FEED_FORWARD_KS = 0;
     public static final double ARM_FEED_FORWARD_KG = 0;

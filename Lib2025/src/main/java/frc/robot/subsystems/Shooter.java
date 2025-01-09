@@ -10,6 +10,8 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
@@ -17,7 +19,7 @@ import frc.robot.Constants.SHOOTER;
 import frc.robot.util.Utility;
 
 public class Shooter extends SubsystemBase {
-    private double m_targetRPM;
+    private AngularVelocity m_targetRPM;
 
     private SparkMax m_topShooterMotor;
     private SparkMax m_bottomShooterMotor;
@@ -63,26 +65,21 @@ public class Shooter extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void setRPM(double RPM) {
-        if (Double.isNaN(RPM)) {
-            System.err.println("Shooter: Cannot set shooter RPMs to NaN");
-            return;
-        }
-
-        m_targetRPM = RPM;
-        m_topPIDController.setReference(m_targetRPM, ControlType.kVelocity);
-        m_bottomPIDController.setReference(m_targetRPM, ControlType.kVelocity);
+    public void setRPM(AngularVelocity vel) {
+        m_targetRPM = vel;
+        m_topPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
+        m_bottomPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
     }
 
     public void setAxisSpeed(double speed) {
-        m_targetRPM = Double.NaN;
+        m_targetRPM = null;
         speed *= Constants.SHOOTER.SHOOTER_AXIS_MAX_SPEED;
         m_topShooterMotor.set(speed);
         m_bottomShooterMotor.set(speed);
     }
 
     public void stop() {
-        m_targetRPM = Double.NaN;
+        m_targetRPM = null;
         m_topShooterMotor.set(0.0);
         m_bottomShooterMotor.set(0.0);
     }
@@ -95,12 +92,12 @@ public class Shooter extends SubsystemBase {
         return m_bottomShooterMotor.getEncoder().getVelocity();
     }
 
-    public boolean isAtRPM(double RPM) {
-        return Utility.isWithinTolerance(getTopVelocity(), RPM, SHOOTER.RPM_TOLERANCE)
-                && Utility.isWithinTolerance(getBottomVelocity(), RPM, SHOOTER.RPM_TOLERANCE);
+    public boolean isAtVelocity(AngularVelocity vel) {
+        return Utility.isWithinTolerance(getTopVelocity(), vel.in(Units.RPM), SHOOTER.RPM_TOLERANCE)
+                && Utility.isWithinTolerance(getBottomVelocity(), vel.in(Units.RPM), SHOOTER.RPM_TOLERANCE);
     }
 
     public boolean isAtTargetSpeed() {
-        return isAtRPM(m_targetRPM);
+        return isAtVelocity(m_targetRPM);
     }
 }
