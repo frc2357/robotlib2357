@@ -43,13 +43,13 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    shooter = new Shooter();
+    // shooter = new Shooter();
 
-    intake = new Intake();
+    // intake = new Intake();
 
-    extensionArm = new ExtensionArm();
+    // extensionArm = new ExtensionArm();
 
-    rotationArm = new RotationArm();
+    // rotationArm = new RotationArm();
   }
 
   /**

@@ -1,19 +1,20 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class IntakeSetRPM extends Command {
-  private double m_RPM;
+public class IntakeSetVelocity extends Command {
+  private AngularVelocity m_velocity;
 
-  public IntakeSetRPM(double RPM) {
-    m_RPM = RPM;
+  public IntakeSetVelocity(AngularVelocity vel) {
+    m_velocity = vel;
     addRequirements(Robot.intake);
   }
 
   @Override
   public void initialize() {
-    Robot.intake.setRPM(m_RPM);
+    Robot.intake.setVelocity(m_velocity);
   }
 
   @Override

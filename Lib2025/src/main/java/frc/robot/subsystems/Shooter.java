@@ -19,7 +19,7 @@ import frc.robot.Constants.SHOOTER;
 import frc.robot.util.Utility;
 
 public class Shooter extends SubsystemBase {
-    private AngularVelocity m_targetRPM;
+    private AngularVelocity m_targetVelocity;
 
     private SparkMax m_topShooterMotor;
     private SparkMax m_bottomShooterMotor;
@@ -65,21 +65,21 @@ public class Shooter extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void setRPM(AngularVelocity vel) {
-        m_targetRPM = vel;
+    public void setVelocity(AngularVelocity vel) {
+        m_targetVelocity = vel;
         m_topPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
         m_bottomPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
     }
 
     public void setAxisSpeed(double speed) {
-        m_targetRPM = null;
+        m_targetVelocity = null;
         speed *= Constants.SHOOTER.SHOOTER_AXIS_MAX_SPEED;
         m_topShooterMotor.set(speed);
         m_bottomShooterMotor.set(speed);
     }
 
     public void stop() {
-        m_targetRPM = null;
+        m_targetVelocity = null;
         m_topShooterMotor.set(0.0);
         m_bottomShooterMotor.set(0.0);
     }
@@ -98,6 +98,6 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isAtTargetSpeed() {
-        return isAtVelocity(m_targetRPM);
+        return isAtVelocity(m_targetVelocity);
     }
 }

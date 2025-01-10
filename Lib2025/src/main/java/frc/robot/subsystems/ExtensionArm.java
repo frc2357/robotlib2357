@@ -46,14 +46,16 @@ public class ExtensionArm extends SubsystemBase {
                 .inverted(EXTENSION_ARM.MOTOR_INVERTED)
                 .voltageCompensation(12)
                 .idleMode(EXTENSION_ARM.MOTOR_IDLE_MODE)
-                .smartCurrentLimit(EXTENSION_ARM.MOTOR_STALL_LIMIT_AMPS, EXTENSION_ARM.MOTOR_FREE_LIMIT_AMPS);
+                .smartCurrentLimit(EXTENSION_ARM.MOTOR_STALL_LIMIT_AMPS,
+                        EXTENSION_ARM.MOTOR_FREE_LIMIT_AMPS);
 
         motorConfig.encoder
-                .countsPerRevolution((int) Units.Revolution.one().in(CUSTOM_UNITS.NEO_ENCODER_TICK))
+                .countsPerRevolution(1)
                 .inverted(EXTENSION_ARM.ENCODER_INVERTED);
 
         motorConfig.closedLoop
-                .pidf(EXTENSION_ARM.MOTOR_PID_P, EXTENSION_ARM.MOTOR_PID_I, EXTENSION_ARM.MOTOR_PID_D,
+                .pidf(EXTENSION_ARM.MOTOR_PID_P, EXTENSION_ARM.MOTOR_PID_I,
+                        EXTENSION_ARM.MOTOR_PID_D,
                         EXTENSION_ARM.MOTOR_PID_FF)
                 .outputRange(-1, 1)
                 .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
@@ -65,7 +67,7 @@ public class ExtensionArm extends SubsystemBase {
     }
 
     private void setTargetRotations(double targetRotations) {
-        m_targetRotations = CUSTOM_UNITS.NEO_ENCODER_TICK.of(targetRotations);
+        m_targetRotations = Units.Revolutions.of(targetRotations);
         m_PIDController.setReference(targetRotations, ControlType.kMAXMotionPositionControl);
     }
 
@@ -86,27 +88,28 @@ public class ExtensionArm extends SubsystemBase {
 
     public boolean isAtTargetRotations() {
         return Utility.isWithinTolerance(
-                getRotations().in(CUSTOM_UNITS.NEO_ENCODER_TICK),
-                m_targetRotations.in(CUSTOM_UNITS.NEO_ENCODER_TICK),
+                getRotations().in(Units.Revolutions),
+                m_targetRotations.in(Units.Revolutions),
                 EXTENSION_ARM.SMART_MOTION_ALLOWED_ERROR);
     }
 
     public Angle getRotations() {
-        return CUSTOM_UNITS.NEO_ENCODER_TICK.of(m_alternateEncoder.getPosition());
+        return Units.Revolutions.of(m_alternateEncoder.getPosition());
     }
 
     public Distance getExtensionDistance() {
-        return CUSTOM_UNITS.NEO_SHAFT_CIRCUMFERENCE.times(getRotations().in(Units.Revolutions));
+        return EXTENSION_ARM.DISTANCE_TRAVELED_PER_MOTOR_ROTATION.times(getRotations().in(Units.Revolutions));
     }
 
     public void setExtensionDistance(Distance distance) {
-        Angle rotations = Units.Revolutions.of(distance.div(CUSTOM_UNITS.NEO_SHAFT_CIRCUMFERENCE).magnitude());
+        Angle rotations = Units.Revolutions
+                .of(distance.div(EXTENSION_ARM.DISTANCE_TRAVELED_PER_MOTOR_ROTATION).magnitude());
         setExtensionRotations(rotations);
         System.out.println(m_targetRotations);
     }
 
     public void setExtensionRotations(Angle rotations) {
-        setTargetRotations(rotations.in(CUSTOM_UNITS.NEO_ENCODER_TICK));
+        setTargetRotations(rotations.in(Units.Revolutions));
         System.out.println(m_targetRotations);
     }
 }
