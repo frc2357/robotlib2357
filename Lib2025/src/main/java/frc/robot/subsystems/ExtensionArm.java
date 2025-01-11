@@ -17,7 +17,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.CUSTOM_UNITS;
 import frc.robot.Constants.EXTENSION_ARM;
 import frc.robot.util.Utility;
 
@@ -105,11 +104,9 @@ public class ExtensionArm extends SubsystemBase {
         Angle rotations = Units.Revolutions
                 .of(distance.div(EXTENSION_ARM.DISTANCE_TRAVELED_PER_MOTOR_ROTATION).magnitude());
         setExtensionRotations(rotations);
-        System.out.println(m_targetRotations);
     }
 
     public void setExtensionRotations(Angle rotations) {
         setTargetRotations(rotations.in(Units.Revolutions));
-        System.out.println(m_targetRotations);
     }
 }

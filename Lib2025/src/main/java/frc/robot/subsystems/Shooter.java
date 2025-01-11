@@ -65,10 +65,14 @@ public class Shooter extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void setVelocity(AngularVelocity vel) {
+    public void setMotorVelocity(AngularVelocity vel) {
         m_targetVelocity = vel;
         m_topPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
         m_bottomPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
+    }
+
+    public void setOutputVelocity(AngularVelocity vel) {
+        setMotorVelocity(vel.times(SHOOTER.GEAR_RATIO));
     }
 
     public void setAxisSpeed(double speed) {
