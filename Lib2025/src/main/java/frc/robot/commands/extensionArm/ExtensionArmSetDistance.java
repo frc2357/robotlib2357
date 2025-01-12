@@ -1,20 +1,20 @@
 package frc.robot.commands.extensionArm;
 
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class ExtensionArmSetRotations extends Command {
-    private Angle m_rotations;
+public class ExtensionArmSetDistance extends Command {
+    private Distance m_distance;
 
-    public ExtensionArmSetRotations(Angle rotations) {
-        m_rotations = rotations;
+    public ExtensionArmSetDistance(Distance distance) {
+        m_distance = distance;
         addRequirements(Robot.extensionArm);
     }
 
     @Override
     public void initialize() {
-        Robot.extensionArm.setExtensionRotations(m_rotations);
+        Robot.extensionArm.setExtensionDistance(m_distance);
     }
 
     @Override

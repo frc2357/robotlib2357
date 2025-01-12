@@ -88,7 +88,7 @@ public class ExtensionArm extends SubsystemBase {
         m_alternateEncoder.setPosition(0);
     }
 
-    public boolean isAtTargetRotations() {
+    public boolean isAtSetpoint() {
         return Utility.isWithinTolerance(
                 getRotations().in(Units.Rotations),
                 m_targetRotations.in(Units.Rotations),
