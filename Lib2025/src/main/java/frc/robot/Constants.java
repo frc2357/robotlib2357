@@ -126,11 +126,12 @@ public final class Constants {
   public static final class EXTENSION_ARM {
     // See shooter example for how this logic works
     public static final double GEAR_RATIO = 1.0 / 16.0;
-    public static final Distance MOTOR_PULLEY_CIRCUMFERENCE = Units.Inches.of(1.08 * Math.PI);
-    public static final Distance DISTANCE_TRAVELED_PER_MOTOR_ROTATION = MOTOR_PULLEY_CIRCUMFERENCE.times(GEAR_RATIO);
+    public static final Distance MOTOR_PULLEY_CIRCUMFERENCE = Units.Inches.of(1.0830709 * Math.PI);
 
     public static final boolean MOTOR_INVERTED = false;
     public static final boolean ENCODER_INVERTED = true;
+
+    public static final int ENCODER_COUNTS_PER_REV = 8196;
 
     public static final IdleMode MOTOR_IDLE_MODE = IdleMode.kBrake;
 
