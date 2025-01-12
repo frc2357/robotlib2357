@@ -88,20 +88,18 @@ public class Shooter extends SubsystemBase {
         m_bottomShooterMotor.set(0.0);
     }
 
-    public double getTopVelocity() {
-        return m_topShooterMotor.getEncoder().getVelocity();
+    public AngularVelocity getTopMotorVelocity() {
+        return Units.RPM.of(m_topShooterMotor.getEncoder().getVelocity());
     }
 
-    public double getBottomVelocity() {
-        return m_bottomShooterMotor.getEncoder().getVelocity();
-    }
-
-    public boolean isAtVelocity(AngularVelocity vel) {
-        return Utility.isWithinTolerance(getTopVelocity(), vel.in(Units.RPM), SHOOTER.RPM_TOLERANCE)
-                && Utility.isWithinTolerance(getBottomVelocity(), vel.in(Units.RPM), SHOOTER.RPM_TOLERANCE);
+    public AngularVelocity getBottomMotorVelocity() {
+        return Units.RPM.of(m_bottomShooterMotor.getEncoder().getVelocity());
     }
 
     public boolean isAtTargetSpeed() {
-        return isAtVelocity(m_targetVelocity);
+        return Utility.isWithinTolerance(getTopMotorVelocity().in(Units.RPM), m_targetVelocity.in(Units.RPM),
+                SHOOTER.RPM_TOLERANCE)
+                && Utility.isWithinTolerance(getBottomMotorVelocity().in(Units.RPM), m_targetVelocity.in(Units.RPM),
+                        SHOOTER.RPM_TOLERANCE);
     }
 }
