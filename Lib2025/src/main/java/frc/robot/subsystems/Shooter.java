@@ -10,6 +10,8 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
@@ -17,7 +19,7 @@ import frc.robot.Constants.SHOOTER;
 import frc.robot.util.Utility;
 
 public class Shooter extends SubsystemBase {
-    private double m_targetRPM;
+    private AngularVelocity m_targetVelocity;
 
     private SparkMax m_topShooterMotor;
     private SparkMax m_bottomShooterMotor;
@@ -63,44 +65,41 @@ public class Shooter extends SubsystemBase {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void setRPM(double RPM) {
-        if (Double.isNaN(RPM)) {
-            System.err.println("Shooter: Cannot set shooter RPMs to NaN");
-            return;
-        }
+    public void setMotorVelocity(AngularVelocity vel) {
+        m_targetVelocity = vel;
+        m_topPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
+        m_bottomPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
+    }
 
-        m_targetRPM = RPM;
-        m_topPIDController.setReference(m_targetRPM, ControlType.kVelocity);
-        m_bottomPIDController.setReference(m_targetRPM, ControlType.kVelocity);
+    public void setOutputVelocity(AngularVelocity vel) {
+        setMotorVelocity(vel.times(SHOOTER.GEAR_RATIO));
     }
 
     public void setAxisSpeed(double speed) {
-        m_targetRPM = Double.NaN;
+        m_targetVelocity = null;
         speed *= Constants.SHOOTER.SHOOTER_AXIS_MAX_SPEED;
         m_topShooterMotor.set(speed);
         m_bottomShooterMotor.set(speed);
     }
 
     public void stop() {
-        m_targetRPM = Double.NaN;
+        m_targetVelocity = null;
         m_topShooterMotor.set(0.0);
         m_bottomShooterMotor.set(0.0);
     }
 
-    public double getTopVelocity() {
-        return m_topShooterMotor.getEncoder().getVelocity();
+    public AngularVelocity getTopMotorVelocity() {
+        return Units.RPM.of(m_topShooterMotor.getEncoder().getVelocity());
     }
 
-    public double getBottomVelocity() {
-        return m_bottomShooterMotor.getEncoder().getVelocity();
-    }
-
-    public boolean isAtRPM(double RPM) {
-        return Utility.isWithinTolerance(getTopVelocity(), RPM, SHOOTER.RPM_TOLERANCE)
-                && Utility.isWithinTolerance(getBottomVelocity(), RPM, SHOOTER.RPM_TOLERANCE);
+    public AngularVelocity getBottomMotorVelocity() {
+        return Units.RPM.of(m_bottomShooterMotor.getEncoder().getVelocity());
     }
 
     public boolean isAtTargetSpeed() {
-        return isAtRPM(m_targetRPM);
+        return Utility.isWithinTolerance(getTopMotorVelocity().in(Units.RPM), m_targetVelocity.in(Units.RPM),
+                SHOOTER.RPM_TOLERANCE)
+                && Utility.isWithinTolerance(getBottomMotorVelocity().in(Units.RPM), m_targetVelocity.in(Units.RPM),
+                        SHOOTER.RPM_TOLERANCE);
     }
 }

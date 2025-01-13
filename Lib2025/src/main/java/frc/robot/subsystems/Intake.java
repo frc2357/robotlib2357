@@ -12,6 +12,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
@@ -20,7 +22,7 @@ import frc.robot.Constants.INTAKE;
 import frc.robot.util.Utility;
 
 public class Intake extends SubsystemBase {
-    private double m_targetRPM;
+    private AngularVelocity m_targetVelocity;
 
     private SparkMax m_topIntakeMotor;
     private SparkMax m_bottomIntakeMotor;
@@ -79,20 +81,15 @@ public class Intake extends SubsystemBase {
     }
 
     public void stop() {
-        m_targetRPM = Double.NaN;
+        m_targetVelocity = null;
         m_topIntakeMotor.set(0.0);
         m_bottomIntakeMotor.set(0.0);
     }
 
-    public void setRPM(double RPM) {
-        if (Double.isNaN(RPM)) {
-            System.err.println("Intake: Cannot set intake RPMs to NaN");
-            return;
-        }
-
-        m_targetRPM = RPM;
-        m_topPIDController.setReference(m_targetRPM, ControlType.kVelocity);
-        m_bottomPIDController.setReference(m_targetRPM, ControlType.kVelocity);
+    public void setVelocity(AngularVelocity vel) {
+        m_targetVelocity = vel;
+        m_topPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
+        m_bottomPIDController.setReference(vel.in(Units.RPM), ControlType.kVelocity);
     }
 
     public double getTopVelocity() {
@@ -103,13 +100,13 @@ public class Intake extends SubsystemBase {
         return m_bottomIntakeMotor.getEncoder().getVelocity();
     }
 
-    public boolean isAtRPM(double RPM) {
-        return Utility.isWithinTolerance(getTopVelocity(), RPM, INTAKE.RPM_TOLERANCE)
-                && Utility.isWithinTolerance(getBottomVelocity(), RPM, INTAKE.RPM_TOLERANCE);
+    public boolean isAtVelocity(AngularVelocity vel) {
+        return Utility.isWithinTolerance(getTopVelocity(), vel.in(Units.RPM), INTAKE.RPM_TOLERANCE)
+                && Utility.isWithinTolerance(getBottomVelocity(), vel.in(Units.RPM), INTAKE.RPM_TOLERANCE);
     }
 
     public boolean isAtTargetSpeed() {
-        return isAtRPM(m_targetRPM);
+        return isAtVelocity(m_targetVelocity);
     }
 
     public boolean isBeamBroken() {
