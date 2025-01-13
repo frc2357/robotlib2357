@@ -126,7 +126,14 @@ public final class Constants {
   public static final class EXTENSION_ARM {
     // See shooter example for how this logic works
     public static final double GEAR_RATIO = 1.0 / 16.0;
-    public static final Distance MOTOR_PULLEY_CIRCUMFERENCE = Units.Inches.of(1.0830709 * Math.PI);
+    // When the final output from a motor is going to a belt that drives the
+    // extension of a mechanism, we want to use the pitch diameter/circumference of
+    // the pulley. We find the pitch circumference with the following formula:
+    // (Pulley pitch) * (Number of Teeth)
+    public static final Distance HTD5_PULLEY_PITCH = Units.Millimeters.of(5);
+    public static final double OUTPUT_PULLEY_NUMBER_OF_TEETH = 18;
+    public static final Distance MOTOR_PULLEY_PITCH_CIRCUMFERENCE = HTD5_PULLEY_PITCH
+        .times(OUTPUT_PULLEY_NUMBER_OF_TEETH);
 
     public static final boolean MOTOR_INVERTED = false;
     public static final boolean ENCODER_INVERTED = true;
