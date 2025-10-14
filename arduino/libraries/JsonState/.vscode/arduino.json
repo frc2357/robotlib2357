@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "sketch": "examples/TestElement/TestElement.ino"
+}
