@@ -1,0 +1,40 @@
+name: Build And Prettify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container: wpilib/roborio-cross-ubuntu:2025-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./robotbase/gradlew
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.18.1"
+
+      - name: Install Packages
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run check
+
+      - name: Compile and run tests on robot code
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: ./robotbase
+          arguments: build

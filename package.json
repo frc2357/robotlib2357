@@ -2,7 +2,8 @@
   "name": "robotlib2357",
   "description": "FRC 2357 Reusable Robot Library",
   "scripts": {
-    "format": "prettier --write **/*.java"
+    "format": "prettier --write **/*.java",
+    "check": "prettier --check **/*.java"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,7 @@
   },
   "homepage": "https://github.com/frc2357/robotlib2357#readme",
   "devDependencies": {
-    "prettier": "^2.7.1",
-    "prettier-plugin-java": "^1.6.2"
+    "prettier": "^3.4.2",
+    "prettier-plugin-java": "^2.6.7"
   }
 }

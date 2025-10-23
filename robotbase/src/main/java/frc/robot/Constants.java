@@ -10,7 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
  * constants. This class should not be used for any other purpose. All constants
- * should be declared
+ * should be declared`
  * globally (i.e. public static). Do not put anything functional in this class.
  *
  * <p>
@@ -19,7 +19,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static final class CAN_ID {
+
     public static final int TOP_SHOOTER_MOTOR_ID = 25;
     public static final int BOTTOM_SHOOTER_MOTOR_ID = 26;
 
@@ -32,6 +34,7 @@ public final class Constants {
   }
 
   public static final class SHOOTER {
+
     public static final double SHOOTER_AXIS_MAX_SPEED = 0.8;
 
     public static final IdleMode IDLE_MODE = IdleMode.kCoast;
@@ -61,6 +64,7 @@ public final class Constants {
   }
 
   public static final class INTAKE {
+
     public static final double INTAKE_AXIS_MAX_SPEED = 0.8;
 
     public static final double DEBOUNCE_TIME_SECONDS = 0.02;
@@ -92,10 +96,12 @@ public final class Constants {
   }
 
   public static final class DIGITAL_INPUT {
+
     public static final int INTAKE_BEAM_BREAK_ID = 5;
   }
 
   public static final class EXTENSION_ARM {
+
     public static final boolean MOTOR_INVERTED = false;
     public static final boolean ENCODER_INVERTED = true;
 
@@ -117,6 +123,7 @@ public final class Constants {
   }
 
   public static final class ROTATION_ARM {
+
     public static final boolean MOTOR_INVERTED = false;
     public static final boolean ENCODER_INVERTED = true;
 

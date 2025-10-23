@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -11,7 +14,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -22,77 +24,105 @@ import frc.robot.Constants.ROTATION_ARM;
 import frc.robot.util.Utility;
 
 public class RotationArm extends SubsystemBase {
-    private Angle m_targetAngle;
 
-    private SparkMax m_motor;
-    private SparkClosedLoopController m_PIDController;
-    private RelativeEncoder m_alternateEncoder;
-    private ArmFeedforward m_armFeedForward;
+  private Angle m_targetAngle;
 
-    public RotationArm() {
-        m_motor = new SparkMax(Constants.CAN_ID.ROTATION_ARM_MOTOR_ID, MotorType.kBrushless);
-        m_PIDController = m_motor.getClosedLoopController();
-        m_alternateEncoder = m_motor.getAlternateEncoder();
+  private SparkMax m_motor;
+  private SparkClosedLoopController m_PIDController;
+  private RelativeEncoder m_alternateEncoder;
+  private ArmFeedforward m_armFeedForward;
 
-        m_armFeedForward = new ArmFeedforward(ROTATION_ARM.ARM_FEED_FORWARD_KS, ROTATION_ARM.ARM_FEED_FORWARD_KG, 
-                ROTATION_ARM.ARM_FEED_FORWARD_KV, ROTATION_ARM.ARM_FEED_FORWARD_KA);
+  public RotationArm() {
+    m_motor = new SparkMax(
+      Constants.CAN_ID.ROTATION_ARM_MOTOR_ID,
+      MotorType.kBrushless
+    );
+    m_PIDController = m_motor.getClosedLoopController();
+    m_alternateEncoder = m_motor.getAlternateEncoder();
 
-        configure();
-    }
+    m_armFeedForward = new ArmFeedforward(
+      ROTATION_ARM.ARM_FEED_FORWARD_KS,
+      ROTATION_ARM.ARM_FEED_FORWARD_KG,
+      ROTATION_ARM.ARM_FEED_FORWARD_KV,
+      ROTATION_ARM.ARM_FEED_FORWARD_KA
+    );
 
-    private void configure() {
-        MAXMotionConfig maxMotionConfig = new MAXMotionConfig()
-                .maxVelocity(ROTATION_ARM.SMART_MOTION_MAX_VEL_RPM)
-                .maxAcceleration(ROTATION_ARM.SMART_MOTION_MAX_ACC_RPM)
-                .allowedClosedLoopError(ROTATION_ARM.SMART_MOTION_ALLOWED_ERROR);
+    configure();
+  }
 
-        SparkBaseConfig motorConfig = new SparkMaxConfig()
-                .inverted(ROTATION_ARM.MOTOR_INVERTED)
-                .voltageCompensation(12)
-                .idleMode(ROTATION_ARM.MOTOR_IDLE_MODE)
-                .smartCurrentLimit(ROTATION_ARM.MOTOR_STALL_LIMIT_AMPS, ROTATION_ARM.MOTOR_FREE_LIMIT_AMPS);
+  private void configure() {
+    MAXMotionConfig maxMotionConfig = new MAXMotionConfig()
+      .maxVelocity(ROTATION_ARM.SMART_MOTION_MAX_VEL_RPM)
+      .maxAcceleration(ROTATION_ARM.SMART_MOTION_MAX_ACC_RPM)
+      .allowedClosedLoopError(ROTATION_ARM.SMART_MOTION_ALLOWED_ERROR);
 
-        motorConfig.encoder
-                .inverted(ROTATION_ARM.ENCODER_INVERTED);
+    SparkBaseConfig motorConfig = new SparkMaxConfig()
+      .inverted(ROTATION_ARM.MOTOR_INVERTED)
+      .voltageCompensation(12)
+      .idleMode(ROTATION_ARM.MOTOR_IDLE_MODE)
+      .smartCurrentLimit(
+        ROTATION_ARM.MOTOR_STALL_LIMIT_AMPS,
+        ROTATION_ARM.MOTOR_FREE_LIMIT_AMPS
+      );
 
-        motorConfig.closedLoop
-                .pidf(ROTATION_ARM.MOTOR_PID_P, ROTATION_ARM.MOTOR_PID_I, ROTATION_ARM.MOTOR_PID_D,
-                ROTATION_ARM.MOTOR_PID_FF)
-                .outputRange(-1, 1)
-                .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
-                .apply(maxMotionConfig);
+    motorConfig.encoder.inverted(ROTATION_ARM.ENCODER_INVERTED);
 
-        m_motor.configure(motorConfig,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters);
-    }
+    motorConfig.closedLoop
+      .pidf(
+        ROTATION_ARM.MOTOR_PID_P,
+        ROTATION_ARM.MOTOR_PID_I,
+        ROTATION_ARM.MOTOR_PID_D,
+        ROTATION_ARM.MOTOR_PID_FF
+      )
+      .outputRange(-1, 1)
+      .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+      .apply(maxMotionConfig);
 
-    public void setAxisSpeed(double speed) {
-        m_targetAngle = null;
-        speed *= ROTATION_ARM.AXIS_MAX_SPEED;
-        m_motor.set(speed);
-    }
+    m_motor.configure(
+      motorConfig,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
+  }
 
-    public void stop() {
-        m_targetAngle = null;
-        m_motor.stopMotor();
-    }
+  public void setAxisSpeed(double speed) {
+    m_targetAngle = null;
+    speed *= ROTATION_ARM.AXIS_MAX_SPEED;
+    m_motor.set(speed);
+  }
 
-    public void setZero() {
-        m_alternateEncoder.setPosition(0);
-    }
+  public void stop() {
+    m_targetAngle = null;
+    m_motor.stopMotor();
+  }
 
-    public Angle getAngle() {
-        return Units.Radian.of(m_alternateEncoder.getPosition());
-    }
+  public void setZero() {
+    m_alternateEncoder.setPosition(0);
+  }
 
-    public boolean isAtTargetAngle() {
-        return Utility.isWithinTolerance(getAngle().in(Units.Radians), m_targetAngle.in(Units.Radians), ROTATION_ARM.SMART_MOTION_ALLOWED_ERROR);
-    }
+  public Angle getAngle() {
+    return Units.Radian.of(m_alternateEncoder.getPosition());
+  }
 
-    public void setTargetAngle(Angle angle) {
-        m_targetAngle = angle;
-        Voltage armFeedForwardVolts = m_armFeedForward.calculate(getAngle(), null);
-        m_PIDController.setReference(angle.in(Units.Radians), ControlType.kMAXMotionPositionControl, 0, armFeedForwardVolts.in(Units.Volts));
-    }
+  public boolean isAtTargetAngle() {
+    return Utility.isWithinTolerance(
+      getAngle().in(Units.Radians),
+      m_targetAngle.in(Units.Radians),
+      ROTATION_ARM.SMART_MOTION_ALLOWED_ERROR
+    );
+  }
+
+  public void setTargetAngle(Angle angle) {
+    m_targetAngle = angle;
+    double armFeedForwardVolts = m_armFeedForward.calculate(
+      getAngle().in(Units.Radians),
+      Units.RPM.of(m_alternateEncoder.getVelocity()).in(RadiansPerSecond)
+    );
+    m_PIDController.setReference(
+      angle.in(Units.Radians),
+      ControlType.kMAXMotionPositionControl,
+      ClosedLoopSlot.kSlot0,
+      armFeedForwardVolts
+    );
+  }
 }
